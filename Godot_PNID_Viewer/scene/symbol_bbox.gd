@@ -27,8 +27,8 @@ func _ready():
 	global_position = get_center_point(x,y,width,height)
 	global_rotation_degrees = degree
 	
-	ProjectManager.active_project.symbol_selected_from_tree.connect(on_symbol_selected) # TODO
-	ProjectManager.active_project.symbol_deselect.connect(on_symbol_deselected) 
+	SymbolManager.symbol_selected_from_tree.connect(on_symbol_selected) # TODO
+	SymbolManager.symbol_deselected.connect(on_symbol_deselected) 
 	
 
 func _draw():

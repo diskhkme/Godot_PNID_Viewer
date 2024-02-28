@@ -1,6 +1,5 @@
 extends Node
 
-const object_tag_name = "symbol_object"
 
 func yes_no_to_bool(str: String) -> bool:
 	if str == "y":
@@ -31,7 +30,7 @@ func parse_pnid_xml(path: String) -> Array:
 			var node_name = parser.get_node_name()
 			
 			match node_name:
-				object_tag_name:
+				Config.OBJECT_TAG_NAME:
 					symbol_object = SymbolObject.new()
 				"type":
 					symbol_object.type = get_current_node_data(parser)

@@ -1,10 +1,10 @@
 extends Node
 
 # 파일 집합으로 로드하는 프로젝트 전체를 관리하는 클래스 (singleton)
-var open_projects: Array
+var open_projects: Array[Project]
 var active_project: Project
 
-func add_project(paths) -> Project:
+func add_project(paths: PackedStringArray) -> Project:
 	var project = Project.new() as Project
 	# TODO: Check sanity
 	if project.initialize(open_projects.size(), paths) == true:

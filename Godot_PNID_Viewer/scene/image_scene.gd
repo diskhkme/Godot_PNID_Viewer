@@ -3,7 +3,7 @@ extends Node2D
 # image cache
 var imgs_dict = {}
 
-func load_image_as_texture(img_filepath) -> Vector2:
+func load_image_as_texture(img_filepath: String) -> Vector2:
 	var img
 	if imgs_dict.has(img_filepath):
 		img = imgs_dict[img_filepath]

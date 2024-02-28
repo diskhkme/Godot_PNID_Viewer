@@ -32,8 +32,8 @@ func use_project(project: Project) -> void:
 	tree.set_column_clip_content(2, true)
 	tree.set_column_custom_minimum_width(2, 100)
 	
-	ProjectManager.active_project.symbol_selected_from_image.connect(focus_symbol)
-	ProjectManager.active_project.symbol_deselect.connect(on_symbol_deselected) 
+	SymbolManager.symbol_selected_from_image.connect(focus_symbol)
+	SymbolManager.symbol_deselected.connect(on_symbol_deselected) 
 
 
 func _on_tree_item_selected():
@@ -41,7 +41,7 @@ func _on_tree_item_selected():
 	var selected_xml_filename = tree.get_selected().get_parent().get_text(0)
 	selected_xml_id = ProjectManager.active_project.get_xml_id_from_filename(selected_xml_filename)
 	if selected_xml_id != -1 && selected_symbol_id != -1:
-		ProjectManager.active_project.symbol_selected_from_tree.emit(selected_xml_id,selected_symbol_id)
+		SymbolManager.symbol_selected_from_tree.emit(selected_xml_id,selected_symbol_id)
 	
 	
 func focus_symbol(xml_id:int, symbol_id:int):

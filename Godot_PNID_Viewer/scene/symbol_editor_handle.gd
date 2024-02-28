@@ -18,6 +18,7 @@ var center_pos
 var rot_start_angle: float
 var rot_start_vec: Vector2
 
+
 func init_symbol(center_pos, size, angle):
 	center_node.global_position = center_pos
 	center_node.scale = size
@@ -31,12 +32,13 @@ func init_symbol(center_pos, size, angle):
 	queue_redraw()
 	
 func _ready():
+	rot_handle.indicator_move_started.connect(on_indicator_move_started)
+	
 	tl_handle.indicator_moved.connect(on_indicator_moved)
 	tr_handle.indicator_moved.connect(on_indicator_moved)
 	bl_handle.indicator_moved.connect(on_indicator_moved)
 	br_handle.indicator_moved.connect(on_indicator_moved)
 	rot_handle.indicator_moved.connect(on_indicator_moved)
-	rot_handle.indicator_move_started.connect(on_indicator_move_started)
 	
 
 func _draw():
@@ -58,9 +60,10 @@ func update_handle_positions_with_anchor():
 	
 	
 func on_indicator_move_started(target: Indicator, start_pos: Vector2):
+	SymbolManager.symbol_edit_started.emit()
 	rot_start_angle = center_node.rotation
-	print(rot_start_angle)
 	rot_start_vec = (start_pos - center_node.global_position).normalized()
+	
 	
 func on_indicator_moved(target: Indicator, pos: Vector2):
 	var right_vec = Vector2.RIGHT.rotated(center_node.rotation)

@@ -1,9 +1,5 @@
 class_name Project
 
-signal symbol_selected_from_image
-signal symbol_selected_from_tree
-signal symbol_deselect
-
 var id: int
 # var undo_redo
 
@@ -11,9 +7,9 @@ var dirty: bool = false # TODO: per xml dirty state
 var loaded: bool = false
 
 var img_filepath: String 
-var xml_status: Array
+var xml_status: Array[XML_Status]
 
-func initialize(id, paths) -> bool:
+func initialize(id: int, paths: PackedStringArray) -> bool:
 	id = id
 	img_filepath = Util.get_img_path(paths)
 	if img_filepath.is_empty():

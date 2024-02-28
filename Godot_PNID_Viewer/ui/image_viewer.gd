@@ -15,7 +15,7 @@ func use_project(project: Project) -> void:
 	adjust_viewport_to_fullscreen()
 	move_cam_to(texture_size/2)
 	
-	project.symbol_selected_from_tree.connect(focus_img)
+	SymbolManager.symbol_selected_from_tree.connect(focus_img)
 	
 	
 func adjust_viewport_to_fullscreen():

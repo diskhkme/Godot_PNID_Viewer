@@ -30,10 +30,13 @@ func _input(event):
 			if selected_candidate.size() > 0:
 				# decide unique selection
 				decide_selection(get_global_mouse_position())
-				ProjectManager.active_project.symbol_selected_from_image.emit(selected_candidate[0].xml_id,selected_candidate[0].symbol_id)
+				SymbolManager.symbol_selected_from_image.emit(selected_candidate[0].xml_id,selected_candidate[0].symbol_id)
 				selected_candidate.clear()
 			else:
-				ProjectManager.active_project.symbol_deselect.emit()
+				if SymbolManager.is_editing:
+					SymbolManager.symbol_edit_ended.emit()
+				elif !SymbolManager.is_editing:
+					SymbolManager.symbol_deselected.emit()
 			
 		
 func decide_selection(mouse_position: Vector2) -> void:
