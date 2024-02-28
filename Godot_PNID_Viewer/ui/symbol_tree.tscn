@@ -1,8 +1,8 @@
 [gd_scene load_steps=2 format=3 uid="uid://blxopnyobf05a"]
 
-[ext_resource type="Script" path="res://ui/symbol_info.gd" id="1_b4ut8"]
+[ext_resource type="Script" path="res://ui/symbol_tree.gd" id="1_b4ut8"]
 
-[node name="SymbolInfo" type="PanelContainer"]
+[node name="SymbolTree" type="PanelContainer"]
 offset_right = 40.0
 offset_bottom = 40.0
 script = ExtResource("1_b4ut8")

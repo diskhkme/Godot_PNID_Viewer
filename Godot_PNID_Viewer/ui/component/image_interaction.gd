@@ -1,3 +1,6 @@
+# image interaction
+# zoom, pan image of image viewer
+
 extends Node
 
 @export var zoom_tick: float = 0.05

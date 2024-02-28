@@ -1,3 +1,6 @@
+# Image scene
+# display image as texture
+
 extends Node2D
 
 # image cache
@@ -16,8 +19,6 @@ func load_image_as_texture(img_filepath: String) -> Vector2:
 			
 	var texture = ImageTexture.create_from_image(img)
 	$PNIDImage.texture = texture
-	
-	print("texture created")
 	
 	return Vector2(texture.get_width(), texture.get_height())
 	

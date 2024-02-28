@@ -1,12 +1,12 @@
 [gd_scene load_steps=2 format=3 uid="uid://dwve11s71aa6x"]
 
-[ext_resource type="Script" path="res://ui/symbol_info_row.gd" id="1_okoef"]
+[ext_resource type="Script" path="res://ui/symbol_tree_row.gd" id="1_djfxj"]
 
-[node name="SymbolInfoRow" type="HBoxContainer"]
+[node name="SymbolTreeRow" type="HBoxContainer"]
 custom_minimum_size = Vector2(300, 0)
 offset_right = 40.0
 offset_bottom = 40.0
-script = ExtResource("1_okoef")
+script = ExtResource("1_djfxj")
 
 [node name="TypeLabel" type="Label" parent="."]
 custom_minimum_size = Vector2(100, 0)

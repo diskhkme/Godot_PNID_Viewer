@@ -1,3 +1,6 @@
+# --- Main scene
+# Controls open, close, change of project
+
 extends Node
 
 @onready var main_menu: Control = $CanvasLayer/MainWindow/MainMenu
@@ -7,10 +10,10 @@ extends Node
 
 
 func _ready():
-	main_menu.file_opened.connect(on_file_opened)
+	main_menu.file_opened.connect(on_new_project)
 
 
-func on_file_opened(paths):
+func on_new_project(paths: PackedStringArray) -> void:
 	var project: Project = ProjectManager.add_project(paths)
 	if project != null: # TODO: fail case dialog
 		make_project_active(project)
