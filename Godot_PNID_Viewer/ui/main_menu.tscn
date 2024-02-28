@@ -1,0 +1,27 @@
+[gd_scene load_steps=2 format=3 uid="uid://d02o5ib62ed0d"]
+
+[ext_resource type="Script" path="res://ui/main_menu.gd" id="1_f2d2a"]
+
+[node name="MainMenu" type="HBoxContainer"]
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("1_f2d2a")
+
+[node name="Left" type="HBoxContainer" parent="."]
+layout_mode = 2
+size_flags_horizontal = 2
+
+[node name="OpenFilesButton" type="Button" parent="Left"]
+layout_mode = 2
+text = "Open File(s)"
+
+[node name="Right" type="HBoxContainer" parent="."]
+layout_mode = 2
+size_flags_horizontal = 8
+alignment = 2
+
+[node name="Button" type="Button" parent="Right"]
+layout_mode = 2
+text = "dumb"
+
+[connection signal="pressed" from="Left/OpenFilesButton" to="." method="_on_open_files_button_pressed"]

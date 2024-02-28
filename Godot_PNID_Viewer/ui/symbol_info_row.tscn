@@ -1,0 +1,56 @@
+[gd_scene load_steps=2 format=3 uid="uid://dwve11s71aa6x"]
+
+[ext_resource type="Script" path="res://ui/symbol_info_row.gd" id="1_okoef"]
+
+[node name="SymbolInfoRow" type="HBoxContainer"]
+custom_minimum_size = Vector2(300, 0)
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("1_okoef")
+
+[node name="TypeLabel" type="Label" parent="."]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+vertical_alignment = 1
+
+[node name="VSeparator" type="VSeparator" parent="."]
+layout_mode = 2
+
+[node name="ClsLabel" type="Label" parent="."]
+layout_mode = 2
+clip_text = true
+
+[node name="VSeparator2" type="VSeparator" parent="."]
+layout_mode = 2
+
+[node name="XMinLabel" type="Label" parent="."]
+layout_mode = 2
+clip_text = true
+
+[node name="VSeparator3" type="VSeparator" parent="."]
+layout_mode = 2
+
+[node name="YMinLabel" type="Label" parent="."]
+layout_mode = 2
+clip_text = true
+
+[node name="VSeparator4" type="VSeparator" parent="."]
+layout_mode = 2
+
+[node name="XMaxLabel" type="Label" parent="."]
+layout_mode = 2
+clip_text = true
+
+[node name="VSeparator5" type="VSeparator" parent="."]
+layout_mode = 2
+
+[node name="YMaxLabel" type="Label" parent="."]
+layout_mode = 2
+clip_text = true
+
+[node name="VSeparator6" type="VSeparator" parent="."]
+layout_mode = 2
+
+[node name="DegreeLabel" type="Label" parent="."]
+layout_mode = 2
+clip_text = true

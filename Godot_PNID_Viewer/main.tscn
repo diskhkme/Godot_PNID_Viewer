@@ -1,0 +1,110 @@
+[gd_scene load_steps=6 format=3 uid="uid://en0mt7v4ddrg"]
+
+[ext_resource type="Script" path="res://main.gd" id="1_h1xnr"]
+[ext_resource type="PackedScene" uid="uid://d02o5ib62ed0d" path="res://ui/main_menu.tscn" id="1_n0m63"]
+[ext_resource type="PackedScene" uid="uid://bqsveu6pgdywi" path="res://ui/image_viewer.tscn" id="3_nc67t"]
+[ext_resource type="PackedScene" uid="uid://cypy5mb0rfmk7" path="res://ui/project_info.tscn" id="4_48ush"]
+[ext_resource type="PackedScene" uid="uid://blxopnyobf05a" path="res://ui/symbol_info.tscn" id="5_2yue0"]
+
+[node name="Main" type="Node"]
+script = ExtResource("1_h1xnr")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="MainWindow" type="VBoxContainer" parent="CanvasLayer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MainMenu" parent="CanvasLayer/MainWindow" node_paths=PackedStringArray("open_files_dialog") instance=ExtResource("1_n0m63")]
+layout_mode = 2
+open_files_dialog = NodePath("../../Dialogs/OpenFilesDialog")
+
+[node name="Toolbar_TODO" type="HBoxContainer" parent="CanvasLayer/MainWindow"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/MainWindow/Toolbar_TODO"]
+layout_mode = 2
+size_flags_horizontal = 2
+
+[node name="Button" type="Button" parent="CanvasLayer/MainWindow/Toolbar_TODO/HBoxContainer"]
+layout_mode = 2
+text = "Dummy"
+
+[node name="Button2" type="Button" parent="CanvasLayer/MainWindow/Toolbar_TODO/HBoxContainer"]
+layout_mode = 2
+text = "Dummy"
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="CanvasLayer/MainWindow/Toolbar_TODO"]
+layout_mode = 2
+size_flags_horizontal = 8
+alignment = 2
+
+[node name="Button5" type="Button" parent="CanvasLayer/MainWindow/Toolbar_TODO/HBoxContainer3"]
+layout_mode = 2
+text = "Dummy"
+
+[node name="Middle" type="HSplitContainer" parent="CanvasLayer/MainWindow"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 20.0
+
+[node name="ImageViewer" parent="CanvasLayer/MainWindow/Middle" instance=ExtResource("3_nc67t")]
+layout_mode = 2
+
+[node name="ProjectViewer" type="VSplitContainer" parent="CanvasLayer/MainWindow/Middle"]
+layout_mode = 2
+size_flags_horizontal = 3
+split_offset = 165
+
+[node name="ProjectInfo" parent="CanvasLayer/MainWindow/Middle/ProjectViewer" instance=ExtResource("4_48ush")]
+layout_mode = 2
+
+[node name="SymbolInfo" parent="CanvasLayer/MainWindow/Middle/ProjectViewer" instance=ExtResource("5_2yue0")]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="StatusBar_TODO" type="Panel" parent="CanvasLayer/MainWindow"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/MainWindow/StatusBar_TODO"]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -23.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/MainWindow/StatusBar_TODO/MarginContainer"]
+layout_mode = 2
+
+[node name="Left" type="HBoxContainer" parent="CanvasLayer/MainWindow/StatusBar_TODO/MarginContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 2
+
+[node name="Label" type="Label" parent="CanvasLayer/MainWindow/StatusBar_TODO/MarginContainer/HBoxContainer/Left"]
+layout_mode = 2
+text = "Position: - "
+
+[node name="Right" type="HBoxContainer" parent="CanvasLayer/MainWindow/StatusBar_TODO/MarginContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 8
+alignment = 2
+
+[node name="Label" type="Label" parent="CanvasLayer/MainWindow/StatusBar_TODO/MarginContainer/HBoxContainer/Right"]
+layout_mode = 2
+text = "Symbol: "
+
+[node name="Dialogs" type="Node" parent="CanvasLayer"]
+
+[node name="OpenFilesDialog" type="FileDialog" parent="CanvasLayer/Dialogs"]
+title = "Open File(s)"
+ok_button_text = "열기"
+file_mode = 1
+access = 2
+use_native_dialog = true

@@ -1,0 +1,8 @@
+[gd_scene load_steps=3 format=3 uid="uid://cxj66r5y818vv"]
+
+[ext_resource type="Script" path="res://scene/symbol_bbox.gd" id="1_7111m"]
+[ext_resource type="PackedScene" uid="uid://caai5y1ec0vrm" path="res://scene/symbol_editor_handle.tscn" id="2_px74q"]
+
+[node name="SymbolBbox" type="Node2D"]
+script = ExtResource("1_7111m")
+symbol_editor_handle = ExtResource("2_px74q")

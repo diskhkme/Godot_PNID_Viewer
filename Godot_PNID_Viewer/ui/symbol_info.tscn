@@ -1,0 +1,14 @@
+[gd_scene load_steps=2 format=3 uid="uid://blxopnyobf05a"]
+
+[ext_resource type="Script" path="res://ui/symbol_info.gd" id="1_b4ut8"]
+
+[node name="SymbolInfo" type="PanelContainer"]
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("1_b4ut8")
+
+[node name="Tree" type="Tree" parent="."]
+layout_mode = 2
+select_mode = 1
+
+[connection signal="item_selected" from="Tree" to="." method="_on_tree_item_selected"]

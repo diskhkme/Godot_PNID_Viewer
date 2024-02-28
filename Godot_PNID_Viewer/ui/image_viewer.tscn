@@ -1,0 +1,36 @@
+[gd_scene load_steps=7 format=3 uid="uid://bqsveu6pgdywi"]
+
+[ext_resource type="Script" path="res://ui/image_viewer.gd" id="1_lk1s6"]
+[ext_resource type="PackedScene" uid="uid://b3nso7c3r31hc" path="res://ui/component/image_interaction.tscn" id="2_2tjoj"]
+[ext_resource type="PackedScene" uid="uid://brryu3q7k47oc" path="res://ui/component/viewer_select_interaction.tscn" id="3_551p0"]
+[ext_resource type="PackedScene" uid="uid://dbvqpmb1pp25p" path="res://scene/image_scene.tscn" id="3_uupac"]
+[ext_resource type="PackedScene" uid="uid://cokv526beh8ol" path="res://scene/symbol_scene.tscn" id="4_152u3"]
+[ext_resource type="PackedScene" uid="uid://cxj66r5y818vv" path="res://scene/symbol_bbox.tscn" id="5_pk4hg"]
+
+[node name="ImageViewer" type="PanelContainer"]
+offset_right = 40.0
+offset_bottom = 40.0
+size_flags_horizontal = 3
+script = ExtResource("1_lk1s6")
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="."]
+layout_mode = 2
+stretch = true
+
+[node name="SubViewport" type="SubViewport" parent="SubViewportContainer"]
+handle_input_locally = false
+physics_object_picking = true
+size = Vector2i(40, 40)
+render_target_update_mode = 4
+
+[node name="ImageScene" parent="SubViewportContainer/SubViewport" instance=ExtResource("3_uupac")]
+
+[node name="ImageInteraction" parent="SubViewportContainer/SubViewport" node_paths=PackedStringArray("image_view_cam") instance=ExtResource("2_2tjoj")]
+image_view_cam = NodePath("../Camera2D")
+
+[node name="SymbolScene" parent="SubViewportContainer/SubViewport" instance=ExtResource("4_152u3")]
+bbox_scene = ExtResource("5_pk4hg")
+
+[node name="ViewerSelectInteraction" parent="SubViewportContainer/SubViewport" instance=ExtResource("3_551p0")]
+
+[node name="Camera2D" type="Camera2D" parent="SubViewportContainer/SubViewport"]

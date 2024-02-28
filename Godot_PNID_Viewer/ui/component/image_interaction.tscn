@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://b3nso7c3r31hc"]
+
+[ext_resource type="Script" path="res://ui/component/image_interaction.gd" id="1_xi20t"]
+
+[node name="ImageInteraction" type="Node"]
+script = ExtResource("1_xi20t")
