@@ -26,16 +26,17 @@ func _ready():
 func on_symbol_selected(xml_id: int, symbol_id: int):
 	selected_xml_id = xml_id
 	selected_symbol_id = symbol_id
-	
+	symbol_edit_started.emit()
 	
 func on_symbol_deselected():
 	selected_xml_id = -1
 	selected_symbol_id = -1
-	
+
 	
 func on_symbol_edit_start():
 	is_editing = true
 	
 	
 func on_symbol_edit_end():
+	symbol_deselected.emit()
 	is_editing = false

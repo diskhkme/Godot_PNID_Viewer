@@ -1,6 +1,6 @@
 # symbol scene
 # display symbols with "draw" if not selected, 
-# display symbol_editor if selected
+# activate symbol editor when selected
 
 extends Node2D
 
@@ -9,7 +9,7 @@ extends Node2D
 @onready var symbol_editor: SymbolEditor = $SymbolEditor
 @onready var symbol_selection_filter: SymbolSelectionFilter = $SymbolSelectionFilter
 
-var selected_candidate: Array[StaticSymbolDisplay]
+var selected_candidate: Array[StaticSymbol]
 var symbol_editor_instance: SymbolEditor
 
 
@@ -22,32 +22,34 @@ func _ready():
 func populate_symbol_bboxes(xml_status: Array) -> void:
 	for xml_stat in xml_status:
 		for symbol_object in xml_stat.symbol_objects:	
-			var symbol = static_symbol_display.instantiate() as StaticSymbolDisplay
+			var symbol = static_symbol_display.instantiate() as StaticSymbol
 			symbol.xml_id = xml_stat.id
 			symbol.symbol_object = symbol_object
 			self.add_child(symbol)
-			symbol.report_selected.connect(on_symbol_select_reported)
+			symbol.report_static_selected.connect(on_static_symbol_select_reported)
 
 
 func _input(event):
 	if ProjectManager.active_project == null:
 		return
 	
+	if SymbolManager.is_editing: # ignore selection while editing
+		selected_candidate.clear()
+		return
+	
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
 		if !event.is_pressed():
+			# TODO: becuase of is_editing ignore, history based filtering does not work currently
 			var selected = symbol_selection_filter.decided_selected(selected_candidate)
 			if selected == null:
-				if SymbolManager.is_editing:
-					SymbolManager.symbol_edit_ended.emit()
-				else:
-					SymbolManager.symbol_deselected.emit()
+				SymbolManager.symbol_deselected.emit()
 			else:
 				SymbolManager.symbol_selected_from_image.emit(selected.xml_id, selected.symbol_object.id)
-			
+		
 			selected_candidate.clear()
 
 
-func on_symbol_select_reported(symbol: StaticSymbolDisplay) -> void:
+func on_static_symbol_select_reported(symbol: StaticSymbol) -> void:
 	selected_candidate.push_back(symbol)
 	
 	

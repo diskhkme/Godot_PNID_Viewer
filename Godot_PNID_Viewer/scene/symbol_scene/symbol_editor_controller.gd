@@ -55,6 +55,15 @@ func _draw():
 	draw_line(bl_handle.global_position, tl_handle.global_position, color, line_width)
 
 
+func _input(event):
+	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
+		if event.is_pressed():
+			# if mouse pressed on outside of handles, end editing
+			if (tl_handle.on_cursor or tr_handle.on_cursor or br_handle.on_cursor or 
+			bl_handle.on_cursor or rot_handle.on_cursor or translate_handle.on_cursor) == false:
+				SymbolManager.symbol_edit_ended.emit()
+				
+
 func update_handle_positions_as_anchor():
 	tl_handle.global_position = $Center/TL_Anchor.global_position
 	tr_handle.global_position = $Center/TR_Anchor.global_position

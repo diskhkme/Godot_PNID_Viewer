@@ -2,10 +2,10 @@
 # draw symbols not in editing state
 
 extends Node2D
-class_name StaticSymbolDisplay
+class_name StaticSymbol
 
 # signal to symbol scene for filtering selection
-signal report_selected(obj: SymbolObject)
+signal report_static_selected(obj: SymbolObject)
 
 @onready var area = $Area2D
 @onready var collision = $Area2D/CollisionShape2D
@@ -37,7 +37,7 @@ func _ready():
 func _input(event):
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
 		if event.is_pressed() and on_cursor:
-			report_selected.emit(self)
+			report_static_selected.emit(self)
 			
 			
 func on_symbol_selected(xml_id:int, symbol_id: int) -> void:

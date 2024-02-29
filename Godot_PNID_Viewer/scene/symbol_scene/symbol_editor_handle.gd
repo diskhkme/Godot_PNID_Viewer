@@ -1,3 +1,6 @@
+# Symbol editor handle
+# Translation, Scaling, Rotation handle which follows mouse cursor
+
 extends Node2D
 class_name Handle
 
