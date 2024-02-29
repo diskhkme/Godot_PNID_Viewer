@@ -1,8 +1,0 @@
-[gd_scene load_steps=3 format=3 uid="uid://cxj66r5y818vv"]
-
-[ext_resource type="Script" path="res://scene/symbol_scene/static_symbol_display.gd" id="1_y2dwb"]
-[ext_resource type="PackedScene" uid="uid://caai5y1ec0vrm" path="res://scene/symbol_scene/symbol_editor.tscn" id="2_cf5la"]
-
-[node name="StaticSymbolDisplay" type="Node2D"]
-script = ExtResource("1_y2dwb")
-symbol_editor_handle = ExtResource("2_cf5la")

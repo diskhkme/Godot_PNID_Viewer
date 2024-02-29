@@ -1,13 +1,13 @@
 [gd_scene load_steps=5 format=3 uid="uid://cokv526beh8ol"]
 
 [ext_resource type="Script" path="res://scene/symbol_scene/symbol_scene.gd" id="1_yeogs"]
-[ext_resource type="PackedScene" uid="uid://cxj66r5y818vv" path="res://scene/symbol_scene/static_symbol.tscn" id="2_kovh7"]
+[ext_resource type="PackedScene" uid="uid://cxj66r5y818vv" path="res://scene/symbol_scene/static_symbol.tscn" id="2_3dlp5"]
 [ext_resource type="PackedScene" uid="uid://caai5y1ec0vrm" path="res://scene/symbol_scene/symbol_editor.tscn" id="3_5wfah"]
 [ext_resource type="PackedScene" uid="uid://cg2wr3b05cyos" path="res://ui/component/symbol_selection_filter.tscn" id="3_spko0"]
 
 [node name="SymbolScene" type="Node2D"]
 script = ExtResource("1_yeogs")
-static_symbol_display = ExtResource("2_kovh7")
+static_symbol_display = ExtResource("2_3dlp5")
 
 [node name="SymbolSelectionFilter" parent="." instance=ExtResource("3_spko0")]
 

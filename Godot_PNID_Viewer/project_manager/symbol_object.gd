@@ -9,7 +9,7 @@ var degree: float
 var flip: bool
 
 
-func bndbox_to_rect() -> Rect2:
+func get_rect() -> Rect2:
 	var width = bndbox.z-bndbox.x
 	var height = bndbox.w-bndbox.y
 	return Rect2(bndbox.x, bndbox.y, width, height)

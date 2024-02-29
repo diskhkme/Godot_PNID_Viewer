@@ -1,0 +1,21 @@
+[gd_scene load_steps=4 format=3 uid="uid://cxj66r5y818vv"]
+
+[ext_resource type="Script" path="res://scene/symbol_scene/static_symbol.gd" id="1_m6kno"]
+[ext_resource type="Script" path="res://scene/symbol_scene/static_symbol_draw.gd" id="2_2lfpy"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_qaaa1"]
+size = Vector2(1, 1)
+
+[node name="StaticSymbol" type="Node2D"]
+script = ExtResource("1_m6kno")
+
+[node name="StaticSymbolDraw" type="Node2D" parent="."]
+script = ExtResource("2_2lfpy")
+
+[node name="Area2D" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+shape = SubResource("RectangleShape2D_qaaa1")
+
+[connection signal="mouse_entered" from="Area2D" to="." method="_on_area_2d_mouse_entered"]
+[connection signal="mouse_exited" from="Area2D" to="." method="_on_area_2d_mouse_exited"]
