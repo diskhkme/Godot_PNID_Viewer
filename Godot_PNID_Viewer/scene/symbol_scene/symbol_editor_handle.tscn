@@ -1,11 +1,11 @@
 [gd_scene load_steps=3 format=3 uid="uid://cbkdst3f4uqnj"]
 
-[ext_resource type="Script" path="res://scene/symbol_scene/symbol_editor_handle.gd" id="1_n4d7s"]
+[ext_resource type="Script" path="res://scene/symbol_scene/symbol_editor_handle.gd" id="1_k7g6i"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_6m20f"]
 
 [node name="SymbolEditHandle" type="Node2D"]
-script = ExtResource("1_n4d7s")
+script = ExtResource("1_k7g6i")
 
 [node name="Area2D" type="Area2D" parent="."]
 

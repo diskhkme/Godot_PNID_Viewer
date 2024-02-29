@@ -43,3 +43,6 @@ color = Color(0.718078, 0.23361, 0.675337, 1)
 type = 1
 line_width = 5.0
 color = Color(0.718078, 0.23361, 0.675337, 1)
+
+[node name="Translate_Handle" parent="." instance=ExtResource("2_de34t")]
+type = 2

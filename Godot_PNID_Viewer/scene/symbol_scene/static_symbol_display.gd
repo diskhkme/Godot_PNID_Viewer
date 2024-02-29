@@ -5,7 +5,7 @@ extends Node2D
 class_name StaticSymbolDisplay
 
 # signal to symbol scene
-signal report_selected(global_mouse_pos: Vector2, obj: StaticSymbolDisplay)
+signal report_selected(obj: SymbolObject)
 
 var xml_id: int
 var symbol_object: SymbolObject
@@ -36,7 +36,7 @@ func _input(event):
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
 		if event.is_pressed():
 			var global_mouse_pos = get_global_mouse_position()
-			if global_rect.has_point(global_mouse_pos) == true:
+			if global_rect.has_point(global_mouse_pos) == true: # TODO: cannot detect rotated symbol selection
 				report_selected.emit(self)
 			
 			

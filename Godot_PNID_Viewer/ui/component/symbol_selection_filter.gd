@@ -66,10 +66,11 @@ func decided_selected(selected_candidate: Array[StaticSymbolDisplay]):
 	else:
 		# if selection changed
 		update_history(selected_candidate)
+		last_selected_candidate = selected_candidate.duplicate()
 		for sel in selected_candidate:
 			if selected_history[sel] == true:
 				selected_history[sel] = false
-				return selected_history
+				return sel
 				
 	#if not in case, return null
 	selected_history.clear()
