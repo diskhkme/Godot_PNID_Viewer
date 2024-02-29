@@ -16,3 +16,8 @@ func bndbox_to_rect() -> Rect2:
 
 func get_center() -> Vector2:
 	return Vector2((bndbox.x + bndbox.z)/2, (bndbox.y + bndbox.w)/2)
+	
+func get_size() -> Vector2:
+	var width = bndbox.z-bndbox.x
+	var height = bndbox.w-bndbox.y
+	return Vector2(width, height)

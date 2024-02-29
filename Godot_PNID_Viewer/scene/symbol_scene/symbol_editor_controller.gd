@@ -1,9 +1,7 @@
-extends Node2D
+# Symbol editor controller
+# change transform of "Center" node, followed by change of handles
 
-@export var indicator: PackedScene
-@export var rect_color: Color = Color.CORAL
-@export var rect_line_width: float = 5
-@export var rotation_handle_offset: float = 40
+extends Node2D
 
 @onready var tl_handle = $TL_Handle
 @onready var tr_handle = $TR_Handle
@@ -13,24 +11,10 @@ extends Node2D
 
 @onready var center_node = $Center
 
-var center_pos
-
 var rot_start_angle: float
 var rot_start_vec: Vector2
 
 
-func init_symbol(center_pos, size, angle):
-	center_node.global_position = center_pos
-	center_node.scale = size
-	center_node.rotation = angle * PI/180
-	
-	tl_handle.global_position = $Center/TL_Anchor.global_position
-	tr_handle.global_position = $Center/TR_Anchor.global_position
-	bl_handle.global_position = $Center/BL_Anchor.global_position
-	br_handle.global_position = $Center/BR_Anchor.global_position
-	rot_handle.global_position = $Center/Rot_Anchor.global_position
-	queue_redraw()
-	
 func _ready():
 	rot_handle.indicator_move_started.connect(on_indicator_move_started)
 	
@@ -40,23 +24,32 @@ func _ready():
 	br_handle.indicator_moved.connect(on_indicator_moved)
 	rot_handle.indicator_moved.connect(on_indicator_moved)
 	
+	
+func set_target_symbol(symbol_position: Vector2, symbol_size: Vector2, symbol_angle: float):
+	center_node.global_position = symbol_position
+	center_node.global_scale = symbol_size
+	center_node.rotation = symbol_angle
+	
+	update_handle_positions_as_anchor()
+	
 
 func _draw():
-	draw_line(tl_handle.global_position, tr_handle.global_position, rect_color, rect_line_width)
-	draw_line(tr_handle.global_position, br_handle.global_position, rect_color, rect_line_width)
-	draw_line(br_handle.global_position, bl_handle.global_position, rect_color, rect_line_width)
-	draw_line(bl_handle.global_position, tl_handle.global_position, rect_color, rect_line_width)
-	
-func update():
-	update_handle_positions_with_anchor()
-	queue_redraw()
+	var color = Config.EDITOR_RECT_COLOR
+	var line_width = Config.EDITOR_RECT_LINE_WIDTH
 
-func update_handle_positions_with_anchor():
+	draw_line(tl_handle.global_position, tr_handle.global_position, color, line_width)
+	draw_line(tr_handle.global_position, br_handle.global_position, color, line_width)
+	draw_line(br_handle.global_position, bl_handle.global_position, color, line_width)
+	draw_line(bl_handle.global_position, tl_handle.global_position, color, line_width)
+	
+
+func update_handle_positions_as_anchor():
 	tl_handle.global_position = $Center/TL_Anchor.global_position
 	tr_handle.global_position = $Center/TR_Anchor.global_position
 	bl_handle.global_position = $Center/BL_Anchor.global_position
 	br_handle.global_position = $Center/BR_Anchor.global_position
 	rot_handle.global_position = $Center/Rot_Anchor.global_position
+	queue_redraw()
 	
 	
 func on_indicator_move_started(target: Indicator, start_pos: Vector2):
@@ -77,17 +70,18 @@ func on_indicator_moved(target: Indicator, pos: Vector2):
 		center_node.rotation = rot_start_angle + angle
 	
 	if target.type == Indicator.TYPE.SCALING:
+		var changed_position
 		if target == tl_handle:
-			center_pos = (target.global_position + br_handle.global_position)/2
+			changed_position = (target.global_position + br_handle.global_position)/2
 		elif target == tr_handle:
-			center_pos = (target.global_position + bl_handle.global_position)/2
+			changed_position = (target.global_position + bl_handle.global_position)/2
 		elif target == bl_handle:
-			center_pos = (target.global_position + tr_handle.global_position)/2
+			changed_position = (target.global_position + tr_handle.global_position)/2
 		elif target == br_handle:
-			center_pos = (target.global_position + tl_handle.global_position)/2
+			changed_position = (target.global_position + tl_handle.global_position)/2
 			
-		diag_vec = (target.global_position - center_pos).rotated(-center_node.rotation)
-		center_node.global_position = center_pos
+		diag_vec = (target.global_position - changed_position).rotated(-center_node.rotation)
+		center_node.global_position = changed_position
 		center_node.global_scale = abs(diag_vec*2)
 		
 	# TODO: width/height가 0이 되지 않도록제
@@ -95,5 +89,4 @@ func on_indicator_moved(target: Indicator, pos: Vector2):
 	# TODO: screen space 크기 고정신
 	# TODO: 수정값 -> Project -> symbolinfo 지속 갱
 				
-	update()
-
+	update_handle_positions_as_anchor()

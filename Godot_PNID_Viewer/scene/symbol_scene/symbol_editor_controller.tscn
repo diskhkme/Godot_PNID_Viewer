@@ -1,0 +1,45 @@
+[gd_scene load_steps=3 format=3 uid="uid://fih1la8ol5eg"]
+
+[ext_resource type="Script" path="res://scene/symbol_scene/symbol_editor_controller.gd" id="1_don2u"]
+[ext_resource type="PackedScene" uid="uid://cbkdst3f4uqnj" path="res://scene/symbol_scene/symbol_editor_handle.tscn" id="2_de34t"]
+
+[node name="SymbolEditorController" type="Node2D"]
+script = ExtResource("1_don2u")
+
+[node name="Center" type="Node2D" parent="."]
+
+[node name="TL_Anchor" type="Node2D" parent="Center"]
+position = Vector2(-0.5, -0.5)
+
+[node name="TR_Anchor" type="Node2D" parent="Center"]
+position = Vector2(0.5, -0.5)
+
+[node name="BL_Anchor" type="Node2D" parent="Center"]
+position = Vector2(-0.5, 0.5)
+
+[node name="BR_Anchor" type="Node2D" parent="Center"]
+position = Vector2(0.5, 0.5)
+
+[node name="Rot_Anchor" type="Node2D" parent="Center"]
+position = Vector2(0, -1)
+
+[node name="TL_Handle" parent="." instance=ExtResource("2_de34t")]
+line_width = 5.0
+color = Color(0.717647, 0.235294, 0.67451, 1)
+
+[node name="TR_Handle" parent="." instance=ExtResource("2_de34t")]
+line_width = 5.0
+color = Color(0.718078, 0.23361, 0.675337, 1)
+
+[node name="BL_Handle" parent="." instance=ExtResource("2_de34t")]
+line_width = 5.0
+color = Color(0.718078, 0.23361, 0.675337, 1)
+
+[node name="BR_Handle" parent="." instance=ExtResource("2_de34t")]
+line_width = 5.0
+color = Color(0.718078, 0.23361, 0.675337, 1)
+
+[node name="Rot_Handle" parent="." instance=ExtResource("2_de34t")]
+type = 1
+line_width = 5.0
+color = Color(0.718078, 0.23361, 0.675337, 1)

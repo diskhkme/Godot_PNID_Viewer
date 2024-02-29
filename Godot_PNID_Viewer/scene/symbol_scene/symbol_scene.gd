@@ -1,16 +1,22 @@
 # symbol scene
 # display symbols with "draw" if not selected, 
-# and add manipulation handle when selected
+# display symbol_editor if selected
 
 extends Node2D
 
 @export var static_symbol_display: PackedScene
-@export var editing_symbol_display: PackedScene
 
+@onready var symbol_editor: SymbolEditor = $SymbolEditor
 @onready var symbol_selection_filter: SymbolSelectionFilter = $SymbolSelectionFilter
 
 var selected_candidate: Array[StaticSymbolDisplay]
+var symbol_editor_instance: SymbolEditor
 
+
+func _ready():
+	symbol_editor.visible = false
+	SymbolManager.symbol_selected_from_tree.connect(on_symbol_selected)
+	SymbolManager.symbol_deselected.connect(on_symbol_deselected)
 
 func populate_symbol_bboxes(xml_status: Array) -> void:
 	for xml_stat in xml_status:
@@ -30,13 +36,26 @@ func _input(event):
 		if !event.is_pressed():
 			var selected: StaticSymbolDisplay = symbol_selection_filter.decided_selected(selected_candidate)
 			if selected == null:
-				SymbolManager.symbol_deselected.emit()
+				if SymbolManager.is_editing:
+					SymbolManager.symbol_edit_ended.emit()
+				else:
+					SymbolManager.symbol_deselected.emit()
 			else:
-				SymbolManager.symbol_selected.emit(selected.xml_id, selected.symbol_object.id)
+				SymbolManager.symbol_selected_from_image.emit(selected.xml_id, selected.symbol_object.id)
 			
 			selected_candidate.clear()
 
 
-func on_symbol_select_reported(symbol: StaticSymbolDisplay):
+func on_symbol_select_reported(symbol: StaticSymbolDisplay) -> void:
 	selected_candidate.push_back(symbol)
+	
+	
+func on_symbol_selected(xml_id: int, symbol_id: int): 
+	symbol_editor.visible = true
+	queue_redraw()
+	
+	
+func on_symbol_deselected(): 
+	symbol_editor.visible = false
+	queue_redraw()
 		

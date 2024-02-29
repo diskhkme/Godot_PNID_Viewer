@@ -2,8 +2,8 @@
 
 [ext_resource type="Script" path="res://ui/image_viewer.gd" id="1_lk1s6"]
 [ext_resource type="PackedScene" uid="uid://b3nso7c3r31hc" path="res://ui/component/image_interaction.tscn" id="2_2tjoj"]
-[ext_resource type="PackedScene" uid="uid://dbvqpmb1pp25p" path="res://scene/image_scene.tscn" id="3_uupac"]
-[ext_resource type="PackedScene" uid="uid://cokv526beh8ol" path="res://scene/symbol_scene.tscn" id="4_152u3"]
+[ext_resource type="PackedScene" uid="uid://dbvqpmb1pp25p" path="res://scene/image_scene/image_scene.tscn" id="3_uupac"]
+[ext_resource type="PackedScene" uid="uid://cokv526beh8ol" path="res://scene/symbol_scene/symbol_scene.tscn" id="4_152u3"]
 [ext_resource type="Script" path="res://ui/Camera2D.gd" id="7_cknkd"]
 
 [node name="ImageViewer" type="PanelContainer"]

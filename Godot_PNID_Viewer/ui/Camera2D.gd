@@ -2,7 +2,7 @@ extends Camera2D
 
 
 func _ready():
-	SymbolManager.symbol_selected.connect(focus_symbol)
+	SymbolManager.symbol_selected_from_tree.connect(focus_symbol)
 
 
 func focus_symbol(xml_id:int, symbol_id:int) -> void:

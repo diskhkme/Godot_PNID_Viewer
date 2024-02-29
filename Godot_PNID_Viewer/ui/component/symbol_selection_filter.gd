@@ -1,3 +1,7 @@
+# Symbol scene select filter
+# return single symbol from multiple candidates, or null if deselect
+
+
 extends Node
 class_name SymbolSelectionFilter
 
