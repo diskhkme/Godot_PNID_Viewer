@@ -1,5 +1,6 @@
 # Symbol editor controller
 # change transform of "Center" node, followed by change of handles
+# also, notify changed
 
 extends Node2D
 
@@ -17,6 +18,9 @@ var rot_start_vec: Vector2
 var translate_start_position: Vector2
 var translate_start_mouse_position: Vector2
 
+var xml_id: int
+var symbol_id: int
+var target_symbol: SymbolObject
 
 func _ready():
 	SymbolManager.symbol_selected_from_image.connect(on_symbol_selected)
@@ -41,19 +45,16 @@ func _ready():
 	
 	
 func on_symbol_selected(xml_id: int, symbol_id: int):
-	var target_symbol_object = ProjectManager.active_project.xml_status[xml_id].symbol_objects[symbol_id]
-	var symbol_position = target_symbol_object.get_center()
-	var symbol_size = target_symbol_object.get_size()
-	var symbol_angle = deg_to_rad(target_symbol_object.degree)
-	set_target_symbol(symbol_position, symbol_size, symbol_angle)
-	#SymbolManager.symbol_edit_started.emit()
+	self.xml_id = xml_id
+	self.symbol_id = symbol_id
 	
-	
-func set_target_symbol(symbol_position: Vector2, symbol_size: Vector2, symbol_angle: float):
+	target_symbol = ProjectManager.active_project.xml_status[xml_id].symbol_objects[symbol_id]
+	var symbol_position = target_symbol.get_center()
+	var symbol_size = target_symbol.get_size()
+	var symbol_angle = deg_to_rad(target_symbol.degree)
 	center_node.global_position = symbol_position
 	center_node.global_scale = symbol_size
 	center_node.rotation = symbol_angle
-	
 	update_handle_positions_as_anchor()
 	
 
@@ -132,3 +133,12 @@ func on_indicator_moved(target: Handle, mouse_pos: Vector2):
 	# TODO: 수정값 -> Project -> symbolinfo 지속 갱
 				
 	update_handle_positions_as_anchor()
+	update_symbol_object()
+
+
+func update_symbol_object():
+	target_symbol.set_bndbox(center_node.global_position, center_node.scale)
+	target_symbol.set_degree(center_node.rotation)
+	SymbolManager.symbol_edited.emit(xml_id, symbol_id)
+	
+

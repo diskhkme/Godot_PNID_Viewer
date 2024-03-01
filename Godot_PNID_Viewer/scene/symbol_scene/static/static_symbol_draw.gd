@@ -4,7 +4,7 @@ var size
 var color
 var line_width
 
-func set_draw(size:Vector2, color:Color, line_width:float):
+func update_draw(size:Vector2, color:Color, line_width:float):
 	self.size = size
 	self.color = color
 	self.line_width = line_width

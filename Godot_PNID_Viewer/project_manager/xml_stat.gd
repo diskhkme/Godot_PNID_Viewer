@@ -9,6 +9,8 @@ var symbol_objects: Array
 var visible: bool
 var color: Color
 
+var dirty: bool
+
 func _init(id, path):
 	self.id = id
 	self.path = path

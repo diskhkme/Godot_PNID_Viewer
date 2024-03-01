@@ -3,7 +3,6 @@ class_name Project
 var id: int
 # var undo_redo
 
-var dirty: bool = false # TODO: per xml dirty state
 var loaded: bool = false
 
 var img_filepath: String 

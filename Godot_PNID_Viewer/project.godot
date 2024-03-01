@@ -18,10 +18,10 @@ config/icon="res://icon.svg"
 [autoload]
 
 ProjectManager="*res://project_manager/project_manager.gd"
+SymbolManager="*res://project_manager/symbol_manager.gd"
 PnidXmlParser="*res://project_manager/pnid_xml_parser.gd"
 Util="*res://project_manager/util.gd"
 Config="*res://config.gd"
-SymbolManager="*res://project_manager/symbol_manager.gd"
 
 [rendering]
 

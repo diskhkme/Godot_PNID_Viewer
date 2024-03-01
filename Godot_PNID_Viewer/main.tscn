@@ -62,7 +62,7 @@ split_offset = 165
 [node name="ProjectInfo" parent="CanvasLayer/MainWindow/Middle/ProjectViewer" instance=ExtResource("4_48ush")]
 layout_mode = 2
 
-[node name="SymbolInfo" parent="CanvasLayer/MainWindow/Middle/ProjectViewer" instance=ExtResource("5_2yue0")]
+[node name="SymbolTree" parent="CanvasLayer/MainWindow/Middle/ProjectViewer" instance=ExtResource("5_2yue0")]
 layout_mode = 2
 size_flags_vertical = 3
 

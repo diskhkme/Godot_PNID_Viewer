@@ -18,20 +18,26 @@ var is_editing: bool = false
 
 
 func _ready():
+	SymbolManager.symbol_selected_from_tree.connect(on_symbol_selected)
+	SymbolManager.symbol_selected_from_image.connect(on_symbol_selected)
+	SymbolManager.symbol_deselected.connect(on_symbol_deselected) 
+	SymbolManager.symbol_edited.connect(on_symbol_edited) 
+	
+	update_symbol()
+	
+	
+func update_symbol():
 	area.global_position = symbol_object.get_center()
 	area.scale = symbol_object.get_size()
 	area.rotation = deg_to_rad(symbol_object.degree)
 	
-	var size = symbol_object.get_rect().size
-	var color = ProjectManager.active_project.xml_status[xml_id].color
-	var width = Config.DEFAULT_LINE_WIDTH
-	static_symbol_draw.set_draw(size,color,width)
 	static_symbol_draw.global_position = symbol_object.get_center()
 	static_symbol_draw.rotation = deg_to_rad(symbol_object.degree)
 	
-	SymbolManager.symbol_selected_from_tree.connect(on_symbol_selected)
-	SymbolManager.symbol_selected_from_image.connect(on_symbol_selected)
-	SymbolManager.symbol_deselected.connect(on_symbol_deselected) 
+	var size = symbol_object.get_rect().size
+	var color = ProjectManager.active_project.xml_status[xml_id].color
+	var width = Config.DEFAULT_LINE_WIDTH
+	static_symbol_draw.update_draw(size,color,width)
 	
 
 func _input(event):
@@ -48,6 +54,11 @@ func on_symbol_selected(xml_id:int, symbol_id: int) -> void:
 		
 	queue_redraw()
 
+
+func on_symbol_edited(xml_id: int, symbol_id: int):
+	if self.xml_id == xml_id and self.symbol_object.id == symbol_id:
+		update_symbol()
+	
 
 func on_symbol_deselected() -> void:
 	static_symbol_draw.visible = true
