@@ -1,9 +1,11 @@
-[gd_scene load_steps=6 format=3 uid="uid://bqsveu6pgdywi"]
+[gd_scene load_steps=8 format=3 uid="uid://bqsveu6pgdywi"]
 
 [ext_resource type="Script" path="res://ui/image_viewer.gd" id="1_lk1s6"]
 [ext_resource type="PackedScene" uid="uid://b3nso7c3r31hc" path="res://ui/component/image_interaction.tscn" id="2_2tjoj"]
 [ext_resource type="PackedScene" uid="uid://dbvqpmb1pp25p" path="res://scene/image_scene/image_scene.tscn" id="3_uupac"]
-[ext_resource type="PackedScene" uid="uid://cokv526beh8ol" path="res://scene/symbol_scene/symbol_scene.tscn" id="4_152u3"]
+[ext_resource type="PackedScene" uid="uid://cokv526beh8ol" path="res://scene/symbol_scene/static/static_symbol_scene.tscn" id="4_152u3"]
+[ext_resource type="PackedScene" uid="uid://caai5y1ec0vrm" path="res://scene/symbol_scene/editing/symbol_editor_scene.tscn" id="6_ri51b"]
+[ext_resource type="PackedScene" uid="uid://cxj66r5y818vv" path="res://scene/symbol_scene/static/static_symbol.tscn" id="6_x2cw7"]
 [ext_resource type="Script" path="res://ui/Camera2D.gd" id="7_cknkd"]
 
 [node name="ImageViewer" type="PanelContainer"]
@@ -27,7 +29,10 @@ render_target_update_mode = 4
 [node name="ImageInteraction" parent="SubViewportContainer/SubViewport" node_paths=PackedStringArray("image_view_cam") instance=ExtResource("2_2tjoj")]
 image_view_cam = NodePath("../Camera2D")
 
-[node name="SymbolScene" parent="SubViewportContainer/SubViewport" instance=ExtResource("4_152u3")]
+[node name="StaticSymbolScene" parent="SubViewportContainer/SubViewport" instance=ExtResource("4_152u3")]
+static_symbol = ExtResource("6_x2cw7")
+
+[node name="SymbolEditorScene" parent="SubViewportContainer/SubViewport" instance=ExtResource("6_ri51b")]
 
 [node name="Camera2D" type="Camera2D" parent="SubViewportContainer/SubViewport"]
 script = ExtResource("7_cknkd")

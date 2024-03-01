@@ -1,28 +1,18 @@
 # symbol scene
-# display symbols with "draw" if not selected, 
-# activate symbol editor when selected
+# display symbols with "draw" if not selected
 
 extends Node2D
 
-@export var static_symbol_display: PackedScene
+@export var static_symbol: PackedScene
 
-@onready var symbol_editor: SymbolEditor = $SymbolEditor
 @onready var symbol_selection_filter: SymbolSelectionFilter = $SymbolSelectionFilter
 
 var selected_candidate: Array[StaticSymbol]
-var symbol_editor_instance: SymbolEditor
-
-
-func _ready():
-	symbol_editor.visible = false
-	SymbolManager.symbol_selected_from_tree.connect(on_symbol_selected)
-	SymbolManager.symbol_deselected.connect(on_symbol_deselected)
-	
 
 func populate_symbol_bboxes(xml_status: Array) -> void:
 	for xml_stat in xml_status:
 		for symbol_object in xml_stat.symbol_objects:	
-			var symbol = static_symbol_display.instantiate() as StaticSymbol
+			var symbol = static_symbol.instantiate() as StaticSymbol
 			symbol.xml_id = xml_stat.id
 			symbol.symbol_object = symbol_object
 			self.add_child(symbol)
@@ -53,12 +43,3 @@ func on_static_symbol_select_reported(symbol: StaticSymbol) -> void:
 	selected_candidate.push_back(symbol)
 	
 	
-func on_symbol_selected(xml_id: int, symbol_id: int): 
-	symbol_editor.visible = true
-	queue_redraw()
-	
-	
-func on_symbol_deselected(): 
-	symbol_editor.visible = false
-	queue_redraw()
-		

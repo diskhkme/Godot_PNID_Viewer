@@ -19,6 +19,9 @@ var translate_start_mouse_position: Vector2
 
 
 func _ready():
+	SymbolManager.symbol_selected_from_image.connect(on_symbol_selected)
+	SymbolManager.symbol_selected_from_tree.connect(on_symbol_selected)
+	
 	rot_handle.indicator_move_started.connect(on_indicator_move_started)
 	translate_handle.indicator_move_started.connect(on_indicator_move_started)
 	
@@ -35,6 +38,15 @@ func _ready():
 	br_handle.set_handle_size(Vector2(Config.EDITOR_HANDLE_SIZE,Config.EDITOR_HANDLE_SIZE))
 	rot_handle.set_handle_size(Vector2(Config.EDITOR_HANDLE_SIZE,Config.EDITOR_HANDLE_SIZE))
 	translate_handle.set_handle_size(Vector2.ONE)
+	
+	
+func on_symbol_selected(xml_id: int, symbol_id: int):
+	var target_symbol_object = ProjectManager.active_project.xml_status[xml_id].symbol_objects[symbol_id]
+	var symbol_position = target_symbol_object.get_center()
+	var symbol_size = target_symbol_object.get_size()
+	var symbol_angle = deg_to_rad(target_symbol_object.degree)
+	set_target_symbol(symbol_position, symbol_size, symbol_angle)
+	#SymbolManager.symbol_edit_started.emit()
 	
 	
 func set_target_symbol(symbol_position: Vector2, symbol_size: Vector2, symbol_angle: float):
