@@ -21,4 +21,8 @@ func make_project_active(project: Project) -> void:
 	active_project = project
 
 
+func get_symbol_in_xml(xml_id:int, symbol_id:int):
+	return active_project.xml_status[xml_id].symbol_objects[symbol_id]
+	
+
 

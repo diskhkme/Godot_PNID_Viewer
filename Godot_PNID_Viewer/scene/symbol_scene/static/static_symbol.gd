@@ -17,10 +17,10 @@ var on_cursor: bool = false
 var is_editing: bool = false
 
 func _ready():
-	SymbolManager.symbol_selected_from_tree.connect(on_symbol_selected)
-	SymbolManager.symbol_selected_from_image.connect(on_symbol_selected)
-	SymbolManager.symbol_deselected.connect(on_symbol_deselected) 
-	SymbolManager.symbol_edited.connect(on_symbol_edited) 
+	SymbolManager.symbol_selected_from_tree.connect(hide_selected)
+	SymbolManager.symbol_selected_from_image.connect(hide_selected)
+	SymbolManager.symbol_deselected.connect(show_deselected) 
+	SymbolManager.symbol_edited.connect(update_edited) 
 	update_symbol()
 	
 	
@@ -44,7 +44,7 @@ func _input(event):
 			report_static_selected.emit(self)
 			
 			
-func on_symbol_selected(xml_id:int, symbol_id: int) -> void:
+func hide_selected(xml_id:int, symbol_id: int) -> void:
 	if self.xml_id == xml_id and self.symbol_object.id == symbol_id:
 		static_symbol_draw.visible = false
 	else:
@@ -53,12 +53,12 @@ func on_symbol_selected(xml_id:int, symbol_id: int) -> void:
 	queue_redraw()
 
 
-func on_symbol_edited(xml_id: int, symbol_id: int):
+func update_edited(xml_id: int, symbol_id: int):
 	if self.xml_id == xml_id and self.symbol_object.id == symbol_id:
 		update_symbol()
 	
 
-func on_symbol_deselected() -> void:
+func show_deselected() -> void:
 	static_symbol_draw.visible = true
 	queue_redraw()
 

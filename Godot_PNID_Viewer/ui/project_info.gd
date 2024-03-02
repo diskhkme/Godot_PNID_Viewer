@@ -6,6 +6,10 @@ extends PanelContainer
 @export var color_button_texture: Texture2D
 
 
+func _ready():
+	SymbolManager.symbol_edited.connect(update_xml_status)
+		
+
 func use_project(project: Project) -> void:
 	tree.clear()
 	tree.set_columns(3)
@@ -20,7 +24,8 @@ func use_project(project: Project) -> void:
 		
 # TODO: Connect options to viewer (Show/Hide, Color Pick)
 
-func update_xml_status(xml_stat: XML_Status):
+func update_xml_status(xml_id:int, symbol_id:int):
+	var xml_stat = ProjectManager.active_project.xml_status[xml_id]
 	var root: TreeItem = tree.get_root()
 	for i in range(root.get_child_count()):
 		var child = root.get_child(i)

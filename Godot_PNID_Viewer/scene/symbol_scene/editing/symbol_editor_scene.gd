@@ -9,17 +9,17 @@ class_name SymbolEditor
 
 
 func _ready():
-	SymbolManager.symbol_edit_ended.connect(on_symbol_edit_end)
-	SymbolManager.symbol_selected_from_image.connect(on_symbol_selected)
-	SymbolManager.symbol_selected_from_tree.connect(on_symbol_selected)
+	SymbolManager.symbol_selected_from_image.connect(show_editor)
+	SymbolManager.symbol_selected_from_tree.connect(show_editor)
+	SymbolManager.symbol_edit_ended.connect(hide_editor)
 	visible = false
 
 
-func on_symbol_selected(xml_id:int, symbol_id:int):
+func show_editor(xml_id:int, symbol_id:int):
 	visible = true
 
 
-func on_symbol_edit_end():
+func hide_editor():
 	visible = false
 	
 	

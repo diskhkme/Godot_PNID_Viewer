@@ -7,6 +7,7 @@ var symbol_update_cache = {}
 func _ready():
 	SymbolManager.symbol_selected_from_image.connect(focus_symbol)
 	SymbolManager.symbol_deselected.connect(on_symbol_deselected) 
+	SymbolManager.symbol_edited.connect(update_symbol)
 
 func use_project(project: Project) -> void:
 	tree.clear()
@@ -58,7 +59,8 @@ func fill_treeitem(symbol_child: TreeItem, symbol_object: SymbolObject):
 	symbol_child.set_text(7, str(symbol_object.degree))
 	
 
-func update_symbol(xml_id: int, symbol: SymbolObject):
+func update_symbol(xml_id: int, symbol_id: int):
+	var symbol = ProjectManager.get_symbol_in_xml(xml_id, symbol_id)
 	if symbol_update_cache.has(symbol):
 		fill_treeitem(symbol_update_cache[symbol], symbol)
 	else:

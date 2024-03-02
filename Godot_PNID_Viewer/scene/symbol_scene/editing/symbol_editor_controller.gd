@@ -17,8 +17,8 @@ var target_symbol: SymbolObject
 
 func _ready():
 	add_to_group("draw_group")
-	SymbolManager.symbol_selected_from_image.connect(on_symbol_selected)
-	SymbolManager.symbol_selected_from_tree.connect(on_symbol_selected)
+	SymbolManager.symbol_selected_from_image.connect(initialize_editor)
+	SymbolManager.symbol_selected_from_tree.connect(initialize_editor)
 	
 	for handle in handles:
 		if handle.type == Handle.TYPE.ROTATE or handle.scale_type == Handle.TYPE.TRANSLATE:
@@ -48,7 +48,7 @@ func _draw():
 	draw_line($Center/BL_Anchor.global_position, $Center/TL_Anchor.global_position, color, (line_width/zoom_level.x))
 	
 	
-func on_symbol_selected(xml_id: int, symbol_id: int):
+func initialize_editor(xml_id: int, symbol_id: int):
 	self.xml_id = xml_id
 	self.symbol_id = symbol_id
 	

@@ -21,6 +21,7 @@ func _ready():
 	symbol_deselected.connect(on_symbol_deselected)
 	
 	symbol_edit_ended.connect(on_symbol_edit_end)
+	symbol_edited.connect(on_symbol_edited)
 	
 	
 func on_symbol_selected(xml_id: int, symbol_id: int):
@@ -37,4 +38,8 @@ func on_symbol_deselected():
 func on_symbol_edit_end():
 	symbol_deselected.emit()
 	is_editing = false
+	
+	
+func on_symbol_edited(xml_id: int, symbol_id: int):
+	ProjectManager.active_project.xml_status[xml_id].dirty = true
 
