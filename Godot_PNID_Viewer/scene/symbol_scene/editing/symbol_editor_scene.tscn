@@ -3,8 +3,8 @@
 [ext_resource type="Script" path="res://scene/symbol_scene/editing/symbol_editor_scene.gd" id="1_uoqd8"]
 [ext_resource type="PackedScene" uid="uid://fih1la8ol5eg" path="res://scene/symbol_scene/editing/symbol_editor_controller.tscn" id="2_omb14"]
 
-[node name="SymbolEditorScene" type="Node2D" groups=["symbol_editor"]]
+[node name="SymbolEditorScene" type="Node2D"]
 z_index = 1
 script = ExtResource("1_uoqd8")
 
-[node name="SymbolEditorController" parent="." groups=["symbol_editor"] instance=ExtResource("2_omb14")]
+[node name="SymbolEditorController" parent="." instance=ExtResource("2_omb14")]

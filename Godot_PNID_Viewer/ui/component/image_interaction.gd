@@ -3,12 +3,17 @@
 
 extends Node
 
+signal zoom_changed(zoom_level: float)
+
 @export var zoom_tick: float = 0.05
 @export var image_view_cam: Camera2D
 
 var is_dragging: bool = false
 var drag_start_position: Vector2
 var drag_offset: Vector2
+
+func _ready():
+	add_to_group("draw_group")
 
 func _input(event):
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_RIGHT:
@@ -23,8 +28,10 @@ func _input(event):
 		
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_WHEEL_UP:
 		var target_zoom = image_view_cam.zoom * zoom_tick
-		image_view_cam.zoom += Vector2.ONE * target_zoom
+		image_view_cam.zoom += target_zoom
+		get_tree().call_group("draw_group", "on_redraw_requested")
 		
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
 		var target_zoom = image_view_cam.zoom * zoom_tick
-		image_view_cam.zoom -= Vector2.ONE * target_zoom
+		image_view_cam.zoom -= target_zoom
+		get_tree().call_group("draw_group", "on_redraw_requested")

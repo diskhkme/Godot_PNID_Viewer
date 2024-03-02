@@ -8,7 +8,6 @@ class_name ImageViewer
 @onready var image_viewport = $SubViewportContainer/SubViewport
 @onready var camera = $SubViewportContainer/SubViewport/Camera2D
 @onready var static_symbol_scene = $SubViewportContainer/SubViewport/StaticSymbolScene
-@onready var symbol_editor_scene = $SubViewportContainer/SubViewport/SymbolEditorScene
 
 
 func use_project(project: Project) -> void:
@@ -24,5 +23,6 @@ func adjust_viewport_to_fullscreen() -> void:
 	var window_size = DisplayServer.window_get_size()
 	image_viewport.size = window_size
 	print(window_size)
+	
 	
 

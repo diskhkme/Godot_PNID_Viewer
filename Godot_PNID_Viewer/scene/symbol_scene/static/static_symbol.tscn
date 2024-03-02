@@ -9,7 +9,7 @@ size = Vector2(1, 1)
 [node name="StaticSymbol" type="Node2D"]
 script = ExtResource("1_m6kno")
 
-[node name="StaticSymbolDraw" type="Node2D" parent="."]
+[node name="StaticSymbolDraw" type="Node2D" parent="." groups=["draw_group"]]
 script = ExtResource("2_2lfpy")
 
 [node name="Area2D" type="Area2D" parent="."]

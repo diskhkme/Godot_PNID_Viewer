@@ -16,13 +16,11 @@ var symbol_object: SymbolObject
 var on_cursor: bool = false
 var is_editing: bool = false
 
-
 func _ready():
 	SymbolManager.symbol_selected_from_tree.connect(on_symbol_selected)
 	SymbolManager.symbol_selected_from_image.connect(on_symbol_selected)
 	SymbolManager.symbol_deselected.connect(on_symbol_deselected) 
 	SymbolManager.symbol_edited.connect(on_symbol_edited) 
-	
 	update_symbol()
 	
 	

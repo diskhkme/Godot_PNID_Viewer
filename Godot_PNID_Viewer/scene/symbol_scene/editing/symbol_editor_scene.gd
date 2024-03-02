@@ -1,5 +1,6 @@
 # Symbol editor 
 # controls overall symbol editing and reporting to symbol manager
+# activates editor controller when selected, deactivates when edit ended
 
 extends Node2D
 class_name SymbolEditor
