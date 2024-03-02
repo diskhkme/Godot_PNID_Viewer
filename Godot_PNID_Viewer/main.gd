@@ -6,7 +6,7 @@ extends Node
 @onready var main_menu: Control = $CanvasLayer/MainWindow/MainMenu
 @onready var image_viewer: Control = $CanvasLayer/MainWindow/Middle/ImageViewer
 @onready var project_info: Control = $CanvasLayer/MainWindow/Middle/ProjectViewer/ProjectInfo
-@onready var symbol_tree: Control = $CanvasLayer/MainWindow/Middle/ProjectViewer/SymbolTree
+@onready var symbol_info: Control = $CanvasLayer/MainWindow/Middle/ProjectViewer/SymbolInfo
 
 
 func _ready():
@@ -25,7 +25,7 @@ func make_project_active(project: Project) -> void:
 	
 	image_viewer.use_project(project)
 	project_info.use_project(project)
-	symbol_tree.use_project(project)
+	symbol_info.use_project(project)
 	
 	# make menubar adds new tab
 	

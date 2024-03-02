@@ -1,56 +1,90 @@
-[gd_scene load_steps=2 format=3 uid="uid://dwve11s71aa6x"]
+[gd_scene load_steps=3 format=3 uid="uid://dwve11s71aa6x"]
 
 [ext_resource type="Script" path="res://ui/symbol_tree_row.gd" id="1_djfxj"]
+[ext_resource type="StyleBox" uid="uid://chhlgrtwbxxg" path="res://resources/symbol_info_rowitem_focused.tres" id="2_sr3jd"]
 
-[node name="SymbolTreeRow" type="HBoxContainer"]
+[node name="SymbolTreeRow" type="MarginContainer"]
 custom_minimum_size = Vector2(300, 0)
-offset_right = 40.0
-offset_bottom = 40.0
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 37.0
+grow_horizontal = 2
+theme_override_constants/margin_left = 3
+theme_override_constants/margin_top = 3
+theme_override_constants/margin_right = 3
+theme_override_constants/margin_bottom = 3
 script = ExtResource("1_djfxj")
+stylebox = ExtResource("2_sr3jd")
 
-[node name="TypeLabel" type="Label" parent="."]
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="Left" type="HBoxContainer" parent="HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="HBoxContainer/Left"]
+custom_minimum_size = Vector2(30, 0)
+layout_mode = 2
+text = "1"
+
+[node name="TypeLabel" type="OptionButton" parent="HBoxContainer/Left"]
+clip_contents = true
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
-vertical_alignment = 1
-
-[node name="VSeparator" type="VSeparator" parent="."]
-layout_mode = 2
-
-[node name="ClsLabel" type="Label" parent="."]
-layout_mode = 2
+text_overrun_behavior = 3
 clip_text = true
 
-[node name="VSeparator2" type="VSeparator" parent="."]
+[node name="ClsLabel" type="OptionButton" parent="HBoxContainer/Left"]
+clip_contents = true
+custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
-
-[node name="XMinLabel" type="Label" parent="."]
-layout_mode = 2
+size_flags_horizontal = 3
 clip_text = true
+item_count = 1
+popup/item_0/text = "4444444444444444444444444444444444"
+popup/item_0/id = 0
 
-[node name="VSeparator3" type="VSeparator" parent="."]
+[node name="VSeparator" type="VSeparator" parent="HBoxContainer"]
+visible = false
 layout_mode = 2
 
-[node name="YMinLabel" type="Label" parent="."]
+[node name="Right" type="HBoxContainer" parent="HBoxContainer"]
 layout_mode = 2
-clip_text = true
+size_flags_horizontal = 8
+alignment = 2
 
-[node name="VSeparator4" type="VSeparator" parent="."]
+[node name="XMinLabel" type="Label" parent="HBoxContainer/Right"]
+clip_contents = true
+custom_minimum_size = Vector2(40, 0)
 layout_mode = 2
+text = "1234"
+horizontal_alignment = 1
 
-[node name="XMaxLabel" type="Label" parent="."]
+[node name="YMinLabel" type="Label" parent="HBoxContainer/Right"]
+clip_contents = true
+custom_minimum_size = Vector2(40, 0)
 layout_mode = 2
-clip_text = true
+text = "1234"
+horizontal_alignment = 1
 
-[node name="VSeparator5" type="VSeparator" parent="."]
+[node name="XMaxLabel" type="Label" parent="HBoxContainer/Right"]
+clip_contents = true
+custom_minimum_size = Vector2(40, 0)
 layout_mode = 2
+text = "1234"
+horizontal_alignment = 1
 
-[node name="YMaxLabel" type="Label" parent="."]
+[node name="YMaxLabel" type="Label" parent="HBoxContainer/Right"]
+clip_contents = true
+custom_minimum_size = Vector2(40, 0)
 layout_mode = 2
-clip_text = true
+text = "1234"
+horizontal_alignment = 1
 
-[node name="VSeparator6" type="VSeparator" parent="."]
+[node name="DegreeLabel" type="Label" parent="HBoxContainer/Right"]
+clip_contents = true
+custom_minimum_size = Vector2(40, 0)
 layout_mode = 2
-
-[node name="DegreeLabel" type="Label" parent="."]
-layout_mode = 2
-clip_text = true
+text = "1234"
+horizontal_alignment = 1
