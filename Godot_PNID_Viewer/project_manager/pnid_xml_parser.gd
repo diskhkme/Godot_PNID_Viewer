@@ -37,15 +37,15 @@ func parse_pnid_xml(path: String) -> Array:
 				"class":
 					symbol_object.cls = get_current_node_data(parser)
 				"bndbox":
-					symbol_object.bndbox = Vector4i()
+					symbol_object.bndbox = Vector4()
 				"xmin":
-					symbol_object.bndbox.x = get_current_node_data(parser).to_int()
+					symbol_object.bndbox.x = get_current_node_data(parser).to_float()
 				"ymin":
-					symbol_object.bndbox.y = get_current_node_data(parser).to_int()
+					symbol_object.bndbox.y = get_current_node_data(parser).to_float()
 				"xmax":
-					symbol_object.bndbox.z = get_current_node_data(parser).to_int()
+					symbol_object.bndbox.z = get_current_node_data(parser).to_float()
 				"ymax":
-					symbol_object.bndbox.w = get_current_node_data(parser).to_int()
+					symbol_object.bndbox.w = get_current_node_data(parser).to_float()
 				"isLarge":
 					symbol_object.is_large = yes_no_to_bool(get_current_node_data(parser))
 				"degree":

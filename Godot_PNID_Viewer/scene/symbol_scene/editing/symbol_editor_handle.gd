@@ -7,9 +7,9 @@ class_name Handle
 enum TYPE {SCALING, ROTATE, TRANSLATE}
 enum SCALE_TYPE {TOP_LEFT, TOP_RIGHT, BOTTOM_LEFT, BOTTOM_RIGHT, NONE}
 
-signal indicator_move_started(mouse_pos: Vector2)
-signal indicator_moved(mouse_delta: Vector2)
-signal indicator_move_ended(mouse_pos: Vector2)
+signal indicator_move_started(target: Handle,mouse_pos: Vector2)
+signal indicator_moved(target: Handle,mouse_pos: Vector2)
+signal indicator_move_ended(target: Handle,mouse_pos: Vector2)
 
 @export var type: TYPE
 @export var scale_type: SCALE_TYPE

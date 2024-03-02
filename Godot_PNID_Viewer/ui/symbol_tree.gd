@@ -52,10 +52,10 @@ func fill_treeitem(symbol_child: TreeItem, symbol_object: SymbolObject):
 	symbol_child.set_text(0, str(symbol_object.id))
 	symbol_child.set_text(1, symbol_object.type)
 	symbol_child.set_text(2, symbol_object.cls)
-	symbol_child.set_text(3, str(symbol_object.bndbox.x))
-	symbol_child.set_text(4, str(symbol_object.bndbox.y))
-	symbol_child.set_text(5, str(symbol_object.bndbox.z))
-	symbol_child.set_text(6, str(symbol_object.bndbox.w))
+	symbol_child.set_text(3, str(floor(symbol_object.bndbox.x)))
+	symbol_child.set_text(4, str(floor(symbol_object.bndbox.y)))
+	symbol_child.set_text(5, str(floor(symbol_object.bndbox.z)))
+	symbol_child.set_text(6, str(floor(symbol_object.bndbox.w)))
 	symbol_child.set_text(7, str(symbol_object.degree))
 	
 

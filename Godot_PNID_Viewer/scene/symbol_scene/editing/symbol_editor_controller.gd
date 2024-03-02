@@ -98,13 +98,13 @@ func update_handle_anchor_positions():
 			handle.global_position = $Center/Rot_Anchor.global_position
 		else:
 			if handle.scale_type == Handle.SCALE_TYPE.TOP_LEFT:
-				handle.global_position = $Center/TL_Anchor.global_position
+				handle.global_position = $Center/TL_Anchor.global_position + Vector2(-1,-1)*Config.EDITOR_HANDLE_PADDING
 			elif handle.scale_type == Handle.SCALE_TYPE.TOP_RIGHT:
-				handle.global_position = $Center/TR_Anchor.global_position
+				handle.global_position = $Center/TR_Anchor.global_position + Vector2(1,-1)*Config.EDITOR_HANDLE_PADDING
 			elif handle.scale_type == Handle.SCALE_TYPE.BOTTOM_LEFT:
-				handle.global_position = $Center/BL_Anchor.global_position
+				handle.global_position = $Center/BL_Anchor.global_position + Vector2(-1,1)*Config.EDITOR_HANDLE_PADDING
 			elif handle.scale_type == Handle.SCALE_TYPE.BOTTOM_RIGHT:
-				handle.global_position = $Center/BR_Anchor.global_position
+				handle.global_position = $Center/BR_Anchor.global_position + Vector2(1,1)*Config.EDITOR_HANDLE_PADDING
 				
 	queue_redraw()
 
@@ -140,7 +140,7 @@ func on_indicator_moved(target: Handle, mouse_pos: Vector2):
 			changed_position = (target.global_position + get_handle(target.type, Handle.SCALE_TYPE.TOP_LEFT).global_position)/2
 			
 		diag_vec = (target.global_position - changed_position).rotated(-center_node.rotation)
-		var new_scale = abs(diag_vec*2)
+		var new_scale = (abs(diag_vec) - Vector2.ONE*Config.EDITOR_HANDLE_PADDING)*2
 		new_scale.x = max(Config.EDITOR_MINIMUM_SYMBOL_SIZE, new_scale.x)
 		new_scale.y = max(Config.EDITOR_MINIMUM_SYMBOL_SIZE, new_scale.y)
 		center_node.global_position = changed_position

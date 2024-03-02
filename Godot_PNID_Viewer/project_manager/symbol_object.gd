@@ -3,7 +3,7 @@ class_name SymbolObject
 var id: int
 var type: String
 var cls: String
-var bndbox: Vector4i
+var bndbox: Vector4
 var is_large: bool
 var degree: float
 var flip: bool
@@ -28,10 +28,10 @@ func set_bndbox(center: Vector2, size: Vector2):
 	var max_coord = center + size/2
 	
 	if Config.FORCE_INT_COORD:
-		min_coord = Vector2i(min_coord)
-		max_coord = Vector2i(max_coord)
+		min_coord = Vector2(min_coord)
+		max_coord = Vector2(max_coord)
 		
-	bndbox = Vector4i(min_coord.x, min_coord.y, max_coord.x, max_coord.y)
+	bndbox = Vector4(min_coord.x, min_coord.y, max_coord.x, max_coord.y)
 		
 	
 func set_degree(angle: float):
