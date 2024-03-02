@@ -7,9 +7,9 @@ class_name Handle
 enum TYPE {SCALING, ROTATE, TRANSLATE}
 enum SCALE_TYPE {TOP_LEFT, TOP_RIGHT, BOTTOM_LEFT, BOTTOM_RIGHT, NONE}
 
-signal indicator_move_started
-signal indicator_moved
-signal indicator_move_ended
+signal indicator_move_started(mouse_pos: Vector2)
+signal indicator_moved(mouse_delta: Vector2)
+signal indicator_move_ended(mouse_pos: Vector2)
 
 @export var type: TYPE
 @export var scale_type: SCALE_TYPE
@@ -19,14 +19,11 @@ signal indicator_move_ended
 
 var is_dragging: bool = false
 var on_cursor: bool = false
-var dragging_start_pos: Vector2
+var mouse_to_object_offset
 
 func _ready():
 	add_to_group("draw_group")
 	
-	
-func _process(delta):
-	queue_redraw()
 	
 func set_initial_handle_size(size: Vector2):
 	var sized_rect = RectangleShape2D.new()
@@ -42,14 +39,12 @@ func update_collision_area_size():
 	if type == TYPE.TRANSLATE: # translate area should not change
 		return
 		
-	#var zoom_level = get_viewport().get_camera_2d().zoom
-	var zoom_level = Vector2.ONE
+	var zoom_level = get_viewport().get_camera_2d().zoom
 	collision_area.scale = Vector2.ONE/zoom_level
 	
 
 func _draw():
-	#var zoom_level = get_viewport().get_camera_2d().zoom
-	var zoom_level = Vector2.ONE
+	var zoom_level = get_viewport().get_camera_2d().zoom
 	var color = Config.EDITOR_HANDLE_COLOR
 	var line_width = Config.EDITOR_RECT_LINE_WIDTH
 	var rect = collision_rect.shape.get_rect()
@@ -65,16 +60,16 @@ func _input(event):
 		if event.is_pressed():
 			if on_cursor:
 				is_dragging = true
-				dragging_start_pos = get_global_mouse_position()
-				indicator_move_started.emit(self, dragging_start_pos)
+				mouse_to_object_offset = global_position - get_global_mouse_position()
+				indicator_move_started.emit(self, get_global_mouse_position())
 		else:
 			is_dragging = false
 			indicator_move_ended.emit(self,get_global_mouse_position())
 		
 	if event is InputEventMouseMotion and is_dragging:
-		if type == TYPE.SCALING:
-			global_position = get_global_mouse_position()
-		indicator_moved.emit(self,get_global_mouse_position())
+		if type != TYPE.ROTATE:
+			global_position = get_global_mouse_position() + mouse_to_object_offset
+		indicator_moved.emit(self,get_global_mouse_position() + mouse_to_object_offset)
 		
 
 func _on_area_2d_mouse_entered():

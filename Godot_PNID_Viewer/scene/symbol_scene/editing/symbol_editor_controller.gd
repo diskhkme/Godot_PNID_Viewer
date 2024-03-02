@@ -10,8 +10,6 @@ extends Node2D
 
 var rot_start_angle: float
 var rot_start_vec: Vector2
-var translate_start_position: Vector2
-var translate_start_mouse_position: Vector2
 
 var xml_id: int
 var symbol_id: int
@@ -22,7 +20,6 @@ func _ready():
 	SymbolManager.symbol_selected_from_image.connect(on_symbol_selected)
 	SymbolManager.symbol_selected_from_tree.connect(on_symbol_selected)
 	
-
 	for handle in handles:
 		if handle.type == Handle.TYPE.ROTATE or handle.scale_type == Handle.TYPE.TRANSLATE:
 			# for rotation and translation, should save initial state when started
@@ -41,8 +38,7 @@ func on_redraw_requested():
 	
 
 func _draw():
-	#var zoom_level = get_viewport().get_camera_2d().zoom
-	var zoom_level = Vector2.ONE
+	var zoom_level = get_viewport().get_camera_2d().zoom
 	var color = Config.EDITOR_RECT_COLOR
 	var line_width = Config.EDITOR_RECT_LINE_WIDTH
 
@@ -88,8 +84,7 @@ func _process(delta):
 
 func update_handle_anchor_positions():
 	# rot anchor adjust depending on the zoom level
-	#var zoom_level = get_viewport().get_camera_2d().zoom
-	var zoom_level = Vector2.ONE
+	var zoom_level = get_viewport().get_camera_2d().zoom
 	var up_vec = Vector2.UP.rotated(center_node.rotation)
 	var up_offset = Config.EDITOR_ROTATION_HANDLE_OFFSET/zoom_level.x
 	$Center/Rot_Anchor.global_position = center_node.global_position + up_vec * (center_node.scale.y/2 + up_offset)
@@ -118,9 +113,6 @@ func on_indicator_move_started(target: Handle, start_pos: Vector2):
 	if target.type == Handle.TYPE.ROTATE:
 		rot_start_angle = center_node.rotation
 		rot_start_vec = (start_pos - center_node.global_position).normalized()
-	elif target.type == Handle.TYPE.TRANSLATE:
-		translate_start_position = center_node.global_position
-		translate_start_mouse_position = start_pos
 	
 	
 func on_indicator_moved(target: Handle, mouse_pos: Vector2):
@@ -130,16 +122,14 @@ func on_indicator_moved(target: Handle, mouse_pos: Vector2):
 	var diag_vec: Vector2
 	
 	if target.type == Handle.TYPE.TRANSLATE:
-		center_node.global_position = translate_start_position + (mouse_pos - translate_start_mouse_position)
-	
-	if target.type == Handle.TYPE.ROTATE:
+		center_node.global_position = mouse_pos
+	elif target.type == Handle.TYPE.ROTATE:
 		var rot_vec = (mouse_pos - center_node.global_position).normalized()
 		var angle = rot_start_vec.angle_to(rot_vec)
 		center_node.rotation = rot_start_angle + angle
-	
-	if target.type == Handle.TYPE.SCALING:
-		print(target.type)
-		var changed_position
+	elif target.type == Handle.TYPE.SCALING:
+		# TODO: a little variation of bottom right when manipulating upper left (because of FORCE_INT_COORD?)
+		var changed_position 
 		if target.scale_type == Handle.SCALE_TYPE.TOP_LEFT:
 			changed_position = (target.global_position + get_handle(target.type, Handle.SCALE_TYPE.BOTTOM_RIGHT).global_position)/2
 		elif target.scale_type == Handle.SCALE_TYPE.TOP_RIGHT:
@@ -150,16 +140,14 @@ func on_indicator_moved(target: Handle, mouse_pos: Vector2):
 			changed_position = (target.global_position + get_handle(target.type, Handle.SCALE_TYPE.TOP_LEFT).global_position)/2
 			
 		diag_vec = (target.global_position - changed_position).rotated(-center_node.rotation)
+		var new_scale = abs(diag_vec*2)
+		new_scale.x = max(Config.EDITOR_MINIMUM_SYMBOL_SIZE, new_scale.x)
+		new_scale.y = max(Config.EDITOR_MINIMUM_SYMBOL_SIZE, new_scale.y)
 		center_node.global_position = changed_position
-		center_node.scale = abs(diag_vec*2)
+		center_node.scale = new_scale
 		
-		if center_node.scale.x < 45:
-			print("wrong")
-		
-	# TODO: width/height가 0이 되지 않도록제
-				
 	update_handle_anchor_positions()
-	#report_symbol_edited()
+	report_symbol_edited()
 
 
 func report_symbol_edited():
