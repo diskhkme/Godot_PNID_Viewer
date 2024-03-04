@@ -1,5 +1,7 @@
-extends Node
+# PNID xml parser
+# partse xml, symbolclass type
 
+extends Node
 
 func yes_no_to_bool(str: String) -> bool:
 	if str == "y":
@@ -58,4 +60,3 @@ func parse_pnid_xml(path: String) -> Array:
 	return symbol_objects
 		
 		
-

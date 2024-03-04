@@ -36,6 +36,7 @@ text_overrun_behavior = 3
 clip_text = true
 
 [node name="ClsLabel" type="OptionButton" parent="HBoxContainer/Left"]
+visible = false
 clip_contents = true
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
@@ -44,6 +45,13 @@ clip_text = true
 item_count = 1
 popup/item_0/text = "4444444444444444444444444444444444"
 popup/item_0/id = 0
+
+[node name="ClsTextLabel" type="TextEdit" parent="HBoxContainer/Left"]
+visible = false
+custom_minimum_size = Vector2(30, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "text"
 
 [node name="VSeparator" type="VSeparator" parent="HBoxContainer"]
 visible = false
@@ -88,3 +96,5 @@ custom_minimum_size = Vector2(40, 0)
 layout_mode = 2
 text = "1234"
 horizontal_alignment = 1
+
+[connection signal="item_selected" from="HBoxContainer/Left/TypeLabel" to="." method="_on_type_label_item_selected"]
