@@ -17,7 +17,7 @@ signal report_static_selected(obj: SymbolObject)
 var xml_id: int
 var symbol_object: SymbolObject
 var on_cursor: bool = false
-var is_editing: bool = false
+
 
 func _ready():
 	symbol_selection_interface.symbol_selected_received.connect(hide_selected)

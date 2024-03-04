@@ -7,7 +7,7 @@ extends Node2D
 
 @onready var symbol_selection_filter: SymbolSelectionFilter = $SymbolSelectionFilter
 @onready var symbol_selection_interface = $SymbolSelectionInterface
-
+@onready var symbol_edit_interface = $SymbolEditInterface
 @onready var symbol_editor_scene = $SymbolEditorScene
 
 var selected_candidate: Array[StaticSymbol]
@@ -26,7 +26,7 @@ func _input(event):
 	if ProjectManager.active_project == null:
 		return
 	
-	if symbol_editor_scene.visible == true: # TODO: decouple symbolmanager?
+	if symbol_edit_interface.get_is_editing() == true:
 		selected_candidate.clear()
 		return
 	
@@ -38,6 +38,7 @@ func _input(event):
 				symbol_selection_interface.symbol_deselected_send()
 			else:
 				symbol_selection_interface.symbol_selected_send(selected.xml_id, selected.symbol_object.id)
+				symbol_edit_interface.symbol_edit_started_send(selected.xml_id, selected.symbol_object.id)
 		
 			selected_candidate.clear()
 

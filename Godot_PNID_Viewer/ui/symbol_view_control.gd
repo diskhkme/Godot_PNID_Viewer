@@ -84,11 +84,12 @@ func _draw():
 # --- Select(send)
 func _on_focus_entered():
 	symbol_selection_interface.symbol_selected_send(xml_id, symbol_id)
+	symbol_edit_interface.symbol_edit_started_send(xml_id, symbol_id)
 	
 	
 func _on_focus_exited():
 	symbol_selection_interface.symbol_deselected_send()
-	
+	# edit ended will only be decided by editor controller	
 	
 # --- Select(received)
 func focus_selected_symbol(xml_id: int, symbol_id: int):

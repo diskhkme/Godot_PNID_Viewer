@@ -78,7 +78,7 @@ func _input(event):
 				if handle.on_cursor == true:
 					return
 					
-			symbol_selection_interface.symbol_deselected_send()
+			symbol_edit_interface.symbol_edit_ended_send()
 				
 				
 func _process(delta):
