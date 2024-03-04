@@ -8,7 +8,7 @@ enum TYPE {SCALING, ROTATE, TRANSLATE}
 enum SCALE_TYPE {TOP_LEFT, TOP_RIGHT, BOTTOM_LEFT, BOTTOM_RIGHT, NONE}
 
 signal indicator_move_started(target: Handle,mouse_pos: Vector2)
-signal indicator_moved(target: Handle,mouse_pos: Vector2)
+signal indicator_moved(target: Handle, mouse_pos: Vector2, mouse_pos_delta: Vector2)
 signal indicator_move_ended(target: Handle,mouse_pos: Vector2)
 
 @export var type: TYPE
@@ -19,8 +19,9 @@ signal indicator_move_ended(target: Handle,mouse_pos: Vector2)
 
 var is_dragging: bool = false
 var on_cursor: bool = false
-var mouse_to_object_offset
 var reference_size: Vector2
+
+var last_mouse_position
 
 func _ready():
 	add_to_group("draw_group")
@@ -59,16 +60,18 @@ func _input(event):
 		if event.is_pressed():
 			if on_cursor:
 				is_dragging = true
-				mouse_to_object_offset = global_position - get_global_mouse_position()
+				last_mouse_position = get_global_mouse_position()
 				indicator_move_started.emit(self, get_global_mouse_position())
 		else:
 			is_dragging = false
 			indicator_move_ended.emit(self,get_global_mouse_position())
 		
 	if event is InputEventMouseMotion and is_dragging:
+		var delta = get_global_mouse_position() - last_mouse_position
 		if type != TYPE.ROTATE:
-			global_position = get_global_mouse_position() + mouse_to_object_offset
-		indicator_moved.emit(self,get_global_mouse_position() + mouse_to_object_offset)
+			self.translate(event.relative)
+		indicator_moved.emit(self,get_global_mouse_position(),delta)
+		last_mouse_position = get_global_mouse_position()
 		
 
 func _on_area_2d_mouse_entered():

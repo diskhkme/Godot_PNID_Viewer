@@ -12,22 +12,7 @@ script = ExtResource("1_sayv6")
 
 [node name="SymbolEditInterface" parent="." instance=ExtResource("3_a7ti0")]
 
-[node name="Center" type="Node2D" parent="."]
-
-[node name="TL_Anchor" type="Node2D" parent="Center"]
-position = Vector2(-0.5, -0.5)
-
-[node name="TR_Anchor" type="Node2D" parent="Center"]
-position = Vector2(0.5, -0.5)
-
-[node name="BL_Anchor" type="Node2D" parent="Center"]
-position = Vector2(-0.5, 0.5)
-
-[node name="BR_Anchor" type="Node2D" parent="Center"]
-position = Vector2(0.5, 0.5)
-
-[node name="Rot_Anchor" type="Node2D" parent="Center"]
-position = Vector2(0, -1)
+[node name="SymbolRect" type="Node2D" parent="."]
 
 [node name="Translate_Handle" parent="." instance=ExtResource("2_n11fk")]
 type = 2

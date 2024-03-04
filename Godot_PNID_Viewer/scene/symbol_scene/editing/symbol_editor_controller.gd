@@ -5,7 +5,7 @@
 extends Node2D
 
 @onready var handles = [$TL_Handle, $TR_Handle, $BL_Handle, $BR_Handle, $Rot_Handle, $Translate_Handle]
-@onready var center_node = $Center
+@onready var center_node = $SymbolRect
 
 @onready var symbol_selection_interface = $SymbolSelectionInterface
 @onready var symbol_edit_interface = $SymbolEditInterface
@@ -21,7 +21,7 @@ var target_symbol: SymbolObject
 
 func _ready():
 	add_to_group("draw_group")
-	symbol_selection_interface.symbol_selected_received.connect(initialize_editor)
+	symbol_edit_interface.symbol_edit_started_received.connect(initialize_editor)
 	
 	for handle in handles:
 		if handle.type == Handle.TYPE.ROTATE or handle.scale_type == Handle.TYPE.TRANSLATE:
@@ -34,10 +34,11 @@ func _ready():
 			handle.set_initial_handle_size(Vector2.ONE)
 		else:
 			handle.set_initial_handle_size(Vector2.ONE * Config.EDITOR_HANDLE_SIZE)
-
+			
 
 func on_redraw_requested():
-	update_handle_anchor_positions()
+	update_handle_positions()
+	queue_redraw()
 	
 
 func _draw():
@@ -45,10 +46,17 @@ func _draw():
 	var color = Config.EDITOR_RECT_COLOR
 	var line_width = Config.EDITOR_RECT_LINE_WIDTH
 
-	draw_line($Center/TL_Anchor.global_position, $Center/TR_Anchor.global_position, color, (line_width/zoom_level.x))
-	draw_line($Center/TR_Anchor.global_position, $Center/BR_Anchor.global_position, color, (line_width/zoom_level.x))
-	draw_line($Center/BR_Anchor.global_position, $Center/BL_Anchor.global_position, color, (line_width/zoom_level.x))
-	draw_line($Center/BL_Anchor.global_position, $Center/TL_Anchor.global_position, color, (line_width/zoom_level.x))
+	var right_vec = Vector2.RIGHT.rotated(center_node.rotation)
+	var up_vec = Vector2.UP.rotated(center_node.rotation)
+	var tl_pos = center_node.global_position + (-right_vec*center_node.scale.x + up_vec*center_node.scale.y)*0.5
+	var tr_pos = center_node.global_position + (right_vec*center_node.scale.x + up_vec*center_node.scale.y)*0.5
+	var bl_pos = center_node.global_position + (-right_vec*center_node.scale.x - up_vec*center_node.scale.y)*0.5
+	var br_pos = center_node.global_position + (right_vec*center_node.scale.x - up_vec*center_node.scale.y)*0.5
+
+	draw_line(tl_pos, tr_pos, color, (line_width/zoom_level.x))
+	draw_line(tr_pos, br_pos, color, (line_width/zoom_level.x))
+	draw_line(br_pos, bl_pos, color, (line_width/zoom_level.x))
+	draw_line(bl_pos, tl_pos, color, (line_width/zoom_level.x))
 	
 	
 func initialize_editor(xml_id: int, symbol_id: int):
@@ -62,7 +70,8 @@ func initialize_editor(xml_id: int, symbol_id: int):
 	center_node.global_position = symbol_position
 	center_node.scale = symbol_size
 	center_node.rotation = symbol_angle
-	update_handle_anchor_positions()
+	
+	update_handle_positions()
 	
 	
 func get_handle(handle_type: Handle.TYPE, scale_type: Handle.SCALE_TYPE):
@@ -81,16 +90,17 @@ func _input(event):
 			symbol_edit_interface.symbol_edit_ended_send()
 				
 				
-func _process(delta):
-	update_handle_anchor_positions()
-	queue_redraw()
-
-func update_handle_anchor_positions():
+func update_handle_positions():
 	# rot anchor adjust depending on the zoom level
 	var zoom_level = get_viewport().get_camera_2d().zoom
+	var right_vec = Vector2.RIGHT.rotated(center_node.rotation)
 	var up_vec = Vector2.UP.rotated(center_node.rotation)
 	var up_offset = Config.EDITOR_ROTATION_HANDLE_OFFSET/zoom_level.x
-	$Center/Rot_Anchor.global_position = center_node.global_position + up_vec * (center_node.scale.y/2 + up_offset)
+	
+	var tl_pos = center_node.global_position + (-right_vec*center_node.scale.x + up_vec*center_node.scale.y)*0.5
+	var tr_pos = center_node.global_position + (right_vec*center_node.scale.x + up_vec*center_node.scale.y)*0.5
+	var bl_pos = center_node.global_position + (-right_vec*center_node.scale.x - up_vec*center_node.scale.y)*0.5
+	var br_pos = center_node.global_position + (right_vec*center_node.scale.x - up_vec*center_node.scale.y)*0.5
 	
 	for handle in handles:
 		if handle.type == Handle.TYPE.TRANSLATE:
@@ -98,16 +108,16 @@ func update_handle_anchor_positions():
 			handle.scale = center_node.scale
 			handle.rotation = center_node.rotation
 		elif handle.type == Handle.TYPE.ROTATE:
-			handle.global_position = $Center/Rot_Anchor.global_position
+			handle.global_position = center_node.global_position + up_vec * (center_node.scale.y/2 + up_offset)
 		else:
 			if handle.scale_type == Handle.SCALE_TYPE.TOP_LEFT:
-				handle.global_position = $Center/TL_Anchor.global_position + Vector2(-1,-1)*Config.EDITOR_HANDLE_PADDING
+				handle.global_position = tl_pos + (up_vec - right_vec).normalized()*Config.EDITOR_HANDLE_PADDING/zoom_level.x
 			elif handle.scale_type == Handle.SCALE_TYPE.TOP_RIGHT:
-				handle.global_position = $Center/TR_Anchor.global_position + Vector2(1,-1)*Config.EDITOR_HANDLE_PADDING
+				handle.global_position = tr_pos + (up_vec + right_vec).normalized()*Config.EDITOR_HANDLE_PADDING/zoom_level.x
 			elif handle.scale_type == Handle.SCALE_TYPE.BOTTOM_LEFT:
-				handle.global_position = $Center/BL_Anchor.global_position + Vector2(-1,1)*Config.EDITOR_HANDLE_PADDING
+				handle.global_position = bl_pos + (-up_vec - right_vec).normalized()*Config.EDITOR_HANDLE_PADDING/zoom_level.x
 			elif handle.scale_type == Handle.SCALE_TYPE.BOTTOM_RIGHT:
-				handle.global_position = $Center/BR_Anchor.global_position + Vector2(1,1)*Config.EDITOR_HANDLE_PADDING
+				handle.global_position = br_pos + (-up_vec + right_vec).normalized()*Config.EDITOR_HANDLE_PADDING/zoom_level.x
 				
 	queue_redraw()
 
@@ -118,38 +128,35 @@ func on_indicator_move_started(target: Handle, start_pos: Vector2):
 		rot_start_vec = (start_pos - center_node.global_position).normalized()
 	
 	
-func on_indicator_moved(target: Handle, mouse_pos: Vector2):
+func on_indicator_moved(target: Handle, mouse_pos: Vector2, mouse_pos_delta: Vector2):
 	var right_vec = Vector2.RIGHT.rotated(center_node.rotation)
-	var up_vec = -Vector2.UP.rotated(center_node.rotation)
+	var up_vec = Vector2.UP.rotated(center_node.rotation)
 		
 	var diag_vec: Vector2
 	
 	if target.type == Handle.TYPE.TRANSLATE:
-		center_node.global_position = mouse_pos
+		center_node.translate(mouse_pos_delta)
 	elif target.type == Handle.TYPE.ROTATE:
 		var rot_vec = (mouse_pos - center_node.global_position).normalized()
 		var angle = rot_start_vec.angle_to(rot_vec)
 		center_node.rotation = rot_start_angle + angle
 	elif target.type == Handle.TYPE.SCALING:
-		# TODO: a little variation of bottom right when manipulating upper left (because of FORCE_INT_COORD?)
-		var changed_position 
+		var width_delta = mouse_pos_delta.dot(right_vec)
+		var width_vec = right_vec * width_delta
+		var height_delta = mouse_pos_delta.dot(up_vec)
+		var height_vec = up_vec * height_delta
 		if target.scale_type == Handle.SCALE_TYPE.TOP_LEFT:
-			changed_position = (target.global_position + get_handle(target.type, Handle.SCALE_TYPE.BOTTOM_RIGHT).global_position)/2
+			center_node.scale += Vector2(-width_delta, height_delta)
 		elif target.scale_type == Handle.SCALE_TYPE.TOP_RIGHT:
-			changed_position = (target.global_position + get_handle(target.type, Handle.SCALE_TYPE.BOTTOM_LEFT).global_position)/2
+			center_node.scale += Vector2(width_delta, height_delta)
 		elif target.scale_type == Handle.SCALE_TYPE.BOTTOM_LEFT:
-			changed_position = (target.global_position + get_handle(target.type, Handle.SCALE_TYPE.TOP_RIGHT).global_position)/2
+			center_node.scale += Vector2(-width_delta, -height_delta)
 		elif target.scale_type == Handle.SCALE_TYPE.BOTTOM_RIGHT:
-			changed_position = (target.global_position + get_handle(target.type, Handle.SCALE_TYPE.TOP_LEFT).global_position)/2
+			center_node.scale += Vector2(width_delta, -height_delta)
 			
-		diag_vec = (target.global_position - changed_position).rotated(-center_node.rotation)
-		var new_scale = (abs(diag_vec) - Vector2.ONE*Config.EDITOR_HANDLE_PADDING)*2
-		new_scale.x = max(Config.EDITOR_MINIMUM_SYMBOL_SIZE, new_scale.x)
-		new_scale.y = max(Config.EDITOR_MINIMUM_SYMBOL_SIZE, new_scale.y)
-		center_node.global_position = changed_position
-		center_node.scale = new_scale
+		center_node.global_position += (width_vec + height_vec)*0.5
 		
-	update_handle_anchor_positions()
+	update_handle_positions()
 	report_symbol_edited()
 
 
