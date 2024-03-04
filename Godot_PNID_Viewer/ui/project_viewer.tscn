@@ -1,9 +1,9 @@
 [gd_scene load_steps=3 format=3 uid="uid://cypy5mb0rfmk7"]
 
-[ext_resource type="Script" path="res://ui/project_info.gd" id="1_2c75l"]
+[ext_resource type="Script" path="res://ui/project_viewer.gd" id="1_2c75l"]
 [ext_resource type="Texture2D" uid="uid://bsgxfpg38df0d" path="res://assets/icons/cursor_icon.png" id="2_30rm8"]
 
-[node name="ProjectInfo" type="PanelContainer"]
+[node name="ProjectViewer" type="PanelContainer"]
 offset_right = 40.0
 offset_bottom = 40.0
 script = ExtResource("1_2c75l")

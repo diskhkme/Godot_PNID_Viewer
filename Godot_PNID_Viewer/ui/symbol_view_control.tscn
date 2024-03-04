@@ -1,9 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://dwve11s71aa6x"]
+[gd_scene load_steps=2 format=3 uid="uid://dwve11s71aa6x"]
 
-[ext_resource type="Script" path="res://ui/symbol_tree_row.gd" id="1_djfxj"]
-[ext_resource type="StyleBox" uid="uid://chhlgrtwbxxg" path="res://resources/symbol_info_rowitem_focused.tres" id="2_sr3jd"]
+[ext_resource type="Script" path="res://ui/symbol_view_control.gd" id="1_e58l6"]
 
-[node name="SymbolTreeRow" type="MarginContainer"]
+[node name="SymbolViewControl" type="MarginContainer"]
 custom_minimum_size = Vector2(300, 0)
 anchors_preset = 10
 anchor_right = 1.0
@@ -13,8 +12,7 @@ theme_override_constants/margin_left = 3
 theme_override_constants/margin_top = 3
 theme_override_constants/margin_right = 3
 theme_override_constants/margin_bottom = 3
-script = ExtResource("1_djfxj")
-stylebox = ExtResource("2_sr3jd")
+script = ExtResource("1_e58l6")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
 layout_mode = 2
@@ -42,11 +40,8 @@ custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 clip_text = true
-item_count = 1
-popup/item_0/text = "4444444444444444444444444444444444"
-popup/item_0/id = 0
 
-[node name="ClsTextLabel" type="TextEdit" parent="HBoxContainer/Left"]
+[node name="ClsTextLabel" type="LineEdit" parent="HBoxContainer/Left"]
 visible = false
 custom_minimum_size = Vector2(30, 0)
 layout_mode = 2
@@ -97,4 +92,5 @@ layout_mode = 2
 text = "1234"
 horizontal_alignment = 1
 
+[connection signal="focus_entered" from="." to="." method="_on_focus_entered"]
 [connection signal="item_selected" from="HBoxContainer/Left/TypeLabel" to="." method="_on_type_label_item_selected"]

@@ -1,11 +1,12 @@
 extends MarginContainer
-class_name SymbolInfoRow
+class_name SymbolViewControl
 
-@export var stylebox: StyleBox
+signal report_focused(xml_id:int, symbol_id: int)
+
+@export var stylebox = preload("res://resources/symbol_info_rowitem_focused.tres")
 
 @onready var left = $HBoxContainer/Left
 @onready var right = $HBoxContainer/Right
-
 @onready var type_label = $HBoxContainer/Left/TypeLabel
 @onready var cls_label = $HBoxContainer/Left/ClsLabel
 @onready var text_label = $HBoxContainer/Left/ClsTextLabel
@@ -13,6 +14,8 @@ class_name SymbolInfoRow
 var type_items_id = {}
 var cls_items_id = {}
 
+var xml_id
+var symbol_id
 
 func set_type_items(symbol_type_set: Array):
 	var id = 0
@@ -30,10 +33,18 @@ func set_cls_items(symbol_cls_set: Array):
 		id += 1
 		
 
-func set_data(symbol_object: SymbolObject) -> void:
+func initialize(xml_id: int, symbol_object: SymbolObject, 
+					symbol_type_set: Array,
+					symbol_cls_set: Array):
+	self.focus_mode = Control.FOCUS_ALL
+	self.xml_id = xml_id
+	self.symbol_id = symbol_object.id
+	
 	left.get_child(0).text = str(symbol_object.id)
+	set_type_items(symbol_type_set)
+	set_cls_items(symbol_cls_set)
 	type_label.select(type_items_id[symbol_object.type])
-	if symbol_object.type.to_lower().contains("text"):
+	if symbol_object.type.to_lower().contains(Config.TEXT_TYPE_NAME):
 		cls_label.visible = false
 		text_label.visible = true
 		text_label.text = symbol_object.cls
@@ -55,5 +66,13 @@ func _draw():
 
 
 func _on_type_label_item_selected(index):
-	# called when type changed
-	pass
+	if index == type_items_id[Config.TEXT_TYPE_NAME]:
+		cls_label.visible = false
+		text_label.visible = true
+	else:
+		cls_label.visible = true
+		text_label.visible = false
+
+
+func _on_focus_entered():
+	report_focused.emit(xml_id, symbol_id)

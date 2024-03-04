@@ -17,3 +17,4 @@ const EDITOR_HANDLE_PADDING: float = 3
 const FORCE_QUANTIZED_DEGREE = true
 const QUANTIZED_DEGREE_VALUE = 5
 const FORCE_INT_COORD = true # only applied when exporting xml (use float internally)
+const TEXT_TYPE_NAME = "text"
