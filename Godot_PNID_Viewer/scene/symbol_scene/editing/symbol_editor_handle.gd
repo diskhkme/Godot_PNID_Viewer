@@ -20,15 +20,15 @@ signal indicator_move_ended(target: Handle,mouse_pos: Vector2)
 var is_dragging: bool = false
 var on_cursor: bool = false
 var mouse_to_object_offset
+var reference_size: Vector2
 
 func _ready():
 	add_to_group("draw_group")
 	
 	
 func set_initial_handle_size(size: Vector2):
-	var sized_rect = RectangleShape2D.new()
-	sized_rect.size = size
-	collision_rect.shape = sized_rect
+	reference_size = size
+	collision_area.scale = size
 	
 func on_redraw_requested():
 	update_collision_area_size()
@@ -40,19 +40,18 @@ func update_collision_area_size():
 		return
 		
 	var zoom_level = get_viewport().get_camera_2d().zoom
-	collision_area.scale = Vector2.ONE/zoom_level
+	collision_area.scale = reference_size/zoom_level
 	
 
 func _draw():
 	var zoom_level = get_viewport().get_camera_2d().zoom
 	var color = Config.EDITOR_HANDLE_COLOR
 	var line_width = Config.EDITOR_RECT_LINE_WIDTH
-	var rect = collision_rect.shape.get_rect()
 	
 	if type == TYPE.SCALING:
-		draw_circle(rect.get_center(), (rect.size.x/2)/zoom_level.x, color)
+		draw_circle(Vector2.ZERO, (collision_area.scale.x*0.5), color)
 	elif type == TYPE.ROTATE:
-		draw_rect(Rect2(rect.position/zoom_level, rect.size/zoom_level), color, false, line_width/zoom_level.x)
+		draw_rect(Rect2(-collision_area.scale*0.5, collision_area.scale), color, false, line_width/zoom_level.x)
 		
 
 func _input(event):
