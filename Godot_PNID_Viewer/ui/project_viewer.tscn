@@ -1,13 +1,16 @@
-[gd_scene load_steps=3 format=3 uid="uid://cypy5mb0rfmk7"]
+[gd_scene load_steps=4 format=3 uid="uid://cypy5mb0rfmk7"]
 
 [ext_resource type="Script" path="res://ui/project_viewer.gd" id="1_2c75l"]
 [ext_resource type="Texture2D" uid="uid://bsgxfpg38df0d" path="res://assets/icons/cursor_icon.png" id="2_30rm8"]
+[ext_resource type="PackedScene" uid="uid://lru6b2rj8tpn" path="res://ui/component/symbol_edit_interface.tscn" id="3_jo3nv"]
 
 [node name="ProjectViewer" type="PanelContainer"]
 offset_right = 40.0
 offset_bottom = 40.0
 script = ExtResource("1_2c75l")
 visibility_button_texture = ExtResource("2_30rm8")
+
+[node name="SymbolEditInterface" parent="." instance=ExtResource("3_jo3nv")]
 
 [node name="Tree" type="Tree" parent="."]
 layout_mode = 2

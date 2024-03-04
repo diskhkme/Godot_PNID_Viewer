@@ -1,0 +1,27 @@
+[gd_scene load_steps=6 format=3 uid="uid://cxj66r5y818vv"]
+
+[ext_resource type="Script" path="res://scene/symbol_scene/static_symbol.gd" id="1_v27ek"]
+[ext_resource type="PackedScene" uid="uid://mh17f6epf3a6" path="res://ui/component/symbol_selection_interface.tscn" id="2_qm8qe"]
+[ext_resource type="PackedScene" uid="uid://lru6b2rj8tpn" path="res://ui/component/symbol_edit_interface.tscn" id="3_apw8w"]
+[ext_resource type="Script" path="res://scene/symbol_scene/static_symbol_draw.gd" id="4_xte3t"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_qaaa1"]
+size = Vector2(1, 1)
+
+[node name="StaticSymbol" type="Node2D"]
+script = ExtResource("1_v27ek")
+
+[node name="SymbolSelectionInterface" parent="." instance=ExtResource("2_qm8qe")]
+
+[node name="SymbolEditInterface" parent="." instance=ExtResource("3_apw8w")]
+
+[node name="StaticSymbolDraw" type="Node2D" parent="." groups=["draw_group"]]
+script = ExtResource("4_xte3t")
+
+[node name="Area2D" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+shape = SubResource("RectangleShape2D_qaaa1")
+
+[connection signal="mouse_entered" from="Area2D" to="." method="_on_area_2d_mouse_entered"]
+[connection signal="mouse_exited" from="Area2D" to="." method="_on_area_2d_mouse_exited"]

@@ -11,16 +11,18 @@ signal report_static_selected(obj: SymbolObject)
 @onready var collision = $Area2D/CollisionShape2D
 @onready var static_symbol_draw = $StaticSymbolDraw
 
+@onready var symbol_selection_interface = $SymbolSelectionInterface
+@onready var symbol_edit_interface = $SymbolEditInterface
+
 var xml_id: int
 var symbol_object: SymbolObject
 var on_cursor: bool = false
 var is_editing: bool = false
 
 func _ready():
-	SymbolManager.symbol_selected_from_tree.connect(hide_selected)
-	SymbolManager.symbol_selected_from_image.connect(hide_selected)
-	SymbolManager.symbol_deselected.connect(show_deselected) 
-	SymbolManager.symbol_edited.connect(update_edited) 
+	symbol_selection_interface.symbol_selected_received.connect(hide_selected)
+	symbol_selection_interface.symbol_deselected_received.connect(show_deselected) 
+	symbol_edit_interface.symbol_edited_received.connect(update_edited) 
 	update_symbol()
 	
 	
@@ -44,28 +46,33 @@ func _input(event):
 			report_static_selected.emit(self)
 			
 			
-func hide_selected(xml_id:int, symbol_id: int) -> void:
-	if self.xml_id == xml_id and self.symbol_object.id == symbol_id:
-		static_symbol_draw.visible = false
-	else:
-		static_symbol_draw.visible = true
-		
-	queue_redraw()
-
-
-func update_edited(xml_id: int, symbol_id: int):
-	if self.xml_id == xml_id and self.symbol_object.id == symbol_id:
-		update_symbol()
-	
-
-func show_deselected() -> void:
-	static_symbol_draw.visible = true
-	queue_redraw()
-
-
 func _on_area_2d_mouse_entered():
 	on_cursor = true
 
 
 func _on_area_2d_mouse_exited():
 	on_cursor = false
+
+
+# --- selected(received)
+func hide_selected(xml_id:int, symbol_id: int) -> void:
+	if self.xml_id == xml_id and self.symbol_object.id == symbol_id:
+		static_symbol_draw.visible = false
+	else:
+		static_symbol_draw.visible = true
+		
+
+func show_deselected() -> void:
+	static_symbol_draw.visible = true
+
+
+# --- edited(received)
+func update_edited(xml_id: int, symbol_id: int):
+	if self.xml_id == xml_id and self.symbol_object.id == symbol_id:
+		update_symbol()
+	
+
+
+
+
+

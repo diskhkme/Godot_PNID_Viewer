@@ -7,9 +7,10 @@ extends Node # TODO: scene instead of autoload?
 signal symbol_selected_from_image(xml_id: int, symbol_id: int)
 signal symbol_selected_from_tree(xml_id: int, symbol_id: int)
 signal symbol_selected(object: Object, xml_id: int, symbol_id: int)
-signal symbol_deselected
+signal symbol_deselected(object: Object)
 
-signal symbol_edited(xml_id: int, symbol_id: int)
+#signal symbol_edited(xml_id: int, symbol_id: int)
+signal symbol_edited(object: Object, xml_id: int, symbol_id: int)
 signal symbol_edit_ended
 
 var selected_obj: Object
@@ -34,7 +35,7 @@ func on_symbol_selected(object: Object, xml_id: int, symbol_id: int):
 	is_editing = true
 
 	
-func on_symbol_deselected():
+func on_symbol_deselected(object: Object):
 	selected_xml_id = -1
 	selected_symbol_id = -1
 
@@ -44,6 +45,6 @@ func on_symbol_edit_end():
 	is_editing = false
 	
 	
-func on_symbol_edited(xml_id: int, symbol_id: int):
+func on_symbol_edited(object: Object, xml_id: int, symbol_id: int):
 	ProjectManager.active_project.xml_status[xml_id].dirty = true
 

@@ -1,10 +1,16 @@
-[gd_scene load_steps=3 format=3 uid="uid://caai5y1ec0vrm"]
+[gd_scene load_steps=5 format=3 uid="uid://caai5y1ec0vrm"]
 
 [ext_resource type="Script" path="res://scene/symbol_scene/editing/symbol_editor_scene.gd" id="1_uoqd8"]
+[ext_resource type="PackedScene" uid="uid://mh17f6epf3a6" path="res://ui/component/symbol_selection_interface.tscn" id="2_fobm5"]
 [ext_resource type="PackedScene" uid="uid://fih1la8ol5eg" path="res://scene/symbol_scene/editing/symbol_editor_controller.tscn" id="2_omb14"]
+[ext_resource type="PackedScene" uid="uid://lru6b2rj8tpn" path="res://ui/component/symbol_edit_interface.tscn" id="3_ljs2t"]
 
 [node name="SymbolEditorScene" type="Node2D"]
 z_index = 1
 script = ExtResource("1_uoqd8")
+
+[node name="SymbolSelectionInterface" parent="." instance=ExtResource("2_fobm5")]
+
+[node name="SymbolEditInterface" parent="." instance=ExtResource("3_ljs2t")]
 
 [node name="SymbolEditorController" parent="." instance=ExtResource("2_omb14")]

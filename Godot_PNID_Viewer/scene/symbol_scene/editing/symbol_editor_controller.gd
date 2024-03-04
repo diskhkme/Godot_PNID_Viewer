@@ -5,8 +5,10 @@
 extends Node2D
 
 @onready var handles = [$TL_Handle, $TR_Handle, $BL_Handle, $BR_Handle, $Rot_Handle, $Translate_Handle]
-
 @onready var center_node = $Center
+
+@onready var symbol_selection_interface = $SymbolSelectionInterface
+@onready var symbol_edit_interface = $SymbolEditInterface
 
 var rot_start_angle: float
 var rot_start_vec: Vector2
@@ -15,10 +17,11 @@ var xml_id: int
 var symbol_id: int
 var target_symbol: SymbolObject
 
+# TODO: rotated symbol editing has error. possibly simplify scene nodes by manual calculation
+
 func _ready():
 	add_to_group("draw_group")
-	SymbolManager.symbol_selected_from_image.connect(initialize_editor)
-	SymbolManager.symbol_selected_from_tree.connect(initialize_editor)
+	symbol_selection_interface.symbol_selected_received.connect(initialize_editor)
 	
 	for handle in handles:
 		if handle.type == Handle.TYPE.ROTATE or handle.scale_type == Handle.TYPE.TRANSLATE:
@@ -75,7 +78,7 @@ func _input(event):
 				if handle.on_cursor == true:
 					return
 					
-			SymbolManager.symbol_edit_ended.emit()
+			symbol_selection_interface.symbol_deselected_send()
 				
 				
 func _process(delta):
@@ -153,6 +156,6 @@ func on_indicator_moved(target: Handle, mouse_pos: Vector2):
 func report_symbol_edited():
 	target_symbol.set_bndbox(center_node.global_position, center_node.scale)
 	target_symbol.set_degree(center_node.rotation)
-	SymbolManager.symbol_edited.emit(xml_id, symbol_id)
+	symbol_edit_interface.symbol_edited_send(xml_id, symbol_id)
 	
 

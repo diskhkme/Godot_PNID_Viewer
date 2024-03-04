@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://lru6b2rj8tpn"]
+
+[ext_resource type="Script" path="res://ui/component/symbol_edit_interface.gd" id="1_dw82v"]
+
+[node name="SymbolEditInterface" type="Node"]
+script = ExtResource("1_dw82v")

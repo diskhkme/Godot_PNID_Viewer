@@ -3,9 +3,12 @@
 
 extends Node2D
 
-@export var static_symbol: PackedScene
+@export var static_symbol: PackedScene = preload("res://scene/symbol_scene/static_symbol.tscn")
 
 @onready var symbol_selection_filter: SymbolSelectionFilter = $SymbolSelectionFilter
+@onready var symbol_selection_interface = $SymbolSelectionInterface
+
+@onready var symbol_editor_scene = $SymbolEditorScene
 
 var selected_candidate: Array[StaticSymbol]
 
@@ -23,7 +26,7 @@ func _input(event):
 	if ProjectManager.active_project == null:
 		return
 	
-	if SymbolManager.is_editing: # ignore selection while editing
+	if symbol_editor_scene.visible == true: # TODO: decouple symbolmanager?
 		selected_candidate.clear()
 		return
 	
@@ -32,9 +35,9 @@ func _input(event):
 			# TODO: becuase of is_editing ignore, history based filtering does not work currently
 			var selected = symbol_selection_filter.decided_selected(selected_candidate)
 			if selected == null:
-				SymbolManager.symbol_deselected.emit()
+				symbol_selection_interface.symbol_deselected_send()
 			else:
-				SymbolManager.symbol_selected_from_image.emit(selected.xml_id, selected.symbol_object.id)
+				symbol_selection_interface.symbol_selected_send(selected.xml_id, selected.symbol_object.id)
 		
 			selected_candidate.clear()
 
