@@ -12,14 +12,14 @@ func show_type_change_window(xml_stat: XML_Status, symbol_object: SymbolObject):
 	self.xml_stat = xml_stat
 	self.symbol_object = symbol_object
 	type_option_button.clear()
-	for type in xml_stat.symbol_type_set:
+	for type in ProjectManager.symbol_type_set:
 		type_option_button.add_item(type)
 		
 	cls_option_button.clear()
-	for cls in xml_stat.symbol_cls_set:
+	for cls in ProjectManager.symbol_type_set[symbol_object.type]:
 		cls_option_button.add_item(cls)
 		
-	type_option_button.select(xml_stat.symbol_type_set.keys().find(symbol_object.type))
+	type_option_button.select(ProjectManager.symbol_type_set.keys().find(symbol_object.type))
 	if symbol_object.is_text:
 		cls_option_button.visible = false
 		cls_text_edit.visible = true
@@ -27,13 +27,13 @@ func show_type_change_window(xml_stat: XML_Status, symbol_object: SymbolObject):
 	else:
 		cls_option_button.visible = true
 		cls_text_edit.visible = false
-		cls_option_button.select(xml_stat.symbol_cls_set.keys().find(symbol_object.cls))
+		cls_option_button.select(ProjectManager.symbol_type_set[symbol_object.type].find(symbol_object.cls))
 		
 	self.visible = true
 
 
 func _on_type_option_button_item_selected(index):
-	if xml_stat.get_is_text_type(index):
+	if ProjectManager.is_symbol_type_text(index):
 		cls_option_button.visible = false
 		cls_text_edit.visible = true
 	else:
