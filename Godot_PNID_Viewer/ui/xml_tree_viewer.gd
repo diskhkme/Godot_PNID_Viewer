@@ -1,5 +1,7 @@
 extends Control
 
+signal requre_type_change_window
+
 @onready var tree = $Tree
 @onready var symbol_selection_interface = $SymbolSelectionInterface
 @onready var symbol_edit_interface = $SymbolEditInterface
@@ -36,7 +38,8 @@ func use_project(project: Project):
 		for symbol_object in xml_stat.symbol_objects:
 			var symbol_child: TreeItem = tree.create_item(child)
 			fill_treeitem(symbol_child,symbol_object)
-			symbol_child.set_editable(2, true)
+			if symbol_object.is_text:
+				symbol_child.set_editable(2, true)
 	
 	set_tree_column_style()
 	
@@ -49,6 +52,17 @@ func _on_tree_item_selected():
 		symbol_selection_interface.symbol_selected_send(selected_xml_id,selected_symbol_id)
 		symbol_edit_interface.symbol_edit_started_send(selected_xml_id,selected_symbol_id)
 	
+
+func _input(event):
+	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
+		if event.double_click:
+			var selected_symbol_id = tree.get_selected().get_text(0).to_int()
+			var selected_xml_filename = tree.get_selected().get_parent().get_text(0)
+			var selected_xml_id = ProjectManager.active_project.get_xml_id_from_filename(selected_xml_filename)
+			var xml_stat = ProjectManager.get_xml(selected_xml_id)
+			var symbol_object = ProjectManager.get_symbol_in_xml(selected_xml_id, selected_symbol_id)
+			requre_type_change_window.emit(xml_stat, symbol_object)
+			
 	
 func focus_symbol(xml_id:int, symbol_id:int):
 	var xml_item = tree.get_root().get_children()[xml_id]

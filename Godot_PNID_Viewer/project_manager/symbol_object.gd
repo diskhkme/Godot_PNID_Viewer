@@ -1,13 +1,21 @@
 class_name SymbolObject
 
 var id: int
-var type: String
+var type: String :
+	get: return type
+	set(value):
+		if value.to_lower().contains(Config.TEXT_TYPE_NAME):
+			is_text = true
+		else:
+				is_text = false
+		type = value
 var cls: String
 var bndbox: Vector4
 var is_large: bool
 var degree: float
 var flip: bool
 
+var is_text
 
 func get_rect() -> Rect2:
 	var width = bndbox.z-bndbox.x

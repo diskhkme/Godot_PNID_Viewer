@@ -8,16 +8,21 @@ extends Node
 @onready var project_viewer: Control = $CanvasLayer/MainWindow/Middle/RightSide/ProjectViewer
 @onready var xml_viewer: Control = $CanvasLayer/MainWindow/Middle/RightSide/XMLTreeViewer
 
+@onready var type_change_window = $CanvasLayer/Dialogs/TypeChangeWindow
 
 func _ready():
 	main_menu.file_opened.connect(on_new_project)
-	
+	xml_viewer.requre_type_change_window.connect(on_type_change)
 
 
 func on_new_project(paths: PackedStringArray) -> void:
 	var project: Project = ProjectManager.add_project(paths)
 	if project != null: # TODO: fail case dialog
 		make_project_active(project)
+		
+		
+func on_type_change(xml_stat:XML_Status, symbol_object:SymbolObject):
+	type_change_window.show_type_change_window(xml_stat, symbol_object)
 
 
 func make_project_active(project: Project) -> void:

@@ -31,16 +31,15 @@ func update_symbol_type_cls_cache(symbol_objects: Array):
 		else:
 			symbol_type_set[symbol_object.type] = 0
 			
-		if !symbol_object.type.to_lower().contains("text"): # ignore text for cls cache
+		if !symbol_object.type.to_lower().contains(Config.TEXT_TYPE_NAME): # ignore text for cls cache
 			if symbol_cls_set.has(symbol_object.cls):
 				symbol_cls_set[symbol_object.cls] += 1
 			else:
 				symbol_cls_set[symbol_object.cls] = 0
 				
 				
-func get_text_type_index():
-	for i in range(symbol_type_set.size()):
-		if symbol_type_set[i].to_lower().contains("text"):
-			return i
-			
-	return -1
+func get_is_text_type(index: int):
+	if symbol_type_set.keys()[index].to_lower().contains(Config.TEXT_TYPE_NAME):
+		return true
+		
+	return false
