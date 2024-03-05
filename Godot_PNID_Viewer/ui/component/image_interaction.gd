@@ -2,11 +2,14 @@
 # zoom, pan image of image viewer
 
 extends Node
+class_name ImageInteraction
 
 signal zoom_changed(zoom_level: float)
 
 @export var zoom_tick: float = 0.05
 @export var image_view_cam: Camera2D
+
+@onready var image_view_context_menu = $ImageViewContextMenu
 
 var is_dragging: bool = false
 var drag_start_position: Vector2
@@ -14,13 +17,19 @@ var drag_offset: Vector2
 
 func _ready():
 	add_to_group("draw_group")
+	image_view_context_menu.poped_up.connect(on_context_menu_popup)
+	
+	
+func on_context_menu_popup():
+	is_dragging = false
+
 
 func _input(event):
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_RIGHT:
-		if not is_dragging and event.pressed:
+		if not is_dragging and event.is_pressed():
 			is_dragging = true
 
-		if is_dragging and not event.pressed:
+		if is_dragging and event.is_released():
 			is_dragging = false
 
 	if event is InputEventMouseMotion and is_dragging:
