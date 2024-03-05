@@ -2,7 +2,7 @@ extends Control
 
 @export var xml_container: PackedScene = preload("res://ui/xml_container.tscn")
 
-@onready var xml_container_parent = $ScrollContainer
+@onready var xml_container_parent = $ScrollContainer/VBoxContainer
 
 
 func use_project(project: Project) -> void:

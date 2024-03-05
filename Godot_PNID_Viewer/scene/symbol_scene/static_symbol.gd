@@ -5,7 +5,7 @@ extends Node2D
 class_name StaticSymbol
 
 # signal to symbol scene for filtering selection
-signal report_static_selected(obj: SymbolObject)
+signal report_static_selected(obj: StaticSymbol)
 
 @onready var area = $Area2D
 @onready var collision = $Area2D/CollisionShape2D
