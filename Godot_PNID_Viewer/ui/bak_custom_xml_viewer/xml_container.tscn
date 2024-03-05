@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://b15wr2ckxw02b"]
 
-[ext_resource type="Script" path="res://ui/xml_container.gd" id="1_ddscs"]
+[ext_resource type="Script" path="res://ui/bak_custom_xml_viewer/xml_container.gd" id="1_ddscs"]
 
 [node name="XMLContainer" type="VBoxContainer"]
 size_flags_horizontal = 3

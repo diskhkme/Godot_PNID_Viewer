@@ -6,7 +6,7 @@ extends Node
 @onready var main_menu: Control = $CanvasLayer/MainWindow/MainMenu
 @onready var image_viewer: Control = $CanvasLayer/MainWindow/Middle/ImageViewer
 @onready var project_viewer: Control = $CanvasLayer/MainWindow/Middle/RightSide/ProjectViewer
-@onready var xml_viewer: Control = $CanvasLayer/MainWindow/Middle/RightSide/XMLViewer
+@onready var xml_viewer: Control = $CanvasLayer/MainWindow/Middle/RightSide/XMLTreeViewer
 
 
 func _ready():

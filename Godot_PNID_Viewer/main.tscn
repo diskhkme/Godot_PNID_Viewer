@@ -4,7 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://d02o5ib62ed0d" path="res://ui/main_menu.tscn" id="1_n0m63"]
 [ext_resource type="PackedScene" uid="uid://bqsveu6pgdywi" path="res://ui/image_viewer.tscn" id="3_nc67t"]
 [ext_resource type="PackedScene" uid="uid://cypy5mb0rfmk7" path="res://ui/project_viewer.tscn" id="4_48ush"]
-[ext_resource type="PackedScene" uid="uid://uk54rtoo7wnt" path="res://ui/xml_viewer.tscn" id="6_loo05"]
+[ext_resource type="PackedScene" uid="uid://mmirfa2yhj50" path="res://ui/xml_tree_viewer.tscn" id="5_4qjjb"]
 
 [node name="Main" type="Node"]
 script = ExtResource("1_h1xnr")
@@ -62,7 +62,7 @@ split_offset = 165
 [node name="ProjectViewer" parent="CanvasLayer/MainWindow/Middle/RightSide" instance=ExtResource("4_48ush")]
 layout_mode = 2
 
-[node name="XMLViewer" parent="CanvasLayer/MainWindow/Middle/RightSide" instance=ExtResource("6_loo05")]
+[node name="XMLTreeViewer" parent="CanvasLayer/MainWindow/Middle/RightSide" instance=ExtResource("5_4qjjb")]
 layout_mode = 2
 
 [node name="StatusBar_TODO" type="Panel" parent="CanvasLayer/MainWindow"]

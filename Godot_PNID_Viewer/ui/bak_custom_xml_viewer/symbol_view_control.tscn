@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://dwve11s71aa6x"]
 
-[ext_resource type="Script" path="res://ui/symbol_view_control.gd" id="1_e58l6"]
+[ext_resource type="Script" path="res://ui/bak_custom_xml_viewer/symbol_view_control.gd" id="1_e58l6"]
 [ext_resource type="PackedScene" uid="uid://mh17f6epf3a6" path="res://ui/component/symbol_selection_interface.tscn" id="2_f0pr1"]
 [ext_resource type="PackedScene" uid="uid://lru6b2rj8tpn" path="res://ui/component/symbol_edit_interface.tscn" id="3_ajotq"]
 

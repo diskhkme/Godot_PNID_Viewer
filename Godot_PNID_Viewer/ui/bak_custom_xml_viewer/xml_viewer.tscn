@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://uk54rtoo7wnt"]
 
-[ext_resource type="Script" path="res://ui/xml_viewer.gd" id="1_ddscs"]
+[ext_resource type="Script" path="res://ui/bak_custom_xml_viewer/xml_viewer.gd" id="1_ddscs"]
 
 [node name="XMLViewer" type="Control"]
 layout_mode = 3
