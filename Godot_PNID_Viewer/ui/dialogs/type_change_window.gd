@@ -7,16 +7,16 @@ extends Window
 var xml_stat: XML_Status
 var symbol_object: SymbolObject
 
+
 func show_type_change_window(xml_stat: XML_Status, symbol_object: SymbolObject):
-	self.xml_stat = xml_stat
-	self.symbol_object = symbol_object
 	type_option_button.clear()
 	for type in ProjectManager.symbol_type_set:
 		type_option_button.add_item(type)
 		
-	cls_option_button.clear()
-	for cls in ProjectManager.symbol_type_set[symbol_object.type]:
-		cls_option_button.add_item(cls)
+	reset_class_with_type(symbol_object.type)
+	
+	self.xml_stat = xml_stat
+	self.symbol_object = symbol_object
 		
 	type_option_button.select(ProjectManager.symbol_type_set.keys().find(symbol_object.type))
 	if symbol_object.is_text:
@@ -31,11 +31,19 @@ func show_type_change_window(xml_stat: XML_Status, symbol_object: SymbolObject):
 	self.visible = true
 
 
+func reset_class_with_type(type: String):
+	cls_option_button.clear()
+	for cls in ProjectManager.symbol_type_set[type]:
+		cls_option_button.add_item(cls)
+
+
 func _on_type_option_button_item_selected(index):
 	if ProjectManager.is_symbol_type_text(index):
 		cls_option_button.visible = false
 		cls_text_edit.visible = true
 	else:
+		var current_type = ProjectManager.symbol_type_set.keys()[index]
+		reset_class_with_type(current_type)
 		cls_option_button.visible = true
 		cls_text_edit.visible = false
 	
