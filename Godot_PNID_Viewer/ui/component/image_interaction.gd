@@ -6,7 +6,6 @@ class_name ImageInteraction
 
 signal zoom_changed(zoom_level: float)
 
-@export var zoom_tick: float = 0.05
 @export var image_view_cam: Camera2D
 
 var is_locked: bool = false
@@ -33,11 +32,11 @@ func _input(event):
 		image_view_cam.global_translate((-event.relative)/image_view_cam.zoom)
 		
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_WHEEL_UP:
-		var target_zoom = image_view_cam.zoom * zoom_tick
+		var target_zoom = image_view_cam.zoom * Config.CAMERA_ZOOM_TICK
 		image_view_cam.zoom += target_zoom
 		get_tree().call_group("draw_group", "on_redraw_requested")
 		
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
-		var target_zoom = image_view_cam.zoom * zoom_tick
+		var target_zoom = image_view_cam.zoom * Config.CAMERA_ZOOM_TICK
 		image_view_cam.zoom -= target_zoom
 		get_tree().call_group("draw_group", "on_redraw_requested")

@@ -30,13 +30,12 @@ text = "Remove"
 
 [node name="EditButton" type="Button" parent="PanelContainer/VBoxContainer"]
 layout_mode = 2
-text = "Edit"
+text = "Edit Type"
 
 [connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
 [connection signal="mouse_exited" from="." to="." method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="PanelContainer" to="." method="_on_panel_container_mouse_entered"]
-[connection signal="mouse_exited" from="PanelContainer" to="." method="_on_panel_container_mouse_exited"]
 [connection signal="mouse_entered" from="PanelContainer/VBoxContainer" to="." method="_on_v_box_container_mouse_entered"]
 [connection signal="mouse_exited" from="PanelContainer/VBoxContainer" to="." method="_on_v_box_container_mouse_exited"]
 [connection signal="pressed" from="PanelContainer/VBoxContainer/AddButton" to="." method="_on_add_button_pressed"]
 [connection signal="pressed" from="PanelContainer/VBoxContainer/RemoveButton" to="." method="_on_remove_button_pressed"]
+[connection signal="pressed" from="PanelContainer/VBoxContainer/EditButton" to="." method="_on_edit_button_pressed"]

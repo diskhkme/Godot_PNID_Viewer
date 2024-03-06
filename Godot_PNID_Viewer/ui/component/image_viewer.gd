@@ -4,11 +4,11 @@
 extends PanelContainer
 class_name ImageViewer
 
-@export var symbol_scene = preload("res://scene/symbol_scene/symbol_scene.tscn")
+@export var symbol_scene = preload("res://image_viewer/symbol/symbol_scene.tscn")
 
 @onready var image_scene = $SubViewportContainer/SubViewport/ImageScene
 @onready var image_viewport = $SubViewportContainer/SubViewport
-@onready var camera = $SubViewportContainer/SubViewport/Camera2D
+@onready var camera = $SubViewportContainer/SubViewport/ImageViewCamera
 @onready var symbol_selection_filter = $SymbolSelectionFilter
 
 
@@ -30,9 +30,5 @@ func use_project(project: Project) -> void:
 	
 
 func adjust_viewport_to_fullscreen() -> void:
-	var window_size = DisplayServer.window_get_size()
-	image_viewport.size = window_size
-	print(window_size)
-	
-	
+	image_viewport.size = self.size
 

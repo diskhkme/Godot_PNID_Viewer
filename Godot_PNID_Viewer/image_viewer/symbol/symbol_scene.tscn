@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://cokv526beh8ol"]
+
+[ext_resource type="Script" path="res://image_viewer/symbol/symbol_scene.gd" id="1_mvhwy"]
+
+[node name="SymbolScene" type="Node2D"]
+script = ExtResource("1_mvhwy")

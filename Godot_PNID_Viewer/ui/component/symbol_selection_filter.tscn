@@ -1,8 +1,0 @@
-[gd_scene load_steps=2 format=3 uid="uid://cg2wr3b05cyos"]
-
-[ext_resource type="Script" path="res://ui/component/symbol_selection_filter.gd" id="1_i31ro"]
-
-[node name="SymbolSelectionFilter" type="Control"]
-layout_mode = 3
-anchors_preset = 0
-script = ExtResource("1_i31ro")

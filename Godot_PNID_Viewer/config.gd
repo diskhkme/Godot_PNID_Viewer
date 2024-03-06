@@ -23,5 +23,6 @@ const QUANTIZED_DEGREE_VALUE = 5
 const FORCE_INT_COORD = true # only applied when exporting xml (use float internally)
 const TEXT_TYPE_NAME = "text"
 
-# Misc
+# Interaction
 const CONTEXT_MENU_THRESHOLD = 10
+const CAMERA_ZOOM_TICK = 0.05

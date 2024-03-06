@@ -36,10 +36,12 @@ func _input(event):
 		if event.is_released():
 			var dist = (event.position - start_mouse_pos).length_squared()
 			if dist < pow(Config.CONTEXT_MENU_THRESHOLD,2):
-				context_menu.position = event.position
+				context_menu.global_position = event.position
+				print(event.position)
 				context_menu.visible = true
 				image_interaction.is_locked = true
 				image_interaction.is_dragging = false
+			print(event.position)
 				
 	if event is InputEventMouseButton:			
 		if event.is_pressed(): 
@@ -82,6 +84,10 @@ func _on_remove_button_pressed():
 	SymbolManager.symbol_deselected.emit()
 	context_menu.visible = false
 
+
+func _on_edit_button_pressed():
+	pass # Replace with function body.
+	
 
 func _on_mouse_entered():
 	is_in_context_menu = true

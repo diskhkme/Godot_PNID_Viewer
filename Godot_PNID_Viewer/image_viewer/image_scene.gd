@@ -20,6 +20,8 @@ func load_image_as_texture(img_filepath: String) -> Vector2:
 	var texture = ImageTexture.create_from_image(img)
 	$PNIDImage.texture = texture
 	
+	global_position = texture.get_size()*0.5
+	
 	return Vector2(texture.get_width(), texture.get_height())
 	
 

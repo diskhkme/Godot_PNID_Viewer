@@ -4,7 +4,7 @@
 extends Node2D
 class_name SymbolScene
 
-@export var static_symbol: PackedScene = preload("res://scene/symbol_scene/static_symbol.tscn")
+@export var static_symbol: PackedScene = preload("res://image_viewer/symbol/static_symbol.tscn")
 
 var selected_candidate: Array[StaticSymbol]
 var selection_filter

@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://en0mt7v4ddrg"]
+[gd_scene load_steps=11 format=3 uid="uid://en0mt7v4ddrg"]
 
 [ext_resource type="Script" path="res://main.gd" id="1_h1xnr"]
 [ext_resource type="PackedScene" uid="uid://d02o5ib62ed0d" path="res://ui/main_menu.tscn" id="1_n0m63"]
@@ -10,8 +10,6 @@
 [ext_resource type="PackedScene" uid="uid://mmirfa2yhj50" path="res://ui/xml_tree_viewer.tscn" id="5_4qjjb"]
 [ext_resource type="Script" path="res://image_viewer/image_scene.gd" id="5_vm2n5"]
 [ext_resource type="PackedScene" uid="uid://bdsyjmvhhrl76" path="res://ui/dialogs/type_change_window.tscn" id="6_xn5xa"]
-[ext_resource type="Script" path="res://image_viewer/image_view_camera.gd" id="8_6tcqo"]
-[ext_resource type="PackedScene" uid="uid://drge4asvwjmcu" path="res://ui/context/image_view_context_menu.tscn" id="12_p38sp"]
 
 [node name="Main" type="Node"]
 script = ExtResource("1_h1xnr")
@@ -61,16 +59,12 @@ size_flags_stretch_ratio = 20.0
 [node name="ImageViewer" type="PanelContainer" parent="CanvasLayer/MainWindow/Middle"]
 layout_mode = 2
 size_flags_horizontal = 3
-mouse_filter = 1
 script = ExtResource("3_5qiq5")
 
 [node name="ImageInteraction" type="Control" parent="CanvasLayer/MainWindow/Middle/ImageViewer" node_paths=PackedStringArray("image_view_cam")]
 layout_mode = 2
-mouse_filter = 1
 script = ExtResource("3_7mdxh")
-image_view_cam = NodePath("../SubViewportContainer/SubViewport/ImageViewCamera")
-
-[node name="CanvasLayer" type="CanvasLayer" parent="CanvasLayer/MainWindow/Middle/ImageViewer"]
+image_view_cam = NodePath("../SubViewportContainer/SubViewport/Camera2D")
 
 [node name="SymbolSelectionFilter" type="Control" parent="CanvasLayer/MainWindow/Middle/ImageViewer"]
 layout_mode = 2
@@ -94,16 +88,7 @@ script = ExtResource("5_vm2n5")
 
 [node name="SymbolEditorScene" parent="CanvasLayer/MainWindow/Middle/ImageViewer/SubViewportContainer/SubViewport" instance=ExtResource("3_aygqj")]
 
-[node name="ImageViewCamera" type="Camera2D" parent="CanvasLayer/MainWindow/Middle/ImageViewer/SubViewportContainer/SubViewport"]
-script = ExtResource("8_6tcqo")
-
-[node name="ImageViewContextMenu" parent="CanvasLayer/MainWindow/Middle/ImageViewer" node_paths=PackedStringArray("image_interaction", "camera") instance=ExtResource("12_p38sp")]
-z_index = 5
-layout_mode = 2
-size_flags_horizontal = 0
-size_flags_vertical = 0
-image_interaction = NodePath("../ImageInteraction")
-camera = NodePath("../SubViewportContainer/SubViewport/ImageViewCamera")
+[node name="Camera2D" type="Camera2D" parent="CanvasLayer/MainWindow/Middle/ImageViewer/SubViewportContainer/SubViewport"]
 
 [node name="RightSide" type="VSplitContainer" parent="CanvasLayer/MainWindow/Middle"]
 layout_mode = 2
@@ -162,7 +147,4 @@ use_native_dialog = true
 [node name="TypeChangeWindow" parent="CanvasLayer/Dialogs" instance=ExtResource("6_xn5xa")]
 visible = false
 
-[node name="ContextMenu" type="CanvasLayer" parent="CanvasLayer"]
-
-[connection signal="mouse_entered" from="CanvasLayer/MainWindow/Middle/ImageViewer" to="CanvasLayer/MainWindow/Middle/ImageViewer/ImageViewContextMenu" method="_on_image_viewer_mouse_entered"]
-[connection signal="mouse_exited" from="CanvasLayer/MainWindow/Middle/ImageViewer" to="CanvasLayer/MainWindow/Middle/ImageViewer/ImageViewContextMenu" method="_on_image_viewer_mouse_exited"]
+[connection signal="resized" from="CanvasLayer/MainWindow/Middle/ImageViewer" to="CanvasLayer/MainWindow/Middle/ImageViewer" method="_on_resized"]
