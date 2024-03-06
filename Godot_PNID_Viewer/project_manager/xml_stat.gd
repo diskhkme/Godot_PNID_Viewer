@@ -33,3 +33,21 @@ func check_sanity(symbol_objects):
 				print("XML has undefined symbol type!")
 
 	return true
+
+
+# TODO: symbol edtied here?
+
+func remove_symbol(symbol_id: int):
+	symbol_objects[symbol_id].removed = true
+	SymbolManager.symbol_edited.emit(id, symbol_id)
+
+
+func add_new_symbol(position: Vector2) -> int:
+	var new_symbol = SymbolObject.new()
+	new_symbol.bndbox += Vector4(position.x, position.y, position.x, position.y) # translate min/max
+	var new_symbol_id = symbol_objects.size()
+	new_symbol.id = new_symbol_id
+	symbol_objects.push_back(new_symbol)
+	SymbolManager.symbol_edited.emit(id, new_symbol_id)
+	
+	return new_symbol_id

@@ -14,7 +14,7 @@ func _ready():
 
 func set_tree_column_style():
 	tree.set_column_clip_content(0, true)
-	tree.set_column_custom_minimum_width(0, 50)
+	tree.set_column_custom_minimum_width(0, 100)
 	tree.set_column_clip_content(1, true)
 	tree.set_column_custom_minimum_width(1, 100)
 	tree.set_column_clip_content(2, true)
@@ -34,13 +34,19 @@ func use_project(project: Project):
 		var child = tree.create_item(root)
 		child.set_text(0,xml_stat.filename)
 		for symbol_object in xml_stat.symbol_objects:
-			var symbol_child: TreeItem = tree.create_item(child)
-			fill_treeitem(symbol_child,symbol_object)
-			if symbol_object.is_text:
-				symbol_child.set_editable(2, true)
+			create_symbol(child, symbol_object)
 	
 	set_tree_column_style()
 	
+	
+func create_symbol(parent: TreeItem, symbol_object: SymbolObject) -> TreeItem:
+	var symbol_child: TreeItem = tree.create_item(parent)
+	fill_treeitem(symbol_child,symbol_object)
+	if symbol_object.is_text:
+		symbol_child.set_editable(2, true)
+		
+	return symbol_child
+
 	
 func _on_tree_item_selected():
 	var selected_symbol_id = tree.get_selected().get_text(0).to_int()
@@ -61,7 +67,7 @@ func _input(event):
 			var symbol_object = ProjectManager.get_symbol_in_xml(selected_xml_id, selected_symbol_id)
 			requre_type_change_window.emit(xml_stat, symbol_object)
 			
-	
+			
 func focus_symbol(xml_id:int, symbol_id:int):
 	var xml_item = tree.get_root().get_children()[xml_id]
 	var symbol_item: TreeItem = xml_item.get_children()[symbol_id]
@@ -83,6 +89,9 @@ func fill_treeitem(symbol_child: TreeItem, symbol_object: SymbolObject):
 	symbol_child.set_text(6, str(floor(symbol_object.bndbox.w)))
 	symbol_child.set_text(7, str(symbol_object.degree))
 	
+	if symbol_object.removed:
+		symbol_child.visible = false
+	
 
 func update_symbol(xml_id: int, symbol_id: int):
 	var symbol = ProjectManager.get_symbol_in_xml(xml_id, symbol_id)
@@ -93,11 +102,17 @@ func update_symbol(xml_id: int, symbol_id: int):
 			var xml_filename = xml_treeitem.get_text(0)
 			var child_xml_id = ProjectManager.active_project.get_xml_id_from_filename(xml_filename)
 			if xml_id == child_xml_id:
-				var symbol_treeitem = find_symbol_by_id(xml_treeitem.get_children(), symbol.id)
-				fill_treeitem(symbol_treeitem, symbol)
+				var symbol_treeitem = find_symbol_item_by_id(xml_treeitem.get_children(), symbol.id)
+				if symbol_treeitem == null: # new symbol added
+					symbol_treeitem = create_symbol(xml_treeitem, symbol)
+				else:
+					fill_treeitem(symbol_treeitem, symbol)
 				symbol_update_cache[symbol] = symbol_treeitem
 
 
-func find_symbol_by_id(arr: Array[TreeItem], id: int):
+func find_symbol_item_by_id(arr: Array[TreeItem], id: int):
 	var result = arr.filter(func(elem): return elem.get_text(0).to_int() == id)
+	if result.size() == 0:
+		return null
 	return result[0]
+	

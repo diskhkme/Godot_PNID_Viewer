@@ -1,4 +1,5 @@
 extends Camera2D
+class_name ImageViewCamera
 
 func _ready():
 	SymbolManager.symbol_selected_from_tree.connect(focus_symbol)
@@ -21,3 +22,10 @@ func is_symbol_visible(target_symbol: SymbolObject):
 		return true
 		
 	return false
+
+
+func get_pixel_coord(canvas_coord: Vector2):
+	var visible_rect = self.get_viewport().get_visible_rect()
+	var camera_pos = global_position
+	var topleft = camera_pos - visible_rect.size*0.5
+	return topleft + canvas_coord

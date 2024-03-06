@@ -51,6 +51,9 @@ func load_symbol_type_definition():
 	if !symbol_type_set.has(Config.TEXT_TYPE_NAME):
 		symbol_type_set[Config.TEXT_TYPE_NAME] = []
 		
+	if !symbol_type_set.has("None"):
+		symbol_type_set["None"] = ["None"]
+		
 		
 func is_symbol_type_text(index: int):
 	if symbol_type_set.keys()[index] == Config.TEXT_TYPE_NAME:

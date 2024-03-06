@@ -36,7 +36,7 @@ func update_symbol():
 	var size = symbol_object.get_rect().size
 	var color = ProjectManager.active_project.xml_status[xml_id].color
 	var width = Config.DEFAULT_LINE_WIDTH
-	static_symbol_draw.update_draw(size,color,width)
+	static_symbol_draw.update_draw(size,color,width, symbol_object.removed)
 	
 
 func _input(event):

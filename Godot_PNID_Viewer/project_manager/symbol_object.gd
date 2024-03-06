@@ -15,7 +15,16 @@ var is_large: bool
 var degree: float
 var flip: bool
 
-var is_text
+var is_text: bool = false
+var removed: bool = false
+
+func _init():
+	bndbox = Vector4(0,0,100,100)
+	is_large = false
+	degree = 0
+	flip = false
+	type = "None"
+	cls = "None"
 
 func get_rect() -> Rect2:
 	var width = bndbox.z-bndbox.x
