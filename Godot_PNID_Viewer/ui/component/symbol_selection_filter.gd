@@ -7,26 +7,22 @@ class_name SymbolSelectionFilter
 
 signal clear_selected_candidate
 
-@onready var symbol_selection_interface = $SymbolSelectionInterface
-@onready var symbol_edit_interface = $SymbolEditInterface
-
 var last_selected_candidate: Array[StaticSymbol]
 var selected_history = {} # false if excluded from candidate
 var watching_scenes: Array[SymbolScene]
 
 func add_watch(symbol_scene: SymbolScene):
 	watching_scenes.push_back(symbol_scene)
-	symbol_selection_interface.symbol_selected_received
 
 
 func _input(event):
 	if ProjectManager.active_project == null:
 		return
 	
-	if symbol_edit_interface.get_is_editing() == true:
+	if SymbolManager.is_editing == true:
 		return
 	
-	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
+	if event is InputEventMouseButton: # and event.button_index == MOUSE_BUTTON_LEFT:
 		if !event.is_pressed():
 			var candidates: Array[StaticSymbol] = []
 			for scene in watching_scenes:
@@ -35,10 +31,10 @@ func _input(event):
 			var mouse_pos = get_global_mouse_position()
 			var selected = decide_selected(mouse_pos, candidates)
 			if selected == null:
-				symbol_selection_interface.symbol_deselected_send()
+				SymbolManager.symbol_deselected.emit()
 			else:
-				symbol_selection_interface.symbol_selected_send(selected.xml_id, selected.symbol_object.id)
-				symbol_edit_interface.symbol_edit_started_send(selected.xml_id, selected.symbol_object.id)
+				SymbolManager.symbol_selected_from_image.emit(selected.xml_id, selected.symbol_object.id)
+				SymbolManager.symbol_edit_started.emit(selected.xml_id, selected.symbol_object.id)
 				
 			clear_selected_candidate.emit()
 			

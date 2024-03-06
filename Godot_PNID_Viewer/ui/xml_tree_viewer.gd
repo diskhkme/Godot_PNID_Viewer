@@ -3,15 +3,13 @@ extends Control
 signal requre_type_change_window
 
 @onready var tree = $Tree
-@onready var symbol_selection_interface = $SymbolSelectionInterface
-@onready var symbol_edit_interface = $SymbolEditInterface
 
 var symbol_update_cache = {}
 
 func _ready():
-	symbol_selection_interface.symbol_selected_received.connect(focus_symbol)
-	symbol_selection_interface.symbol_deselected_received.connect(deselect_treeitem)
-	symbol_edit_interface.symbol_edited_received.connect(update_symbol)
+	SymbolManager.symbol_selected_from_image.connect(focus_symbol)
+	SymbolManager.symbol_deselected.connect(deselect_treeitem)
+	SymbolManager.symbol_edited.connect(update_symbol)
 	
 
 func set_tree_column_style():
@@ -49,8 +47,8 @@ func _on_tree_item_selected():
 	var selected_xml_filename = tree.get_selected().get_parent().get_text(0)
 	var selected_xml_id = ProjectManager.active_project.get_xml_id_from_filename(selected_xml_filename)
 	if selected_xml_id != -1 && selected_symbol_id != -1:
-		symbol_selection_interface.symbol_selected_send(selected_xml_id,selected_symbol_id)
-		symbol_edit_interface.symbol_edit_started_send(selected_xml_id,selected_symbol_id)
+		SymbolManager.symbol_selected_from_tree.emit(selected_xml_id,selected_symbol_id)
+		SymbolManager.symbol_edit_started.emit(selected_xml_id,selected_symbol_id)
 	
 
 func _input(event):

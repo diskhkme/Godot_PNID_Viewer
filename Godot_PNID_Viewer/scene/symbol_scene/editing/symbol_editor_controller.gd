@@ -7,9 +7,6 @@ extends Node2D
 @onready var handles = [$TL_Handle, $TR_Handle, $BL_Handle, $BR_Handle, $Rot_Handle, $Translate_Handle]
 @onready var center_node = $SymbolRect
 
-@onready var symbol_selection_interface = $SymbolSelectionInterface
-@onready var symbol_edit_interface = $SymbolEditInterface
-
 var rot_start_angle: float
 var rot_start_vec: Vector2
 
@@ -21,7 +18,7 @@ var target_symbol: SymbolObject
 
 func _ready():
 	add_to_group("draw_group")
-	symbol_edit_interface.symbol_edit_started_received.connect(initialize_editor)
+	SymbolManager.symbol_edit_started.connect(initialize_editor)
 	
 	for handle in handles:
 		if handle.type == Handle.TYPE.ROTATE or handle.scale_type == Handle.TYPE.TRANSLATE:
@@ -87,7 +84,7 @@ func _input(event):
 				if handle.on_cursor == true:
 					return
 					
-			symbol_edit_interface.symbol_edit_ended_send()
+			SymbolManager.symbol_edit_ended.emit()
 				
 				
 func update_handle_positions():
@@ -163,6 +160,6 @@ func on_indicator_moved(target: Handle, mouse_pos: Vector2, mouse_pos_delta: Vec
 func report_symbol_edited():
 	target_symbol.set_bndbox(center_node.global_position, center_node.scale)
 	target_symbol.set_degree(center_node.rotation)
-	symbol_edit_interface.symbol_edited_send(xml_id, symbol_id)
+	SymbolManager.symbol_edited.emit(xml_id, symbol_id)
 	
 

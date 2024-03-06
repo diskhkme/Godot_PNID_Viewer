@@ -11,8 +11,6 @@ signal report_static_selected(obj: StaticSymbol)
 @onready var collision = $Area2D/CollisionShape2D
 @onready var static_symbol_draw = $StaticSymbolDraw
 
-@onready var symbol_selection_interface = $SymbolSelectionInterface
-@onready var symbol_edit_interface = $SymbolEditInterface
 
 var xml_id: int
 var symbol_object: SymbolObject
@@ -20,9 +18,10 @@ var on_cursor: bool = false
 
 
 func _ready():
-	symbol_selection_interface.symbol_selected_received.connect(hide_selected)
-	symbol_selection_interface.symbol_deselected_received.connect(show_deselected) 
-	symbol_edit_interface.symbol_edited_received.connect(update_edited) 
+	SymbolManager.symbol_selected_from_tree.connect(hide_selected)
+	SymbolManager.symbol_selected_from_image.connect(hide_selected)
+	SymbolManager.symbol_deselected.connect(show_deselected) 
+	SymbolManager.symbol_edited.connect(update_edited) 
 	update_symbol()
 	
 	
@@ -41,7 +40,7 @@ func update_symbol():
 	
 
 func _input(event):
-	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
+	if event is InputEventMouseButton: # and event.button_index == MOUSE_BUTTON_LEFT:
 		if event.is_pressed() and on_cursor:
 			report_static_selected.emit(self)
 			
@@ -55,7 +54,7 @@ func _on_area_2d_mouse_exited():
 
 
 # --- selected(received)
-func hide_selected(xml_id:int, symbol_id: int) -> void:
+func hide_selected(xml_id:int, symbol_id: int):
 	if self.xml_id == xml_id and self.symbol_object.id == symbol_id:
 		static_symbol_draw.visible = false
 	else:

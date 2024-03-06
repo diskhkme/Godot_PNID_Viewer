@@ -5,13 +5,10 @@ extends Node2D
 class_name SymbolEditor
 
 @onready var symbol_editor_controller = $SymbolEditorController
-@onready var symbol_selection_interface = $SymbolSelectionInterface # remove?
-@onready var symbol_edit_interface = $SymbolEditInterface
-
 
 func _ready():
-	symbol_edit_interface.symbol_edit_started_received.connect(show_editor)
-	symbol_edit_interface.symbol_edit_ended_received.connect(hide_editor)
+	SymbolManager.symbol_edit_started.connect(show_editor)
+	SymbolManager.symbol_edit_ended.connect(hide_editor)
 	visible = false
 
 

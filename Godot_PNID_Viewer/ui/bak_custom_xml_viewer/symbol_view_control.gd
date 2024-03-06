@@ -13,9 +13,6 @@ signal report_edited(xml_id:int, symbol_id: int)
 @onready var cls_label = $HBoxContainer/Left/ClsLabel
 @onready var text_label = $HBoxContainer/Left/ClsTextLabel
 
-@onready var symbol_selection_interface = $SymbolSelectionInterface
-@onready var symbol_edit_interface = $SymbolEditInterface
-
 var type_items_id = {}
 var cls_items_id = {}
 
@@ -24,8 +21,8 @@ var symbol_id
 var symbol_object
 
 func _ready():
-	symbol_selection_interface.symbol_selected_received.connect(focus_selected_symbol)
-	symbol_edit_interface.symbol_edited_received.connect(update_edited_symbol)
+	SymbolManager.symbol_selected_from_image.connect(focus_selected_symbol)
+	SymbolManager.symbol_edited.connect(update_edited_symbol)
 
 
 func set_type_items(symbol_type_set: Array):
@@ -83,12 +80,12 @@ func _draw():
 
 # --- Select(send)
 func _on_focus_entered():
-	symbol_selection_interface.symbol_selected_send(xml_id, symbol_id)
-	symbol_edit_interface.symbol_edit_started_send(xml_id, symbol_id)
+	SymbolManager.symbol_selected_from_tree.emit(xml_id, symbol_id)
+	SymbolManager.symbol_edit_started.emit(xml_id, symbol_id)
 	
 	
 func _on_focus_exited():
-	symbol_selection_interface.symbol_deselected_send()
+	SymbolManager.symbol_deselected.emit()
 	# edit ended will only be decided by editor controller	
 	
 # --- Select(received)
@@ -108,19 +105,19 @@ func _on_type_label_item_selected(index):
 		text_label.visible = false
 		symbol_object.cls = cls_items_id.find_key(cls_label.get_selected_id())
 	
-	symbol_edit_interface.symbol_edited_send(xml_id, symbol_id)
+	SymbolManager.symbol_edited.emit(xml_id, symbol_id)
 
 
 func _on_cls_label_item_selected(index):
 	# only happens when not text
 	symbol_object.cls = cls_items_id.find_key(index)
-	symbol_edit_interface.symbol_edited_send(xml_id, symbol_id)
+	SymbolManager.symbol_edited.emit(xml_id, symbol_id)
 
 
 func _on_cls_text_label_text_changed(new_text):
 	# only happens when text
 	symbol_object.cls = new_text
-	symbol_edit_interface.symbol_edited_send(xml_id, symbol_id)
+	SymbolManager.symbol_edited.emit(xml_id, symbol_id)
 	
 	
 # --- Edit(received)

@@ -1,15 +1,12 @@
 extends PanelContainer
 
 @onready var tree = $Tree
-@onready var symbol_edit_interface = $SymbolEditInterface
 
 @export var visibility_button_texture: Texture2D
 @export var color_button_texture: Texture2D
 
-
-
 func _ready():
-	symbol_edit_interface.symbol_edited_received.connect(update_xml_status)
+	SymbolManager.symbol_edited.connect(update_xml_status)
 		
 
 func use_project(project: Project) -> void:

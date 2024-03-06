@@ -121,4 +121,5 @@ offset_right = 40.0
 offset_bottom = 40.0
 mouse_filter = 1
 
-[node name="ImageViewContextMenu" parent="CanvasLayer/ContextMenus" instance=ExtResource("7_j63mt")]
+[node name="ImageViewContextMenu" parent="CanvasLayer/ContextMenus" node_paths=PackedStringArray("image_viewer") instance=ExtResource("7_j63mt")]
+image_viewer = NodePath("../../MainWindow/Middle/ImageViewer")

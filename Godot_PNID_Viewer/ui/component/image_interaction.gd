@@ -9,6 +9,7 @@ signal zoom_changed(zoom_level: float)
 @export var zoom_tick: float = 0.05
 @export var image_view_cam: Camera2D
 
+var is_locked: bool = false
 var is_dragging: bool = false
 var drag_start_position: Vector2
 var drag_offset: Vector2
@@ -18,6 +19,9 @@ func _ready():
 	
 
 func _input(event):
+	if is_locked:
+		return
+	
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_RIGHT:
 		if not is_dragging and event.is_pressed():
 			is_dragging = true

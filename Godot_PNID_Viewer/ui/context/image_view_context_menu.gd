@@ -4,21 +4,37 @@ extends Control
 
 signal poped_up
 
+@export var image_viewer: ImageViewer
+
 @onready var context_menu = $PanelContainer
-@onready var symbol_selection_interface = $SymbolSelectionInterface
-	
+
+var image_interaction	
+var start_mouse_pos
 var is_cursor_inside
+	
+func _ready():
+	for node in image_viewer.get_children():
+		if node is ImageInteraction:
+			image_interaction = node
+	
 	
 func _input(event):
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_RIGHT:
 		if event.is_pressed():
-			context_menu.position = event.position
-			context_menu.visible = true
+			start_mouse_pos = event.position
+		if event.is_released():
+			var dist = (event.position - start_mouse_pos).length_squared()
+			if dist < pow(Config.CONTEXT_MENU_THRESHOLD,2):
+				context_menu.position = event.position
+				context_menu.visible = true
+				image_interaction.is_locked = true
+				image_interaction.is_dragging = false
 				
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:			
 		if event.is_pressed(): 
 			if !is_cursor_inside: # cancel context menu
 				context_menu.visible = false
+				image_interaction.is_locked = false
 
 
 func _on_add_button_pressed():

@@ -4,7 +4,7 @@
 extends Node
 class_name SymbolSelectionInterface
 
-signal symbol_selected_received(xml_id:int, symbol_id:int)
+signal symbol_selected_received(xml_id:int, symbol_id:int, from_image:bool)
 signal symbol_deselected_received()
 
 func _ready():
@@ -13,10 +13,10 @@ func _ready():
 	SymbolManager.symbol_deselected.connect(on_symbol_deselected_received)
 
 
-func on_symbol_selected_received(object: Object, xml_id:int, symbol_id:int):
+func on_symbol_selected_received(object: Object, xml_id:int, symbol_id:int, from_image:bool):
 	# filter out self send
 	if object != self:
-		symbol_selected_received.emit(xml_id,symbol_id)
+		symbol_selected_received.emit(xml_id,symbol_id,from_image)
 		
 
 func on_symbol_deselected_received(object: Object):
@@ -26,8 +26,8 @@ func on_symbol_deselected_received(object: Object):
 
 
 # call this if want to send selection
-func symbol_selected_send(xml_id: int, symbol_id: int):
-	SymbolManager.symbol_selected.emit(self, xml_id, symbol_id)
+func symbol_selected_send(xml_id: int, symbol_id: int, from_image: bool):
+	SymbolManager.symbol_selected.emit(self, xml_id, symbol_id, from_image)
 	
 	
 func symbol_deselected_send():

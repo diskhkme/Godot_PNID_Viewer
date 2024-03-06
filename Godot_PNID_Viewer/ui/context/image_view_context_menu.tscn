@@ -1,15 +1,12 @@
-[gd_scene load_steps=3 format=3 uid="uid://drge4asvwjmcu"]
+[gd_scene load_steps=2 format=3 uid="uid://drge4asvwjmcu"]
 
 [ext_resource type="Script" path="res://ui/context/image_view_context_menu.gd" id="1_or2g8"]
-[ext_resource type="PackedScene" uid="uid://mh17f6epf3a6" path="res://ui/component/symbol_selection_interface.tscn" id="2_qvri7"]
 
 [node name="ImageViewContextMenu" type="Control"]
 layout_mode = 3
 anchors_preset = 0
 mouse_filter = 1
 script = ExtResource("1_or2g8")
-
-[node name="SymbolSelectionInterface" parent="." instance=ExtResource("2_qvri7")]
 
 [node name="PanelContainer" type="PanelContainer" parent="."]
 visible = false

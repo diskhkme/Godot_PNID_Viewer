@@ -1,8 +1,6 @@
-[gd_scene load_steps=4 format=3 uid="uid://mmirfa2yhj50"]
+[gd_scene load_steps=2 format=3 uid="uid://mmirfa2yhj50"]
 
 [ext_resource type="Script" path="res://ui/xml_tree_viewer.gd" id="1_pu4o1"]
-[ext_resource type="PackedScene" uid="uid://mh17f6epf3a6" path="res://ui/component/symbol_selection_interface.tscn" id="2_gou4a"]
-[ext_resource type="PackedScene" uid="uid://lru6b2rj8tpn" path="res://ui/component/symbol_edit_interface.tscn" id="3_qubqd"]
 
 [node name="XMLTreeViewer" type="Control"]
 layout_mode = 3
@@ -12,10 +10,6 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_pu4o1")
-
-[node name="SymbolSelectionInterface" parent="." instance=ExtResource("2_gou4a")]
-
-[node name="SymbolEditInterface" parent="." instance=ExtResource("3_qubqd")]
 
 [node name="Tree" type="Tree" parent="."]
 layout_mode = 1
