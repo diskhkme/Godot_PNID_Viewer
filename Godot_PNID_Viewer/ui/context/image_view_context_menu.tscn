@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://drge4asvwjmcu"]
+[gd_scene load_steps=3 format=3 uid="uid://drge4asvwjmcu"]
 
 [ext_resource type="Script" path="res://ui/context/image_view_context_menu.gd" id="1_or2g8"]
+[ext_resource type="PackedScene" uid="uid://mh17f6epf3a6" path="res://ui/component/symbol_selection_interface.tscn" id="2_qvri7"]
 
 [node name="ImageViewContextMenu" type="Control"]
 layout_mode = 3
@@ -8,14 +9,33 @@ anchors_preset = 0
 mouse_filter = 1
 script = ExtResource("1_or2g8")
 
-[node name="MenuButton" type="MenuButton" parent="."]
+[node name="SymbolSelectionInterface" parent="." instance=ExtResource("2_qvri7")]
+
+[node name="PanelContainer" type="PanelContainer" parent="."]
 visible = false
 layout_mode = 0
-offset_right = 8.0
-offset_bottom = 8.0
+offset_right = 40.0
+offset_bottom = 40.0
 mouse_filter = 1
-item_count = 2
-popup/item_0/text = "Add"
-popup/item_0/id = 0
-popup/item_1/text = "Remove"
-popup/item_1/id = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer"]
+layout_mode = 2
+
+[node name="AddButton" type="Button" parent="PanelContainer/VBoxContainer"]
+layout_mode = 2
+mouse_filter = 1
+text = "Add"
+
+[node name="RemoveButton" type="Button" parent="PanelContainer/VBoxContainer"]
+layout_mode = 2
+mouse_filter = 1
+text = "Remove"
+
+[connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="." to="." method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="PanelContainer" to="." method="_on_panel_container_mouse_entered"]
+[connection signal="mouse_exited" from="PanelContainer" to="." method="_on_panel_container_mouse_exited"]
+[connection signal="mouse_entered" from="PanelContainer/VBoxContainer" to="." method="_on_v_box_container_mouse_entered"]
+[connection signal="mouse_exited" from="PanelContainer/VBoxContainer" to="." method="_on_v_box_container_mouse_exited"]
+[connection signal="pressed" from="PanelContainer/VBoxContainer/AddButton" to="." method="_on_add_button_pressed"]
+[connection signal="pressed" from="PanelContainer/VBoxContainer/RemoveButton" to="." method="_on_remove_button_pressed"]

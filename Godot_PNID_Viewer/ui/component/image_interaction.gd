@@ -9,20 +9,13 @@ signal zoom_changed(zoom_level: float)
 @export var zoom_tick: float = 0.05
 @export var image_view_cam: Camera2D
 
-@onready var image_view_context_menu = $ImageViewContextMenu
-
 var is_dragging: bool = false
 var drag_start_position: Vector2
 var drag_offset: Vector2
 
 func _ready():
 	add_to_group("draw_group")
-	image_view_context_menu.poped_up.connect(on_context_menu_popup)
 	
-	
-func on_context_menu_popup():
-	is_dragging = false
-
 
 func _input(event):
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_RIGHT:
