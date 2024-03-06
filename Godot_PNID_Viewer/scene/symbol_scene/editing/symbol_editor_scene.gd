@@ -9,6 +9,7 @@ class_name SymbolEditor
 func _ready():
 	SymbolManager.symbol_edit_started.connect(show_editor)
 	SymbolManager.symbol_edit_ended.connect(hide_editor)
+	SymbolManager.symbol_deselected.connect(hide_editor)
 	visible = false
 
 

@@ -2,5 +2,7 @@
 
 [ext_resource type="Script" path="res://ui/component/symbol_selection_filter.gd" id="1_i31ro"]
 
-[node name="SymbolSelectionFilter" type="Node2D"]
+[node name="SymbolSelectionFilter" type="Control"]
+layout_mode = 3
+anchors_preset = 0
 script = ExtResource("1_i31ro")

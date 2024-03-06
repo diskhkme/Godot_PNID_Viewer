@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://en0mt7v4ddrg"]
+[gd_scene load_steps=7 format=3 uid="uid://en0mt7v4ddrg"]
 
 [ext_resource type="Script" path="res://main.gd" id="1_h1xnr"]
 [ext_resource type="PackedScene" uid="uid://d02o5ib62ed0d" path="res://ui/main_menu.tscn" id="1_n0m63"]
@@ -6,7 +6,6 @@
 [ext_resource type="PackedScene" uid="uid://cypy5mb0rfmk7" path="res://ui/project_viewer.tscn" id="4_48ush"]
 [ext_resource type="PackedScene" uid="uid://mmirfa2yhj50" path="res://ui/xml_tree_viewer.tscn" id="5_4qjjb"]
 [ext_resource type="PackedScene" uid="uid://bdsyjmvhhrl76" path="res://ui/dialogs/type_change_window.tscn" id="6_xn5xa"]
-[ext_resource type="PackedScene" uid="uid://drge4asvwjmcu" path="res://ui/context/image_view_context_menu.tscn" id="7_j63mt"]
 
 [node name="Main" type="Node"]
 script = ExtResource("1_h1xnr")
@@ -113,13 +112,3 @@ use_native_dialog = true
 
 [node name="TypeChangeWindow" parent="CanvasLayer/Dialogs" instance=ExtResource("6_xn5xa")]
 visible = false
-
-[node name="ContextMenus" type="Control" parent="CanvasLayer"]
-layout_mode = 3
-anchors_preset = 0
-offset_right = 40.0
-offset_bottom = 40.0
-mouse_filter = 1
-
-[node name="ImageViewContextMenu" parent="CanvasLayer/ContextMenus" node_paths=PackedStringArray("image_viewer") instance=ExtResource("7_j63mt")]
-image_viewer = NodePath("../../MainWindow/Middle/ImageViewer")

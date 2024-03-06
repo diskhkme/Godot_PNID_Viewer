@@ -2,7 +2,7 @@
 # watch symbol scene(s) + symbol editor scene
 # i
 
-extends Node2D
+extends Control
 class_name SymbolSelectionFilter
 
 signal clear_selected_candidate

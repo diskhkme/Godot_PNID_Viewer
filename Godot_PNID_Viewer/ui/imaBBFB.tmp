@@ -15,17 +15,17 @@ size_flags_horizontal = 3
 mouse_filter = 1
 script = ExtResource("1_lk1s6")
 
+[node name="ImageInteraction" parent="." node_paths=PackedStringArray("image_view_cam") instance=ExtResource("2_2tjoj")]
+layout_mode = 2
+mouse_filter = 1
+image_view_cam = NodePath("../SubViewportContainer/SubViewport/Camera2D")
+
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
 [node name="ImageViewContextMenu" parent="CanvasLayer" node_paths=PackedStringArray("image_interaction") instance=ExtResource("4_ck8fg")]
 offset_right = 40.0
 offset_bottom = 40.0
 image_interaction = NodePath("../../ImageInteraction")
-
-[node name="ImageInteraction" parent="." node_paths=PackedStringArray("image_view_cam") instance=ExtResource("2_2tjoj")]
-layout_mode = 2
-mouse_filter = 1
-image_view_cam = NodePath("../SubViewportContainer/SubViewport/Camera2D")
 
 [node name="SymbolSelectionFilter" parent="." instance=ExtResource("4_pnl7l")]
 layout_mode = 2

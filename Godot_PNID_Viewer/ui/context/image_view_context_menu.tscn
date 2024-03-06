@@ -21,12 +21,12 @@ layout_mode = 2
 [node name="AddButton" type="Button" parent="PanelContainer/VBoxContainer"]
 layout_mode = 2
 mouse_filter = 1
-text = "Add"
+text = "Remove"
 
 [node name="RemoveButton" type="Button" parent="PanelContainer/VBoxContainer"]
 layout_mode = 2
 mouse_filter = 1
-text = "Remove"
+text = "Edit"
 
 [connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
 [connection signal="mouse_exited" from="." to="." method="_on_mouse_exited"]

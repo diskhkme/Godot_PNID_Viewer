@@ -9,7 +9,7 @@ class_name ImageViewer
 @onready var image_scene = $SubViewportContainer/SubViewport/ImageScene
 @onready var image_viewport = $SubViewportContainer/SubViewport
 @onready var camera = $SubViewportContainer/SubViewport/Camera2D
-@onready var symbol_selection_filter = $SubViewportContainer/SubViewport/SymbolSelectionFilter
+@onready var symbol_selection_filter = $SymbolSelectionFilter
 
 
 func use_project(project: Project) -> void:
