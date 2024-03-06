@@ -10,6 +10,7 @@ func _ready():
 	SymbolManager.symbol_selected_from_image.connect(focus_symbol)
 	SymbolManager.symbol_deselected.connect(deselect_treeitem)
 	SymbolManager.symbol_edited.connect(update_symbol)
+	SymbolManager.symbol_added.connect(add_symbol)
 	
 
 func set_tree_column_style():
@@ -92,6 +93,16 @@ func fill_treeitem(symbol_child: TreeItem, symbol_object: SymbolObject):
 	if symbol_object.removed:
 		symbol_child.visible = false
 	
+	
+func add_symbol(xml_id:int, symbol_id: int):
+	var symbol = ProjectManager.get_symbol_in_xml(xml_id, symbol_id)
+	for xml_treeitem in tree.get_root().get_children():
+		var xml_filename = xml_treeitem.get_text(0)
+		var child_xml_id = ProjectManager.active_project.get_xml_id_from_filename(xml_filename)
+		if xml_id == child_xml_id:	
+			var symbol_treeitem = create_symbol(xml_treeitem, symbol)
+			symbol_update_cache[symbol] = symbol_treeitem
+
 
 func update_symbol(xml_id: int, symbol_id: int):
 	var symbol = ProjectManager.get_symbol_in_xml(xml_id, symbol_id)
@@ -103,16 +114,12 @@ func update_symbol(xml_id: int, symbol_id: int):
 			var child_xml_id = ProjectManager.active_project.get_xml_id_from_filename(xml_filename)
 			if xml_id == child_xml_id:
 				var symbol_treeitem = find_symbol_item_by_id(xml_treeitem.get_children(), symbol.id)
-				if symbol_treeitem == null: # new symbol added
-					symbol_treeitem = create_symbol(xml_treeitem, symbol)
-				else:
-					fill_treeitem(symbol_treeitem, symbol)
+				fill_treeitem(symbol_treeitem, symbol)
 				symbol_update_cache[symbol] = symbol_treeitem
 
 
 func find_symbol_item_by_id(arr: Array[TreeItem], id: int):
 	var result = arr.filter(func(elem): return elem.get_text(0).to_int() == id)
-	if result.size() == 0:
-		return null
+	assert(result.size() != 0, "finding non-existing symbol")
 	return result[0]
 	

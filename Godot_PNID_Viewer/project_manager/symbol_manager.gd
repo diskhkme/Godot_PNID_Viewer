@@ -10,6 +10,7 @@ signal symbol_deselected()
 
 signal symbol_edit_started(xml_id: int, symbol_id: int)
 signal symbol_edited(xml_id: int, symbol_id: int)
+signal symbol_added(xml_id: int, symbol_id: int)
 signal symbol_edit_ended()
 
 var is_editing: bool = false
