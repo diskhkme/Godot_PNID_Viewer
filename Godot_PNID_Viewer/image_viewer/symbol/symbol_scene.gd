@@ -43,6 +43,7 @@ func clear_candidates():
 	
 
 func on_static_symbol_select_reported(symbol: StaticSymbol) -> void:
-	selected_candidate.push_back(symbol)
+	if !selected_candidate.has(symbol):
+		selected_candidate.push_back(symbol)
 	
 	

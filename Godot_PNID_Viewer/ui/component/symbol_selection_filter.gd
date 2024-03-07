@@ -1,11 +1,13 @@
 # Symbol scene select filter
 # watch symbol scene(s) + symbol editor scene
-# i
+# (Note) Event gives global mouse position only if this is a children of subviewport
 
 extends Control
 class_name SymbolSelectionFilter
 
 signal clear_selected_candidate
+
+@export var camera: ImageViewCamera
 
 var last_selected_candidate: Array[StaticSymbol]
 var selected_history = {} # false if excluded from candidate
@@ -15,19 +17,21 @@ func add_watch(symbol_scene: SymbolScene):
 	watching_scenes.push_back(symbol_scene)
 
 
-func _input(event):
+# use _unhandle_input to ignore on context button click
+func _unhandled_input(event):
 	if ProjectManager.active_project == null:
 		return
 	
 	if SymbolManager.is_editing == true:
 		return
 	
-	if event is InputEventMouseButton: # and event.button_index == MOUSE_BUTTON_LEFT:
+	if event is InputEventMouseButton and (event.button_index == MOUSE_BUTTON_LEFT or event.button_index == MOUSE_BUTTON_RIGHT):
 		if !event.is_pressed():
 			var candidates: Array[StaticSymbol] = []
 			for scene in watching_scenes:
 				candidates.append_array(scene.selected_candidate)
 			
+			# get_global_mouse_position() returns 2d world coord position if it is in subviewport
 			var mouse_pos = get_global_mouse_position()
 			var selected = decide_selected(mouse_pos, candidates)
 			if selected == null:

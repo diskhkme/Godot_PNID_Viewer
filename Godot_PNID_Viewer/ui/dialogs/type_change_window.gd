@@ -1,5 +1,7 @@
 extends Window
 
+signal type_change_window_closed
+
 @onready var type_option_button = $VBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/TypeOptionButton
 @onready var cls_option_button = $VBoxContainer/MarginContainer/VBoxContainer/HBoxContainer2/ClassOptionButton
 @onready var cls_text_edit = $VBoxContainer/MarginContainer/VBoxContainer/HBoxContainer2/TextEdit
@@ -61,14 +63,17 @@ func _on_ok_button_pressed():
 	update_symbol_object()
 	SymbolManager.symbol_edited.emit(xml_stat.id, symbol_object.id)
 	self.visible = false
+	type_change_window_closed.emit()
 
 
 func _on_cancel_button_pressed():
 	self.visible = false
+	type_change_window_closed.emit()
 
 
 func _on_close_requested():
 	self.visible = false
+	type_change_window_closed.emit()
 
 
 

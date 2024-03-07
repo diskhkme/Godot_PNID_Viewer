@@ -1,10 +1,11 @@
 extends Control
 
-signal requre_type_change_window
+signal request_type_change_window
 
 @onready var tree = $Tree
 
 var symbol_update_cache = {}
+
 
 func _ready():
 	SymbolManager.symbol_selected_from_image.connect(focus_symbol)
@@ -66,7 +67,7 @@ func _input(event):
 			var selected_xml_id = ProjectManager.active_project.get_xml_id_from_filename(selected_xml_filename)
 			var xml_stat = ProjectManager.get_xml(selected_xml_id)
 			var symbol_object = ProjectManager.get_symbol_in_xml(selected_xml_id, selected_symbol_id)
-			requre_type_change_window.emit(xml_stat, symbol_object)
+			request_type_change_window.emit(xml_stat, symbol_object)
 			
 			
 func focus_symbol(xml_id:int, symbol_id:int):

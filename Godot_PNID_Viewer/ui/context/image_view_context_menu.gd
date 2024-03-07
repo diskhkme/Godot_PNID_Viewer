@@ -5,7 +5,7 @@ extends Control
 signal poped_up
 
 @export var image_interaction: ImageInteraction
-@export var camera: ImageViewCamera
+@export var image_view_camera: ImageViewCamera
 
 @onready var context_menu = $PanelContainer
 @onready var add_button = $PanelContainer/VBoxContainer/AddButton
@@ -15,6 +15,7 @@ signal poped_up
 var start_mouse_pos
 var is_in_parent_canvas
 var is_in_context_menu
+var context_position_global
 
 var xml_id
 var symbol_id
@@ -37,11 +38,9 @@ func _input(event):
 			var dist = (event.position - start_mouse_pos).length_squared()
 			if dist < pow(Config.CONTEXT_MENU_THRESHOLD,2):
 				context_menu.global_position = event.position
-				print(event.position)
 				context_menu.visible = true
 				image_interaction.is_locked = true
 				image_interaction.is_dragging = false
-			print(event.position)
 				
 	if event is InputEventMouseButton:			
 		if event.is_pressed(): 
@@ -71,12 +70,13 @@ func on_symbol_deselected():
 func _on_add_button_pressed():
 	# TODO: currently, just add to the first xml
 	var xml_stat = ProjectManager.active_project.xml_status[0]
-	var new_symbol_id = xml_stat.add_new_symbol(camera.get_pixel_coord(context_menu.position))
+	var new_symbol_id = xml_stat.add_new_symbol(image_view_camera.get_pixel_from_image_canvas(context_menu.global_position))
 	SymbolManager.symbol_selected_from_image.emit(0, new_symbol_id)
 	context_menu.visible = false
 
 
 func _on_remove_button_pressed():
+	# TODO: if removed, request redraw
 	var symbol_object = ProjectManager.get_symbol_in_xml(xml_id, symbol_id)
 	var xml_stat = ProjectManager.active_project.xml_status[xml_id]
 	xml_stat.remove_symbol(symbol_id)

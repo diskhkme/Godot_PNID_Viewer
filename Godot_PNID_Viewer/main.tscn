@@ -70,12 +70,6 @@ mouse_filter = 1
 script = ExtResource("3_7mdxh")
 image_view_cam = NodePath("../SubViewportContainer/SubViewport/ImageViewCamera")
 
-[node name="CanvasLayer" type="CanvasLayer" parent="CanvasLayer/MainWindow/Middle/ImageViewer"]
-
-[node name="SymbolSelectionFilter" type="Control" parent="CanvasLayer/MainWindow/Middle/ImageViewer"]
-layout_mode = 2
-script = ExtResource("4_vp6ol")
-
 [node name="SubViewportContainer" type="SubViewportContainer" parent="CanvasLayer/MainWindow/Middle/ImageViewer"]
 layout_mode = 2
 stretch = true
@@ -85,6 +79,25 @@ handle_input_locally = false
 physics_object_picking = true
 size = Vector2i(570, 546)
 render_target_update_mode = 4
+
+[node name="ContextMenu" type="CanvasLayer" parent="CanvasLayer/MainWindow/Middle/ImageViewer/SubViewportContainer/SubViewport"]
+
+[node name="ImageViewContextMenu" parent="CanvasLayer/MainWindow/Middle/ImageViewer/SubViewportContainer/SubViewport/ContextMenu" node_paths=PackedStringArray("image_interaction", "image_view_camera") instance=ExtResource("12_p38sp")]
+offset_top = 70.0
+offset_bottom = 70.0
+size_flags_horizontal = 0
+size_flags_vertical = 0
+image_interaction = NodePath("../../../../ImageInteraction")
+image_view_camera = NodePath("../../ImageViewCamera")
+
+[node name="SymbolSelectionFilter" type="Control" parent="CanvasLayer/MainWindow/Middle/ImageViewer/SubViewportContainer/SubViewport" node_paths=PackedStringArray("camera")]
+layout_mode = 3
+anchors_preset = 0
+offset_top = 70.0
+offset_right = 570.0
+offset_bottom = 616.0
+script = ExtResource("4_vp6ol")
+camera = NodePath("../ImageViewCamera")
 
 [node name="ImageScene" type="Node2D" parent="CanvasLayer/MainWindow/Middle/ImageViewer/SubViewportContainer/SubViewport"]
 position = Vector2(4000, 4000)
@@ -96,14 +109,6 @@ script = ExtResource("5_vm2n5")
 
 [node name="ImageViewCamera" type="Camera2D" parent="CanvasLayer/MainWindow/Middle/ImageViewer/SubViewportContainer/SubViewport"]
 script = ExtResource("8_6tcqo")
-
-[node name="ImageViewContextMenu" parent="CanvasLayer/MainWindow/Middle/ImageViewer" node_paths=PackedStringArray("image_interaction", "camera") instance=ExtResource("12_p38sp")]
-z_index = 5
-layout_mode = 2
-size_flags_horizontal = 0
-size_flags_vertical = 0
-image_interaction = NodePath("../ImageInteraction")
-camera = NodePath("../SubViewportContainer/SubViewport/ImageViewCamera")
 
 [node name="RightSide" type="VSplitContainer" parent="CanvasLayer/MainWindow/Middle"]
 layout_mode = 2
@@ -162,7 +167,7 @@ use_native_dialog = true
 [node name="TypeChangeWindow" parent="CanvasLayer/Dialogs" instance=ExtResource("6_xn5xa")]
 visible = false
 
-[node name="ContextMenu" type="CanvasLayer" parent="CanvasLayer"]
-
-[connection signal="mouse_entered" from="CanvasLayer/MainWindow/Middle/ImageViewer" to="CanvasLayer/MainWindow/Middle/ImageViewer/ImageViewContextMenu" method="_on_image_viewer_mouse_entered"]
-[connection signal="mouse_exited" from="CanvasLayer/MainWindow/Middle/ImageViewer" to="CanvasLayer/MainWindow/Middle/ImageViewer/ImageViewContextMenu" method="_on_image_viewer_mouse_exited"]
+[connection signal="mouse_entered" from="CanvasLayer/MainWindow/Middle/ImageViewer" to="CanvasLayer/MainWindow/Middle/ImageViewer/ImageInteraction" method="_on_image_viewer_mouse_entered"]
+[connection signal="mouse_entered" from="CanvasLayer/MainWindow/Middle/ImageViewer" to="CanvasLayer/MainWindow/Middle/ImageViewer/SubViewportContainer/SubViewport/ContextMenu/ImageViewContextMenu" method="_on_image_viewer_mouse_entered"]
+[connection signal="mouse_exited" from="CanvasLayer/MainWindow/Middle/ImageViewer" to="CanvasLayer/MainWindow/Middle/ImageViewer/ImageInteraction" method="_on_image_viewer_mouse_exited"]
+[connection signal="mouse_exited" from="CanvasLayer/MainWindow/Middle/ImageViewer" to="CanvasLayer/MainWindow/Middle/ImageViewer/SubViewportContainer/SubViewport/ContextMenu/ImageViewContextMenu" method="_on_image_viewer_mouse_exited"]

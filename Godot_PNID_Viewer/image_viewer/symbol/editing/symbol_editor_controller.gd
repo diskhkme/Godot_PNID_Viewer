@@ -84,7 +84,6 @@ func _input(event):
 				if handle.on_cursor == true:
 					return
 					
-			SymbolManager.symbol_deselected.emit()
 			SymbolManager.symbol_edit_ended.emit()
 				
 				
