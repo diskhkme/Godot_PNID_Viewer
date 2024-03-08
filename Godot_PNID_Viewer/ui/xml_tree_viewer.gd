@@ -46,6 +46,14 @@ func use_project(project: Project):
 	for xml_stat in project.xml_status:
 		var xml_item = tree.create_item(root)
 		xml_item.set_text(0,xml_stat.filename)
+		xml_item.set_selectable(0,false)
+		xml_item.set_selectable(1,false)
+		xml_item.set_selectable(2,false)
+		xml_item.set_selectable(3,false)
+		xml_item.set_selectable(4,false)
+		xml_item.set_selectable(5,false)
+		xml_item.set_selectable(6,false)
+		xml_item.set_selectable(7,false)
 		xml_stat_item_dict[xml_stat] = xml_item
 		for symbol_object in xml_stat.symbol_objects:
 			var symbol_item = create_symbol(xml_item, symbol_object)
@@ -74,8 +82,15 @@ func _on_tree_item_selected():
 	
 
 func _input(event):
+	# limit area to treeviewer
+	var rect = get_global_rect()
+	var pos = get_global_mouse_position()
+	if !rect.has_point(pos):
+		return
+				
+	# bring type class editing window by double clicking
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
-		if event.double_click: # TODO: limit area to treeviewer
+		if event.double_click: 
 			var selected_symbol_id = tree.get_selected().get_text(0).to_int()
 			var selected_xml_filename = tree.get_selected().get_parent().get_text(0)
 			var selected_xml_id = ProjectManager.active_project.get_xml_id_from_filename(selected_xml_filename)
@@ -164,3 +179,5 @@ func change_selectability(xml_id: int):
 			for child in xml_stat_item_dict[xml_stat].get_children():
 				for i in range(COLUMN_COUNT):
 					child.set_selectable(i,true)
+
+

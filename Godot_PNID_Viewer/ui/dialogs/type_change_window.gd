@@ -72,6 +72,7 @@ func update_symbol_object():
 
 
 # change only applied when pressed OK
+# TODO: after closing, XML treeviewer still waits click so selected is jumped(?)
 func _on_ok_button_pressed():
 	if check_symbol_updated():
 		update_symbol_object()

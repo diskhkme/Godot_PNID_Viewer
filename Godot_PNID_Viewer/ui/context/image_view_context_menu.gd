@@ -4,7 +4,6 @@ extends Control
 
 signal poped_up
 
-@export var image_interaction: ImageInteraction
 @export var image_view_camera: ImageViewCamera
 
 @onready var context_menu = $PanelContainer
@@ -39,14 +38,14 @@ func _input(event):
 			if dist < pow(Config.CONTEXT_MENU_THRESHOLD,2):
 				context_menu.global_position = event.position
 				context_menu.visible = true
-				image_interaction.is_locked = true
-				image_interaction.is_dragging = false
+				image_view_camera.is_locked = true
+				image_view_camera.is_dragging = false
 				
 	if event is InputEventMouseButton:			
 		if event.is_pressed(): 
 			if !is_in_context_menu: # cancel context menu
 				context_menu.visible = false
-				image_interaction.is_locked = false
+				image_view_camera.is_locked = false
 
 
 func on_symbol_selected(xml_id:int, symbol_id:int):
@@ -73,7 +72,7 @@ func _on_add_button_pressed():
 	var new_symbol_id = xml_stat.add_new_symbol(image_view_camera.get_pixel_from_image_canvas(context_menu.global_position))
 	SymbolManager.symbol_selected_from_image.emit(0, new_symbol_id)
 	context_menu.visible = false
-	image_interaction.is_locked = false
+	image_view_camera.is_locked = false
 
 
 func _on_remove_button_pressed():
@@ -84,7 +83,7 @@ func _on_remove_button_pressed():
 	SymbolManager.symbol_edit_ended.emit()
 	SymbolManager.symbol_deselected.emit()
 	context_menu.visible = false
-	image_interaction.is_locked = false
+	image_view_camera.is_locked = false
 
 
 func _on_edit_button_pressed():

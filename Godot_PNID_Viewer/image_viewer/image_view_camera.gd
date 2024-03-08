@@ -1,9 +1,41 @@
 extends Camera2D
 class_name ImageViewCamera
 
+signal zoom_changed(zoom_level: float)
+
+var is_locked: bool = false
+var is_dragging: bool = false
+
 func _ready():
+	add_to_group("draw_group")
 	SymbolManager.symbol_selected_from_tree.connect(focus_symbol)
 
+
+func _unhandled_input(event):
+	if is_locked:
+		return
+	
+	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_RIGHT:
+		if not is_dragging and event.is_pressed():
+			is_dragging = true
+
+		if is_dragging and event.is_released():
+			is_dragging = false
+
+	if event is InputEventMouseMotion and is_dragging:
+		self.global_translate((-event.relative)/self.zoom)
+		
+	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_WHEEL_UP:
+		var target_zoom = self.zoom * Config.CAMERA_ZOOM_TICK
+		self.zoom += target_zoom
+		get_tree().call_group("draw_group", "on_redraw_requested")
+
+		
+	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
+		var target_zoom = self.zoom * Config.CAMERA_ZOOM_TICK
+		self.zoom -= target_zoom
+		get_tree().call_group("draw_group", "on_redraw_requested")
+		
 
 func focus_symbol(xml_id:int, symbol_id:int):
 	var target_symbol = ProjectManager.get_symbol_in_xml(xml_id, symbol_id)
@@ -32,3 +64,6 @@ func get_pixel_from_image_canvas(canvas_coord: Vector2):
 	var camera_pos = global_position
 	var topleft = camera_pos - visible_rect.size*0.5
 	return topleft + canvas_coord / zoom.x
+
+
+
