@@ -18,7 +18,7 @@ func _init(id, path):
 	symbol_objects = PnidXmlParser.parse_pnid_xml(path)
 	var is_sane = check_sanity(symbol_objects) # TODO: what to do if check sanity failes?
 	visible = true
-	color = Config.project_color_preset[id]
+	color = Config.SYMBOL_COLOR_PRESET[id]
 	
 
 # TODO: add more constraints

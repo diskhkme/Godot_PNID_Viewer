@@ -15,12 +15,20 @@ func _ready():
 	
 
 func set_tree_column_style():
+	tree.set_column_title(0, "ID")
 	tree.set_column_clip_content(0, true)
 	tree.set_column_custom_minimum_width(0, 100)
+	tree.set_column_title(1, "Type")
 	tree.set_column_clip_content(1, true)
 	tree.set_column_custom_minimum_width(1, 100)
+	tree.set_column_title(2, "Class")
 	tree.set_column_clip_content(2, true)
 	tree.set_column_custom_minimum_width(2, 100)
+	tree.set_column_title(3, "XMin")
+	tree.set_column_title(4, "YMin")
+	tree.set_column_title(5, "XMax")
+	tree.set_column_title(6, "YMax")
+	tree.set_column_title(7, "Deg")
 	
 	for i in range(8):
 		if i != 2:
@@ -36,18 +44,20 @@ func use_project(project: Project):
 		var child = tree.create_item(root)
 		child.set_text(0,xml_stat.filename)
 		for symbol_object in xml_stat.symbol_objects:
-			create_symbol(child, symbol_object)
+			var symbol_item = create_symbol(child, symbol_object)
+			#symbol_item.set_custom_color(1, Config.SYMBOL_COLOR_PRESET[xml_stat.id])
+			symbol_item.set_custom_bg_color(0, Config.SYMBOL_COLOR_PRESET[xml_stat.id],true)
 	
 	set_tree_column_style()
 	
 	
 func create_symbol(parent: TreeItem, symbol_object: SymbolObject) -> TreeItem:
-	var symbol_child: TreeItem = tree.create_item(parent)
-	fill_treeitem(symbol_child,symbol_object)
+	var symbol_item: TreeItem = tree.create_item(parent)
+	fill_treeitem(symbol_item,symbol_object)
 	if symbol_object.is_text:
-		symbol_child.set_editable(2, true)
+		symbol_item.set_editable(2, true)
 		
-	return symbol_child
+	return symbol_item
 
 	
 func _on_tree_item_selected():
@@ -123,4 +133,7 @@ func find_symbol_item_by_id(arr: Array[TreeItem], id: int):
 	var result = arr.filter(func(elem): return elem.get_text(0).to_int() == id)
 	assert(result.size() != 0, "finding non-existing symbol")
 	return result[0]
-	
+
+
+func _on_tree_column_title_clicked(column, mouse_button_index):
+	pass # Replace with function body.

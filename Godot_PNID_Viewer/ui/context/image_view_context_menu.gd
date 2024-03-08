@@ -73,6 +73,7 @@ func _on_add_button_pressed():
 	var new_symbol_id = xml_stat.add_new_symbol(image_view_camera.get_pixel_from_image_canvas(context_menu.global_position))
 	SymbolManager.symbol_selected_from_image.emit(0, new_symbol_id)
 	context_menu.visible = false
+	image_interaction.is_locked = false
 
 
 func _on_remove_button_pressed():
@@ -83,6 +84,7 @@ func _on_remove_button_pressed():
 	SymbolManager.symbol_edit_ended.emit()
 	SymbolManager.symbol_deselected.emit()
 	context_menu.visible = false
+	image_interaction.is_locked = false
 
 
 func _on_edit_button_pressed():
