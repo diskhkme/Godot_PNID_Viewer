@@ -61,6 +61,7 @@ size_flags_stretch_ratio = 20.0
 [node name="ImageViewer" type="PanelContainer" parent="CanvasLayer/MainWindow/Middle"]
 layout_mode = 2
 size_flags_horizontal = 3
+focus_mode = 1
 mouse_filter = 1
 script = ExtResource("3_5qiq5")
 
@@ -77,7 +78,7 @@ stretch = true
 [node name="SubViewport" type="SubViewport" parent="CanvasLayer/MainWindow/Middle/ImageViewer/SubViewportContainer"]
 handle_input_locally = false
 physics_object_picking = true
-size = Vector2i(2, 2)
+size = Vector2i(570, 546)
 render_target_update_mode = 4
 
 [node name="ContextMenu" type="CanvasLayer" parent="CanvasLayer/MainWindow/Middle/ImageViewer/SubViewportContainer/SubViewport"]

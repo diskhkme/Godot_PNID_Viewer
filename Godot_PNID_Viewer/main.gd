@@ -13,7 +13,7 @@ extends Node
 func _ready():
 	main_menu.file_opened.connect(on_new_project)
 	xml_viewer.request_type_change_window.connect(on_type_change)
-	type_change_window.type_change_window_closed.connect(on_type_chan_window_closed)
+	#type_change_window.type_change_window_closed.connect(on_type_chan_window_closed)
 
 
 func on_new_project(paths: PackedStringArray) -> void:
@@ -36,7 +36,5 @@ func make_project_active(project: Project) -> void:
 	# make menubar adds new tab
 	
 	
-func on_type_chan_window_closed():
-	image_viewer.grab_focus() # TODO: remove focus of tree item when window closed
-	
+
 

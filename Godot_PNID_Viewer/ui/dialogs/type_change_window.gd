@@ -50,30 +50,43 @@ func _on_type_option_button_item_selected(index):
 		cls_text_edit.visible = false
 	
 	
+func check_symbol_updated() -> bool:
+	var updated_type = type_option_button.get_item_text(type_option_button.selected)
+	var updated_cls
+	if cls_text_edit.visible:
+		updated_cls = cls_text_edit.text
+	else:
+		updated_cls = cls_option_button.get_item_text(cls_option_button.selected)
+	if symbol_object.is_type_class_same(updated_type, updated_cls):
+		return false
+		
+	return true
+	
+	
 func update_symbol_object():
 	symbol_object.type = type_option_button.get_item_text(type_option_button.selected)
-	if symbol_object.is_text:
+	if cls_text_edit.visible:
 		symbol_object.cls = cls_text_edit.text
 	else:
 		symbol_object.cls = cls_option_button.get_item_text(cls_option_button.selected)
-	
-		
+
+
 # change only applied when pressed OK
 func _on_ok_button_pressed():
-	update_symbol_object()
-	SymbolManager.symbol_edited.emit(xml_stat.id, symbol_object.id)
+	if check_symbol_updated():
+		update_symbol_object()
+		SymbolManager.symbol_edited.emit(xml_stat.id, symbol_object.id)
+				
 	self.visible = false
-	type_change_window_closed.emit()
 
 
 func _on_cancel_button_pressed():
 	self.visible = false
-	type_change_window_closed.emit()
 
 
 func _on_close_requested():
 	self.visible = false
-	type_change_window_closed.emit()
+
 
 
 

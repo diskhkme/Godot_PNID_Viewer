@@ -19,7 +19,7 @@ func _ready():
 	
 
 func _input(event):
-	if is_locked or !is_mouse_on:
+	if is_locked:
 		return
 	
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_RIGHT:
@@ -41,11 +41,3 @@ func _input(event):
 		var target_zoom = image_view_cam.zoom * Config.CAMERA_ZOOM_TICK
 		image_view_cam.zoom -= target_zoom
 		get_tree().call_group("draw_group", "on_redraw_requested")
-
-
-func _on_image_viewer_mouse_entered():
-	is_mouse_on = true
-
-
-func _on_image_viewer_mouse_exited():
-	is_mouse_on = false

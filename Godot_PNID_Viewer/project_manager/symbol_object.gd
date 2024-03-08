@@ -40,6 +40,13 @@ func get_size() -> Vector2:
 	return Vector2(width, height)
 	
 	
+func is_type_class_same(type: String, cls: String):
+	if self.type == type and self.cls == cls:
+		return true
+		
+	return false
+	
+	
 func set_bndbox(center: Vector2, size: Vector2):
 	var min_coord = center - size/2
 	var max_coord = center + size/2
