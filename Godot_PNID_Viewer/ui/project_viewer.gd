@@ -1,27 +1,36 @@
 extends PanelContainer
 
+signal xml_visibility_changed(xml_id: int)
+signal xml_selectability_changed(xml_id: int)
+
 @onready var tree = $Tree
 
-@export var visibility_button_texture: Texture2D
-@export var color_button_texture: Texture2D
+var xml_file_items = {} # key: treeitem, value: xml_status
 
 func _ready():
 	SymbolManager.symbol_edited.connect(update_xml_status)
 		
 
 func use_project(project: Project) -> void:
+	xml_file_items.clear()
 	tree.clear()
 	tree.set_columns(3)
 	var root = tree.create_item()
 	root.set_text(0,project.img_filepath.get_file())
+	root.set_text(1, "Show")
+	root.set_text(2, "Selectable")
 	for xml_stat in project.xml_status:
 		var child: TreeItem = tree.create_item(root)
 		child.set_text(0,xml_stat.filename)
-		child.set_text(1, "visibile")
 		child.set_cell_mode(1, TreeItem.CELL_MODE_CHECK)
+		child.set_editable(1, true)
+		child.set_cell_mode(2, TreeItem.CELL_MODE_CHECK)
+		child.set_editable(2, true)
+		child.set_checked(1, true)
+		child.set_checked(2, true)
 		
-		
-# TODO: Connect options to viewer (Show/Hide, Color Pick)
+		xml_file_items[child] = xml_stat
+
 
 func update_xml_status(xml_id:int, symbol_id:int):
 	var xml_stat = ProjectManager.active_project.xml_status[xml_id]
@@ -34,3 +43,20 @@ func update_xml_status(xml_id:int, symbol_id:int):
 			else:
 				child.set_text(0,xml_stat.filename)
 
+
+func _process(delta): # TODO: how to receive treeitem checkbox changed event?
+	for item in xml_file_items:
+		if item.is_checked(1) != xml_file_items[item].is_visible:
+			xml_file_items[item].is_visible = item.is_checked(1)
+			xml_visibility_changed.emit(xml_file_items[item].id)
+			if item.is_checked(1) == false: # if not visible, not selectable
+				item.set_checked(2,false)
+				item.set_editable(2,false)
+			else:
+				item.set_checked(2,true)
+				item.set_editable(2,true)
+			
+		if item.is_checked(2) != xml_file_items[item].is_selectable:
+			xml_file_items[item].is_selectable = item.is_checked(2)
+			xml_selectability_changed.emit(xml_file_items[item].id)
+		

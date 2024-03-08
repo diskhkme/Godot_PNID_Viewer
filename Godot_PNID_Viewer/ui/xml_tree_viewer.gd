@@ -4,6 +4,7 @@ signal request_type_change_window
 
 @onready var tree = $Tree
 
+var xml_stat_item_dict = {}
 var symbol_update_cache = {}
 
 
@@ -29,6 +30,7 @@ func set_tree_column_style():
 	tree.set_column_title(5, "XMax")
 	tree.set_column_title(6, "YMax")
 	tree.set_column_title(7, "Deg")
+	tree.column_titles_visible = true
 	
 	for i in range(8):
 		if i != 2:
@@ -41,10 +43,11 @@ func use_project(project: Project):
 	var root: TreeItem = tree.create_item() 
 	tree.hide_root = true
 	for xml_stat in project.xml_status:
-		var child = tree.create_item(root)
-		child.set_text(0,xml_stat.filename)
+		var xml_item = tree.create_item(root)
+		xml_item.set_text(0,xml_stat.filename)
+		xml_stat_item_dict[xml_stat] = xml_item
 		for symbol_object in xml_stat.symbol_objects:
-			var symbol_item = create_symbol(child, symbol_object)
+			var symbol_item = create_symbol(xml_item, symbol_object)
 			#symbol_item.set_custom_color(1, Config.SYMBOL_COLOR_PRESET[xml_stat.id])
 			symbol_item.set_custom_bg_color(0, Config.SYMBOL_COLOR_PRESET[xml_stat.id],true)
 	
@@ -71,7 +74,7 @@ func _on_tree_item_selected():
 
 func _input(event):
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
-		if event.double_click:
+		if event.double_click: # TODO: limit area to treeviewer
 			var selected_symbol_id = tree.get_selected().get_text(0).to_int()
 			var selected_xml_filename = tree.get_selected().get_parent().get_text(0)
 			var selected_xml_id = ProjectManager.active_project.get_xml_id_from_filename(selected_xml_filename)
@@ -135,5 +138,13 @@ func find_symbol_item_by_id(arr: Array[TreeItem], id: int):
 	return result[0]
 
 
-func _on_tree_column_title_clicked(column, mouse_button_index):
-	pass # Replace with function body.
+func change_visibility(xml_id: int):
+	# to keep order consistency, reset tree for every call
+	for xml_stat in xml_stat_item_dict:
+		tree.get_root().remove_child(xml_stat_item_dict[xml_stat])
+	
+	for xml_stat in xml_stat_item_dict:
+		if !xml_stat.is_visible:
+			tree.get_root().remove_child(xml_stat_item_dict[xml_stat])
+		else:
+			tree.get_root().add_child(xml_stat_item_dict[xml_stat])

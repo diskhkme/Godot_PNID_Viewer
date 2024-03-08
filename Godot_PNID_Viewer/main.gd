@@ -13,7 +13,9 @@ extends Node
 func _ready():
 	main_menu.file_opened.connect(on_new_project)
 	xml_viewer.request_type_change_window.connect(on_type_change)
-	#type_change_window.type_change_window_closed.connect(on_type_chan_window_closed)
+	
+	project_viewer.xml_visibility_changed.connect(on_xml_visibility_changed)
+	project_viewer.xml_selectability_changed.connect(on_xml_selectabilty_changed)
 
 
 func on_new_project(paths: PackedStringArray) -> void:
@@ -35,6 +37,15 @@ func make_project_active(project: Project) -> void:
 	
 	# make menubar adds new tab
 	
+	
+func on_xml_visibility_changed(xml_id: int):
+	image_viewer.change_visibility(xml_id)
+	xml_viewer.change_visibility(xml_id)
+	
+	
+func on_xml_selectabilty_changed(xml_id: int):
+	# not picking in imageviewer, xml_viewer
+	pass
 	
 
 
