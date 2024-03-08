@@ -7,6 +7,7 @@ signal request_type_change_window
 var xml_stat_item_dict = {}
 var symbol_update_cache = {}
 
+const COLUMN_COUNT = 8
 
 func _ready():
 	SymbolManager.symbol_selected_from_image.connect(focus_symbol)
@@ -32,14 +33,14 @@ func set_tree_column_style():
 	tree.set_column_title(7, "Deg")
 	tree.column_titles_visible = true
 	
-	for i in range(8):
+	for i in range(COLUMN_COUNT):
 		if i != 2:
 			tree.set_column_expand(i, false)
 
 
 func use_project(project: Project):
 	tree.clear()
-	tree.set_columns(8)
+	tree.set_columns(COLUMN_COUNT)
 	var root: TreeItem = tree.create_item() 
 	tree.hide_root = true
 	for xml_stat in project.xml_status:
@@ -148,3 +149,18 @@ func change_visibility(xml_id: int):
 			tree.get_root().remove_child(xml_stat_item_dict[xml_stat])
 		else:
 			tree.get_root().add_child(xml_stat_item_dict[xml_stat])
+			
+			
+func change_selectability(xml_id: int):
+	for xml_stat in xml_stat_item_dict:
+		if xml_stat.id != xml_id:
+			continue
+		
+		if !xml_stat.is_selectable:
+			for child in xml_stat_item_dict[xml_stat].get_children():
+				for i in range(COLUMN_COUNT):
+					child.set_selectable(i,false)
+		else:
+			for child in xml_stat_item_dict[xml_stat].get_children():
+				for i in range(COLUMN_COUNT):
+					child.set_selectable(i,true)

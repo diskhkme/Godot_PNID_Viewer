@@ -19,7 +19,7 @@ func use_project(project: Project) -> void:
 		var symbol_scene_instance = symbol_scene.instantiate() as SymbolScene
 		symbol_scene_instance.populate_symbol_bboxes(xml_stat)
 		symbol_scene_instance.set_watched_filter(symbol_selection_filter)
-		symbol_selection_filter.add_watch(symbol_scene_instance)
+		symbol_selection_filter.set_watch(symbol_scene_instance)
 		
 		image_viewport.add_child(symbol_scene_instance)
 		
@@ -38,3 +38,9 @@ func change_visibility(xml_id: int):
 	for xml_stat in xml_stat_scene_dict:
 		if xml_stat.id == xml_id:
 			xml_stat_scene_dict[xml_stat].visible = xml_stat.is_visible
+
+
+func change_selectability(xml_id: int):
+	for xml_stat in xml_stat_scene_dict:
+		if xml_stat.id == xml_id:
+			symbol_selection_filter.set_watch(xml_stat_scene_dict[xml_stat])

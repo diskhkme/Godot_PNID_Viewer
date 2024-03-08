@@ -44,8 +44,8 @@ func on_xml_visibility_changed(xml_id: int):
 	
 	
 func on_xml_selectabilty_changed(xml_id: int):
-	# not picking in imageviewer, xml_viewer
-	pass
+	image_viewer.change_selectability(xml_id)
+	xml_viewer.change_selectability(xml_id)
 	
 
 
