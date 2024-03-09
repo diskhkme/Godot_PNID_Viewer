@@ -5,6 +5,8 @@ signal xml_selectability_changed(xml_id: int)
 
 @onready var tree = $Tree
 
+@export var icon_color = preload("res://assets/icons/rectangle_tool.png")
+
 var xml_file_items = {} # key: treeitem, value: xml_status
 
 func _ready():
@@ -14,11 +16,12 @@ func _ready():
 func use_project(project: Project) -> void:
 	xml_file_items.clear()
 	tree.clear()
-	tree.set_columns(3)
+	tree.set_columns(4)
 	var root = tree.create_item()
 	root.set_text(0,project.img_filepath.get_file())
 	root.set_text(1, "Show")
 	root.set_text(2, "Selectable")
+	root.set_text(3, "Color")
 	for xml_stat in project.xml_status:
 		var child: TreeItem = tree.create_item(root)
 		child.set_text(0,xml_stat.filename)
@@ -26,6 +29,11 @@ func use_project(project: Project) -> void:
 		child.set_editable(1, true)
 		child.set_cell_mode(2, TreeItem.CELL_MODE_CHECK)
 		child.set_editable(2, true)
+		child.set_cell_mode(3, TreeItem.CELL_MODE_ICON)
+		child.set_icon_modulate(3,xml_stat.color)
+		child.set_icon(3, icon_color)
+		child.set_editable(3, true)
+		
 		child.set_checked(1, true)
 		child.set_checked(2, true)
 		
