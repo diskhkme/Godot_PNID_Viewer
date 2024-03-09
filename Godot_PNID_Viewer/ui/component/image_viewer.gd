@@ -18,6 +18,8 @@ var is_mouse_on = false
 
 func _ready():
 	image_view_context_menu.context_poped_up.connect(on_context_popup)
+	image_view_context_menu.context_add_clicked.connect(on_add_symbol)
+	image_view_context_menu.context_remove_clicked.connect(on_remove_symbol)
 	
 
 func _input(event):
@@ -60,4 +62,23 @@ func change_selectability(xml_id: int):
 	
 func on_context_popup():
 	image_view_camera.is_dragging = false 
+	
+	
+func on_add_symbol(pos: Vector2):
+	var pos_in_image = image_view_camera.get_pixel_from_image_canvas(pos)
+	var new_symbol_id = ProjectManager.active_project.xml_status[0].add_new_symbol(pos_in_image) # TODO: how to set target xml?
+	
+	SymbolManager.symbol_added.emit(0, new_symbol_id)
+	SymbolManager.symbol_selected_from_image.emit(0, new_symbol_id)	
+	SymbolManager.symbol_edit_started.emit(0, new_symbol_id)
+	
+	
+func on_remove_symbol():
+	var xml_id = SymbolManager.selected_xml_id
+	var symbol_id = SymbolManager.selected_symbol_id
+	ProjectManager.active_project.xml_status[xml_id].remove_symbol(symbol_id)
+	
+	SymbolManager.symbol_edited.emit(xml_id, symbol_id)
+	SymbolManager.symbol_deselected.emit()
+	SymbolManager.symbol_edit_ended.emit()
 	

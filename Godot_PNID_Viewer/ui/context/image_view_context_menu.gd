@@ -9,7 +9,6 @@ signal context_remove_clicked
 
 @onready var add_button = $PanelContainer/VBoxContainer/AddButton
 @onready var remove_button = $PanelContainer/VBoxContainer/RemoveButton
-@onready var edit_button = $PanelContainer/VBoxContainer/EditButton
 
 var start_mouse_pos
 var is_in_context_menu

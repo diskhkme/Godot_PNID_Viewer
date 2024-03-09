@@ -41,7 +41,6 @@ func check_sanity(symbol_objects):
 
 func remove_symbol(symbol_id: int):
 	symbol_objects[symbol_id].removed = true
-	SymbolManager.symbol_edited.emit(id, symbol_id)
 
 
 func add_new_symbol(position: Vector2) -> int:
@@ -50,6 +49,5 @@ func add_new_symbol(position: Vector2) -> int:
 	var new_symbol_id = symbol_objects.size()
 	new_symbol.id = new_symbol_id
 	symbol_objects.push_back(new_symbol)
-	SymbolManager.symbol_added.emit(id, new_symbol_id)
 	
 	return new_symbol_id
