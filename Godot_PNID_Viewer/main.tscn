@@ -1,13 +1,13 @@
 [gd_scene load_steps=12 format=3 uid="uid://en0mt7v4ddrg"]
 
 [ext_resource type="Script" path="res://main.gd" id="1_h1xnr"]
-[ext_resource type="PackedScene" uid="uid://d02o5ib62ed0d" path="res://ui/main_menu.tscn" id="1_n0m63"]
+[ext_resource type="Script" path="res://ui/main_menu.gd" id="2_xxrvq"]
 [ext_resource type="Script" path="res://ui/component/image_viewer.gd" id="3_5qiq5"]
 [ext_resource type="PackedScene" uid="uid://caai5y1ec0vrm" path="res://image_viewer/symbol/editing/symbol_editor_scene.tscn" id="3_aygqj"]
 [ext_resource type="PackedScene" uid="uid://cypy5mb0rfmk7" path="res://ui/project_viewer.tscn" id="4_48ush"]
 [ext_resource type="Script" path="res://ui/component/symbol_selection_filter.gd" id="4_vp6ol"]
 [ext_resource type="PackedScene" uid="uid://mmirfa2yhj50" path="res://ui/xml_tree_viewer.tscn" id="5_4qjjb"]
-[ext_resource type="Script" path="res://image_viewer/image_scene.gd" id="5_vm2n5"]
+[ext_resource type="PackedScene" uid="uid://bcet1tfk0dokl" path="res://image_viewer/image_scene.tscn" id="6_vurax"]
 [ext_resource type="PackedScene" uid="uid://bdsyjmvhhrl76" path="res://ui/dialogs/type_change_window.tscn" id="6_xn5xa"]
 [ext_resource type="Script" path="res://image_viewer/image_view_camera.gd" id="8_6tcqo"]
 [ext_resource type="PackedScene" uid="uid://drge4asvwjmcu" path="res://ui/context/image_view_context_menu.tscn" id="12_p38sp"]
@@ -24,11 +24,35 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="MainMenu" parent="CanvasLayer/MainWindow" node_paths=PackedStringArray("open_files_dialog") instance=ExtResource("1_n0m63")]
+[node name="MainMenu" type="HBoxContainer" parent="CanvasLayer/MainWindow" node_paths=PackedStringArray("open_files_dialog")]
 layout_mode = 2
+script = ExtResource("2_xxrvq")
 open_files_dialog = NodePath("../../Dialogs/OpenFilesDialog")
 
+[node name="Left" type="HBoxContainer" parent="CanvasLayer/MainWindow/MainMenu"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="OpenFilesButton" type="Button" parent="CanvasLayer/MainWindow/MainMenu/Left"]
+layout_mode = 2
+text = "Open File(s)"
+
+[node name="TabBar" type="TabBar" parent="CanvasLayer/MainWindow/MainMenu/Left"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Right" type="HBoxContainer" parent="CanvasLayer/MainWindow/MainMenu"]
+layout_mode = 2
+size_flags_horizontal = 8
+alignment = 2
+
+[node name="Button" type="Button" parent="CanvasLayer/MainWindow/MainMenu/Right"]
+visible = false
+layout_mode = 2
+text = "dumb"
+
 [node name="Toolbar_TODO" type="HBoxContainer" parent="CanvasLayer/MainWindow"]
+visible = false
 layout_mode = 2
 
 [node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/MainWindow/Toolbar_TODO"]
@@ -78,7 +102,7 @@ stretch = true
 [node name="SubViewport" type="SubViewport" parent="CanvasLayer/MainWindow/Middle/ImageViewer/SubViewportContainer"]
 handle_input_locally = false
 physics_object_picking = true
-size = Vector2i(570, 546)
+size = Vector2i(570, 580)
 render_target_update_mode = 4
 
 [node name="SymbolSelectionFilter" type="Control" parent="CanvasLayer/MainWindow/Middle/ImageViewer/SubViewportContainer/SubViewport"]
@@ -89,11 +113,7 @@ offset_right = 570.0
 offset_bottom = 616.0
 script = ExtResource("4_vp6ol")
 
-[node name="ImageScene" type="Node2D" parent="CanvasLayer/MainWindow/Middle/ImageViewer/SubViewportContainer/SubViewport"]
-position = Vector2(4000, 4000)
-script = ExtResource("5_vm2n5")
-
-[node name="PNIDImage" type="Sprite2D" parent="CanvasLayer/MainWindow/Middle/ImageViewer/SubViewportContainer/SubViewport/ImageScene"]
+[node name="ImageScene" parent="CanvasLayer/MainWindow/Middle/ImageViewer/SubViewportContainer/SubViewport" instance=ExtResource("6_vurax")]
 
 [node name="SymbolEditorScene" parent="CanvasLayer/MainWindow/Middle/ImageViewer/SubViewportContainer/SubViewport" instance=ExtResource("3_aygqj")]
 
@@ -157,3 +177,7 @@ use_native_dialog = true
 
 [node name="TypeChangeWindow" parent="CanvasLayer/Dialogs" instance=ExtResource("6_xn5xa")]
 visible = false
+
+[connection signal="pressed" from="CanvasLayer/MainWindow/MainMenu/Left/OpenFilesButton" to="CanvasLayer/MainWindow/MainMenu" method="_on_open_files_button_pressed"]
+[connection signal="tab_changed" from="CanvasLayer/MainWindow/MainMenu/Left/TabBar" to="CanvasLayer/MainWindow/MainMenu" method="_on_tab_bar_tab_changed"]
+[connection signal="tab_close_pressed" from="CanvasLayer/MainWindow/MainMenu/Left/TabBar" to="CanvasLayer/MainWindow/MainMenu" method="_on_tab_bar_tab_close_pressed"]

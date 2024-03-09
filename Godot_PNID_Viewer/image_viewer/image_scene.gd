@@ -2,6 +2,7 @@
 # display image as texture
 
 extends Node2D
+class_name ImageScene
 
 # image cache
 var imgs_dict = {}

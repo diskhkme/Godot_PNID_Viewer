@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=3 uid="uid://bcet1tfk0dokl"]
+
+[ext_resource type="Script" path="res://image_viewer/image_scene.gd" id="1_kn0te"]
+
+[node name="ImageScene" type="Node2D"]
+position = Vector2(4000, 4000)
+script = ExtResource("1_kn0te")
+
+[node name="PNIDImage" type="Sprite2D" parent="."]
