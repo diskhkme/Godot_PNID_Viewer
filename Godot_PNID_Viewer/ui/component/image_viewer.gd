@@ -8,10 +8,25 @@ class_name ImageViewer
 
 @onready var image_scene = $SubViewportContainer/SubViewport/ImageScene
 @onready var image_viewport = $SubViewportContainer/SubViewport
-@onready var camera = $SubViewportContainer/SubViewport/ImageViewCamera
+@onready var image_view_camera = $SubViewportContainer/SubViewport/ImageViewCamera
 @onready var symbol_selection_filter = $SubViewportContainer/SubViewport/SymbolSelectionFilter
+@onready var image_view_context_menu = %ImageViewContextMenu
 
 var xml_stat_scene_dict = {}
+var is_mouse_on = false
+
+
+func _ready():
+	image_view_context_menu.context_poped_up.connect(on_context_popup)
+	
+
+func _input(event):
+	if !image_view_context_menu.visible:
+		image_view_camera.process_input(event)
+
+	symbol_selection_filter.process_input(event)
+	image_view_context_menu.process_input(event)
+
 
 func use_project(project: Project) -> void:
 	var texture_size = image_scene.load_image_as_texture(project.img_filepath)
@@ -20,14 +35,11 @@ func use_project(project: Project) -> void:
 		symbol_scene_instance.populate_symbol_bboxes(xml_stat)
 		symbol_scene_instance.set_watched_filter(symbol_selection_filter)
 		symbol_selection_filter.set_watch(symbol_scene_instance)
-		
 		image_viewport.add_child(symbol_scene_instance)
-		
 		xml_stat_scene_dict[xml_stat] = symbol_scene_instance
 	
-	
 	adjust_viewport_to_fullscreen()
-	camera.global_position = texture_size/2
+	image_view_camera.global_position = texture_size/2
 	
 
 func adjust_viewport_to_fullscreen() -> void:
@@ -44,3 +56,8 @@ func change_selectability(xml_id: int):
 	for xml_stat in xml_stat_scene_dict:
 		if xml_stat.id == xml_id:
 			symbol_selection_filter.set_watch(xml_stat_scene_dict[xml_stat])
+	
+	
+func on_context_popup():
+	image_view_camera.is_dragging = false 
+	

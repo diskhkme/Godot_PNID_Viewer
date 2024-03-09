@@ -3,13 +3,13 @@
 [ext_resource type="Script" path="res://ui/context/image_view_context_menu.gd" id="1_or2g8"]
 
 [node name="ImageViewContextMenu" type="Control"]
+visible = false
 layout_mode = 3
 anchors_preset = 0
 mouse_filter = 1
 script = ExtResource("1_or2g8")
 
 [node name="PanelContainer" type="PanelContainer" parent="."]
-visible = false
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
@@ -28,14 +28,9 @@ layout_mode = 2
 mouse_filter = 1
 text = "Remove"
 
-[node name="EditButton" type="Button" parent="PanelContainer/VBoxContainer"]
-layout_mode = 2
-text = "Edit Type"
-
 [connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
 [connection signal="mouse_exited" from="." to="." method="_on_mouse_exited"]
 [connection signal="mouse_entered" from="PanelContainer/VBoxContainer" to="." method="_on_v_box_container_mouse_entered"]
 [connection signal="mouse_exited" from="PanelContainer/VBoxContainer" to="." method="_on_v_box_container_mouse_exited"]
 [connection signal="pressed" from="PanelContainer/VBoxContainer/AddButton" to="." method="_on_add_button_pressed"]
 [connection signal="pressed" from="PanelContainer/VBoxContainer/RemoveButton" to="." method="_on_remove_button_pressed"]
-[connection signal="pressed" from="PanelContainer/VBoxContainer/EditButton" to="." method="_on_edit_button_pressed"]

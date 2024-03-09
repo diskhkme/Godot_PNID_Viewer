@@ -18,8 +18,7 @@ func set_watch(symbol_scene: SymbolScene):
 		watching_scenes.push_back(symbol_scene)
 	
 
-# use _unhandle_input to ignore on context button click
-func _unhandled_input(event):
+func process_input(event):
 	if ProjectManager.active_project == null:
 		return
 	
