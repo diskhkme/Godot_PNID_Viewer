@@ -9,17 +9,13 @@ var img_filename
 var img
 var xml_status: Array[XML_Status]
 
-func initialize(id, img_filename, img, xml_filenames, xml_strs):
+func initialize(id, img_filename, img, num_xml, xml_filenames, xml_strs):
 	self.id = id
 	self.img_filename = img_filename
 	self.img = img
 	
-	#print(img)
-	#print(xml_filenames)
-	#print(xml_strs)
-	
 	xml_status.clear()
-	for i in range(xml_strs.size()):
+	for i in range(num_xml):
 		var xml_stat = parse_xml_status(xml_filenames[i], xml_strs[i].to_utf8_buffer())
 		xml_status.push_back(xml_stat)
 			

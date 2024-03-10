@@ -15,13 +15,12 @@ func add_project(args: Variant) -> Project:
 	var project = Project.new() as Project
 	
 	var data
-	if args.size() != 1: # web new project routine
+	if OS.get_name() == "Web":
 		data = args
-		
-	else: #  windows new  project routine
+	if OS.get_name() == "Windows":
 		data = DataLoader.data_load_from_paths(args)
 		
-	if project.initialize(open_projects.size(), data[0], data[1], data[2], data[3]) == true:
+	if project.initialize(open_projects.size(), data[0], data[1], data[2], data[3], data[4]) == true:
 		open_projects.append(project)
 	else:
 		print("project init failed")
