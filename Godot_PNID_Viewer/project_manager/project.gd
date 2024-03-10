@@ -5,27 +5,31 @@ var id: int
 
 var loaded: bool = false
 
-var img_filepath: String 
+var img_filename 
+var img
 var xml_status: Array[XML_Status]
 
-func initialize(id: int, paths: PackedStringArray) -> bool:
-	id = id
-	img_filepath = Util.get_img_path(paths)
-	if img_filepath.is_empty():
-		return false
+func initialize(id, img_filename, img, xml_filenames, xml_strs):
+	self.id = id
+	self.img_filename = img_filename
+	self.img = img
 	
-	var xml_filepaths = Util.get_xml_paths(paths)
-	if xml_filepaths.size() > 0:
-		for xml_path in xml_filepaths:
-			add_xml_status(xml_path)
+	#print(img)
+	#print(xml_filenames)
+	#print(xml_strs)
+	
+	xml_status.clear()
+	for i in range(xml_strs.size()):
+		var xml_stat = parse_xml_status(xml_filenames[i], xml_strs[i].to_utf8_buffer())
+		xml_status.push_back(xml_stat)
 			
 	return true
 	
 
-func add_xml_status(xml_path: String) -> void:
+func parse_xml_status(xml_filename:String, xml_str: PackedByteArray):
 	var id = xml_status.size()
-	var xml_stat = XML_Status.new(id, xml_path)
-	xml_status.push_back(xml_stat)
+	var xml_stat = XML_Status.new(id, xml_filename, xml_str)
+	return xml_stat
 		
 
 func get_xml_id_from_filename(filename: String) -> int:

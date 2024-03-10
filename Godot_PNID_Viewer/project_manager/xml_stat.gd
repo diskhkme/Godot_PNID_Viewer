@@ -1,7 +1,6 @@
 class_name XML_Status
 
 var id: int
-var path: String
 var filename: String
 var symbol_objects: Array
 var color: Color
@@ -12,11 +11,10 @@ var is_visible: bool
 var is_selectable: bool
 
 
-func _init(id, path):
+func _init(id:int, xml_filename:String, xml_str: PackedByteArray):
 	self.id = id
-	self.path = path
-	filename = path.get_file()
-	symbol_objects = PnidXmlParser.parse_pnid_xml(path)
+	self.filename = xml_filename
+	symbol_objects = PnidXmlParser.parse_pnid_xml_from_byte_array(xml_str)
 	var is_sane = check_sanity(symbol_objects) # TODO: what to do if check sanity failes?
 	is_visible = true
 	is_selectable = true

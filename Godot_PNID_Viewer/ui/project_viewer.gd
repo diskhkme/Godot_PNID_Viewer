@@ -18,7 +18,7 @@ func use_project(project: Project) -> void:
 	tree.clear()
 	tree.set_columns(4)
 	var root = tree.create_item()
-	root.set_text(0,project.img_filepath.get_file())
+	root.set_text(0,project.img_filename)
 	root.set_text(1, "Show")
 	root.set_text(2, "Selectable")
 	root.set_text(3, "Color")

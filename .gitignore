@@ -3,3 +3,6 @@
 
 # test data
 data/
+
+# build test
+build_test/

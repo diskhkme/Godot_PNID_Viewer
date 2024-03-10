@@ -155,6 +155,7 @@ func find_symbol_item_by_id(arr: Array[TreeItem], id: int):
 
 
 func change_visibility(xml_id: int):
+	# TODO: there's bug when change visibility if more than two projects are opened
 	# to keep order consistency, reset tree for every call
 	for xml_stat in xml_stat_item_dict:
 		tree.get_root().remove_child(xml_stat_item_dict[xml_stat])

@@ -22,6 +22,7 @@ SymbolManager="*res://project_manager/symbol_manager.gd"
 PnidXmlParser="*res://project_manager/pnid_xml_parser.gd"
 Util="*res://project_manager/util.gd"
 Config="*res://config.gd"
+DataLoader="*res://project_manager/data_loader.gd"
 
 [rendering]
 

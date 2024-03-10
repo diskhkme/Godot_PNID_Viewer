@@ -8,12 +8,20 @@ var open_projects: Array[Project]
 var active_project: Project
 
 func _ready():
-	load_symbol_type_definition()
+	load_symbol_type_definition() # TODO: web compatible
 
-func add_project(paths: PackedStringArray) -> Project:
+
+func add_project(args: Variant) -> Project:
 	var project = Project.new() as Project
-	# TODO: Check sanity
-	if project.initialize(open_projects.size(), paths) == true:
+	
+	var data
+	if args.size() != 1: # web new project routine
+		data = args
+		
+	else: #  windows new  project routine
+		data = DataLoader.data_load_from_paths(args)
+		
+	if project.initialize(open_projects.size(), data[0], data[1], data[2], data[3]) == true:
 		open_projects.append(project)
 	else:
 		print("project init failed")
@@ -21,7 +29,7 @@ func add_project(paths: PackedStringArray) -> Project:
 		
 	active_project = project # 새로 추가된 project를 active로 하는 것이 default
 	return project
-
+	
 
 func make_project_active(project: Project) -> void:
 	active_project = project

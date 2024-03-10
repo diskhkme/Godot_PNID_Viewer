@@ -13,20 +13,26 @@ extends Node
 @onready var type_change_window = $CanvasLayer/Dialogs/TypeChangeWindow
 
 func _ready():
-	main_menu.file_opened.connect(on_new_project)
+	if OS.get_name() == "Windows":
+		# for windows, start new project if dialog closed
+		main_menu.file_opened.connect(on_new_project)
+	if OS.get_name() == "Web":
+		# for web, start new project if dataloader signaled
+		DataLoader.file_opened.connect(on_new_project)
+		
+		
 	main_menu.active_project_changed.connect(on_changed_active_project)
-	
 	xml_viewer.request_type_change_window.connect(on_type_change)
 	
 	project_viewer.xml_visibility_changed.connect(on_xml_visibility_changed)
 	project_viewer.xml_selectability_changed.connect(on_xml_selectabilty_changed)
 
 
-func on_new_project(paths: PackedStringArray) -> void:
-	var project: Project = ProjectManager.add_project(paths)
+func on_new_project(args: Variant): # web & windows
+	var project: Project = ProjectManager.add_project(args)
 	if project != null: # TODO: fail case dialog
 		main_menu.add_project_tab(project)
-	
+		
 		
 func on_type_change(xml_stat:XML_Status, symbol_object:SymbolObject):
 	type_change_window.show_type_change_window(xml_stat, symbol_object)
