@@ -60,7 +60,7 @@ func initialize_editor(xml_id: int, symbol_id: int):
 	self.xml_id = xml_id
 	self.symbol_id = symbol_id
 	
-	target_symbol = ProjectManager.active_project.xml_status[xml_id].symbol_objects[symbol_id]
+	target_symbol = ProjectManager.get_symbol_in_xml(xml_id, symbol_id)
 	var symbol_position = target_symbol.get_center()
 	var symbol_size = target_symbol.get_size()
 	var symbol_angle = deg_to_rad(target_symbol.degree)

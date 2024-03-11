@@ -1,7 +1,7 @@
 extends Node
 
 # 
-const SYMBOL_TYPE_TXT_PATH = "res://resources/Hyundai_SymbolClass_Type.txt"
+
 
 # Static visual
 const SYMBOL_COLOR_PRESET = [Color.RED, Color.GREEN, Color.BLUE, Color.MAGENTA, Color.CYAN, Color.ORANGE]

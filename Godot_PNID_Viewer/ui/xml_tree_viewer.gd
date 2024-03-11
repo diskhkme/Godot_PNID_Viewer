@@ -101,9 +101,9 @@ func _input(event):
 			
 func focus_symbol(xml_id:int, symbol_id:int):
 	var xml_item = tree.get_root().get_children()[xml_id]
-	var symbol_item: TreeItem = xml_item.get_children()[symbol_id]
-	symbol_item.select(0)
-	tree.scroll_to_item(symbol_item)
+	var symbol_items = xml_item.get_children().filter(func(item): return item.get_text(0).to_int() == symbol_id)
+	symbol_items[0].select(0)
+	tree.scroll_to_item(symbol_items[0])
 	
 	
 func deselect_treeitem():
@@ -182,3 +182,34 @@ func change_selectability(xml_id: int):
 					child.set_selectable(i,true)
 
 
+func _on_tree_column_title_clicked(column, mouse_button_index):
+	if mouse_button_index == MOUSE_BUTTON_LEFT:
+		for xml_stat in xml_stat_item_dict:
+			var xml_item = xml_stat_item_dict[xml_stat]
+			# sort symbol object itself
+			var symbol_objects = xml_stat.symbol_objects
+			symbol_objects.sort_custom(sort_function(column))
+			var symbol_items = xml_item.get_children()
+			for i in range(symbol_objects.size()):
+				fill_treeitem(symbol_items[i], symbol_objects[i])
+			
+			
+func sort_function(column):
+	match column:
+		0: 
+			return func(a,b): return a.id < b.id
+		1: 
+			return func(a,b): return a.type.naturalnocasecmp_to(b.type) < 0
+		2:
+			return func(a,b): return a.cls.naturalnocasecmp_to(b.cls) < 0
+		3:
+			return func(a,b): return a.bndbox.x < b.bndbox.x
+		4:
+			return func(a,b): return a.bndbox.y < b.bndbox.y
+		5:
+			return func(a,b): return a.bndbox.z < b.bndbox.z
+		6:
+			return func(a,b): return a.bndbox.w < b.bndbox.w
+		7:
+			return func(a,b): return a.degree < b.degree
+			

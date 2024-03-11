@@ -8,7 +8,13 @@ var open_projects: Array[Project]
 var active_project: Project
 
 func _ready():
-	load_symbol_type_definition() # TODO: web compatible
+	#if OS.get_name() == "Web":
+		#symbol_type_set = DataLoader.symboltype_load_from_web(Config.SYMBOL_TYPE_TXT_URL_ABS)
+	#if OS.get_name() == "Windows":
+		#symbol_type_set = DataLoader.symboltype_load_from_path(Config.SYMBOL_TYPE_TXT_URL)
+	
+	symbol_type_set = DataLoader.parse_symbol_type_to_dict(SymbolTypeClassDef.TXT)
+	
 
 
 func add_project(args: Variant) -> Project:
@@ -35,33 +41,16 @@ func make_project_active(project: Project) -> void:
 
 
 func get_symbol_in_xml(xml_id:int, symbol_id:int):
-	return active_project.xml_status[xml_id].symbol_objects[symbol_id]
+	# TODO: change symbol objects stored in hashmap for fast search (even after tree sorting)
+	var target_xml_stat = active_project.xml_status.filter(func(xml_stat): return xml_stat.id == xml_id)
+	var target_symbol = target_xml_stat[0].symbol_objects.filter(func(symbol_object): return symbol_object.id == symbol_id)
+	return target_symbol[0]
 	
 
 func get_xml(xml_id:int):
 	return active_project.xml_status[xml_id]
 	
 
-func load_symbol_type_definition():
-	var file = FileAccess.open(Config.SYMBOL_TYPE_TXT_PATH, FileAccess.READ)
-	while !file.eof_reached():
-		var line = file.get_line()
-		var strs = line.split("|")
-		if strs[0].is_empty():
-			continue
-		
-		if !symbol_type_set.has(strs[0]):
-			symbol_type_set[strs[0]] = [strs[1]]
-		else:
-			symbol_type_set[strs[0]].append(strs[1])
-			
-	if !symbol_type_set.has(Config.TEXT_TYPE_NAME):
-		symbol_type_set[Config.TEXT_TYPE_NAME] = []
-		
-	if !symbol_type_set.has("None"):
-		symbol_type_set["None"] = ["None"]
-		
-		
 func is_symbol_type_text(index: int):
 	if symbol_type_set.keys()[index] == Config.TEXT_TYPE_NAME:
 		return true
