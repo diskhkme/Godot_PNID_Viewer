@@ -53,7 +53,7 @@ func use_project(target_project: Project) -> void:
 			var symbol_scene_instance = symbol_scene.instantiate() as SymbolScene
 			symbol_scene_instance.populate_symbol_bboxes(xml_stat)
 			symbol_scene_instance.set_watched_filter(symbol_selection_filter)
-			symbol_selection_filter.set_watch(symbol_scene_instance)
+			symbol_selection_filter.update_watch(symbol_scene_instance)
 			image_viewport.add_child(symbol_scene_instance)
 			xml_stat_scene_dict[xml_stat] = symbol_scene_instance
 	
@@ -68,15 +68,13 @@ func adjust_viewport_to_fullscreen() -> void:
 
 
 func change_visibility(xml_id: int):
-	for xml_stat in xml_stat_scene_dict:
-		if xml_stat.id == xml_id:
-			xml_stat_scene_dict[xml_stat].visible = xml_stat.is_visible
+	var xml_stat = ProjectManager.get_xml(xml_id)
+	xml_stat_scene_dict[xml_stat].visible = xml_stat.is_visible
 
 
 func change_selectability(xml_id: int):
-	for xml_stat in xml_stat_scene_dict:
-		if xml_stat.id == xml_id:
-			symbol_selection_filter.set_watch(xml_stat_scene_dict[xml_stat])
+	var xml_stat = ProjectManager.get_xml(xml_id)
+	symbol_selection_filter.update_watch(xml_stat_scene_dict[xml_stat])
 	
 	
 func on_context_popup():

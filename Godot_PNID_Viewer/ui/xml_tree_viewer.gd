@@ -39,6 +39,7 @@ func set_tree_column_style():
 
 
 func use_project(project: Project):
+	xml_stat_item_dict.clear()
 	tree.clear()
 	tree.set_columns(COLUMN_COUNT)
 	var root: TreeItem = tree.create_item() 

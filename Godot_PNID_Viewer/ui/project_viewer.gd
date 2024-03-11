@@ -18,7 +18,7 @@ func use_project(project: Project) -> void:
 	tree.clear()
 	tree.set_columns(4)
 	var root = tree.create_item()
-	root.set_text(0,project.img_filename)
+	root.set_text(0, project.img_filename)
 	# TODO: Show symbol & text separately
 	root.set_text(1, "Show")
 	root.set_text(2, "Selectable")
@@ -41,19 +41,25 @@ func use_project(project: Project) -> void:
 		xml_file_items[child] = xml_stat
 
 
-func update_xml_status(xml_id:int, symbol_id:int):
+func get_xml_item(xml_id: int):
 	var xml_stat = ProjectManager.active_project.xml_status[xml_id]
 	var root: TreeItem = tree.get_root()
-	for i in range(root.get_child_count()):
-		var child = root.get_child(i)
-		if child.get_text(0).contains(xml_stat.filename):
-			if xml_stat.dirty == true:
-				child.set_text(0,xml_stat.filename + " (*)")
-			else:
-				child.set_text(0,xml_stat.filename)
+	var xml_item = root.get_children().filter(func(item): return item.get_text(0).contains(xml_stat.filename))
+	return xml_item[0]
 
 
-func _process(delta): # TODO: how to receive treeitem checkbox changed event?
+func update_xml_status(xml_id:int, symbol_id:int):
+	var xml_stat = ProjectManager.active_project.xml_status[xml_id]
+	var xml_item = get_xml_item(xml_id)
+	if xml_stat.dirty == true:
+		xml_item.set_text(0,xml_stat.filename + " (*)")
+	else:
+		xml_item.set_text(0,xml_stat.filename)
+	
+
+# TODO: how to receive treeitem checkbox changed event?
+# TODO: selectability/visibility is not stored when active project changed
+func _process(delta): 
 	for item in xml_file_items:
 		if item.is_checked(1) != xml_file_items[item].is_visible:
 			xml_file_items[item].is_visible = item.is_checked(1)

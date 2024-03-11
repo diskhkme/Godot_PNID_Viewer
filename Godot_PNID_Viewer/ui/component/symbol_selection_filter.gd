@@ -9,7 +9,7 @@ signal clear_selected_candidate
 
 var watching_scenes: Array[SymbolScene]
 
-func set_watch(symbol_scene: SymbolScene):
+func update_watch(symbol_scene: SymbolScene):
 	if symbol_scene.xml_stat.is_selectable == false:
 		assert(watching_scenes.has(symbol_scene), "Selectability change error, removing symbol scene not exist in filter watchings")
 		watching_scenes.erase(symbol_scene)
