@@ -46,7 +46,7 @@ func use_project(target_project: Project) -> void:
 	else: # new tab add
 		var image_scene_instance = image_scene.instantiate() as ImageScene
 		image_viewport.add_child(image_scene_instance)
-		var texture_size = image_scene_instance.init_texture(target_project)
+		var texture_size = image_scene_instance.set_texture(target_project.img)
 		project_image_scene_dict[target_project] = image_scene_instance
 		project_symbol_scenes_dict[target_project] = []
 		for xml_stat in target_project.xml_status:

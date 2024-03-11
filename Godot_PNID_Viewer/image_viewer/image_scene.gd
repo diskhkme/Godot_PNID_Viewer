@@ -4,11 +4,17 @@
 extends Node2D
 class_name ImageScene
 
-func init_texture(target_project: Project) -> Vector2:
-	var texture = ImageTexture.create_from_image(target_project.img)
-	$PNIDImage.texture = texture
+var img_texture_dict = {}
+
+func set_texture(image: Image) -> Vector2:
+	var texture
+	if img_texture_dict.has(image):
+		texture = img_texture_dict[image]
+	else:
+		texture = ImageTexture.create_from_image(image)
 	
-	global_position = texture.get_size()*0.5
+	$PNIDImage.texture = texture
+	global_position = texture.get_size()*0.5	
 	
 	return Vector2(texture.get_width(), texture.get_height())
 	
