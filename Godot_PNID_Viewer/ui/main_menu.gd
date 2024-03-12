@@ -31,7 +31,7 @@ func on_files_selected_to_open(paths):
 func add_project_tab(project: Project):
 	tab_project_array.push_back(project)
 	tab_bar.add_tab(project.img_filename)
-	#tab_bar.current_tab = tab_bar.tab_count-1
+	tab_bar.current_tab = tab_bar.tab_count-1
 
 
 func _on_tab_bar_tab_changed(tab: int):

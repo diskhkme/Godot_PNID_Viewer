@@ -175,3 +175,5 @@ visible = false
 [connection signal="tab_close_pressed" from="CanvasLayer/MainWindow/MainMenu/Left/TabBar" to="CanvasLayer/MainWindow/MainMenu" method="_on_tab_bar_tab_close_pressed"]
 [connection signal="mouse_entered" from="CanvasLayer/MainWindow/Middle/ImageViewer" to="CanvasLayer/MainWindow/Middle/ImageViewer" method="_on_mouse_entered"]
 [connection signal="mouse_exited" from="CanvasLayer/MainWindow/Middle/ImageViewer" to="CanvasLayer/MainWindow/Middle/ImageViewer" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="CanvasLayer/MainWindow/Middle/RightSide/XMLTreeViewer" to="CanvasLayer/MainWindow/Middle/RightSide/XMLTreeViewer" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="CanvasLayer/MainWindow/Middle/RightSide/XMLTreeViewer" to="CanvasLayer/MainWindow/Middle/RightSide/XMLTreeViewer" method="_on_mouse_exited"]

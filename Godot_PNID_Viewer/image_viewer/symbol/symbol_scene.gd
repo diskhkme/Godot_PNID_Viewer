@@ -30,7 +30,6 @@ func add_child_static_symbol(xml_id:int, symbol_object: SymbolObject):
 
 func set_watched_filter(selection_filter: SymbolSelectionFilter):
 	self.selection_filter = selection_filter
-	selection_filter.clear_selected_candidate.connect(clear_candidates)
 	
 
 func add_new_symbol(xml_id:int, symbol_id:int):

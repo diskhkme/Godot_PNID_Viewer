@@ -79,6 +79,8 @@ func _process(delta):
 			xml_visibility_changed.emit(xml_id)
 			
 		if xml_item.is_checked(2) != xml_stat.is_selectable:
+			if !xml_item.is_checked(1): # not allow selectable if not visible
+				return
 			xml_stat.is_selectable = xml_item.is_checked(2)
 			xml_selectability_changed.emit(xml_id)
 		

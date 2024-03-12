@@ -12,8 +12,6 @@ var active_scenes: Array
 
 func set_current(active_project_xml_dict): # key: xml_stat, value: symbol scene
 	active_scenes = active_project_xml_dict.values()
-	for symbol_scene in active_scenes:
-		symbol_scene.set_watched_filter(self)
 		
 
 func process_input(event):
@@ -39,7 +37,8 @@ func process_input(event):
 				SymbolManager.symbol_selected_from_image.emit(selected.xml_id, selected.symbol_object.id)
 				SymbolManager.symbol_edit_started.emit(selected.xml_id, selected.symbol_object.id)
 				
-			clear_selected_candidate.emit()
+			for scene in active_scenes: # direct call
+				scene.clear_candidates()
 			
 			
 func decide_selected(mouse_pos: Vector2, selected_candidate: Array[StaticSymbol]):
