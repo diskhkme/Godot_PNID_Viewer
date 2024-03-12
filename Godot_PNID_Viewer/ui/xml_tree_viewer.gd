@@ -133,6 +133,7 @@ func _on_add_symbol(xml_id:int, symbol_id: int):
 	var xml_tree = xml_item_arr[xml_id]
 	var symbol_object = ProjectManager.get_symbol_in_xml(xml_id, symbol_id)
 	var symbol_item = add_symbol_on_tree(xml_tree, symbol_object)
+	symbol_items_dict[xml_id][symbol_id] = symbol_item
 	symbol_update_cache[symbol_object] = symbol_item
 
 

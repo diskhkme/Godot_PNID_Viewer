@@ -9,6 +9,7 @@ signal xml_selectability_changed(xml_id: int)
 
 var tree_xml_dict = {} # key: xml_id, value: [xml_stat, xml_item]
 var root
+var selected
 
 func _ready():
 	SymbolManager.symbol_edited.connect(_on_symbol_edited)
@@ -53,16 +54,16 @@ func use_project(project: Project) -> void:
 	reset_tree(project)
 	
 
+# TODO: dirty state is not maintained when active project changed
 func _on_symbol_edited(xml_id:int, symbol_id:int):
 	var target_xml_stat = tree_xml_dict[xml_id][0]
 	if target_xml_stat.dirty == true:
 		tree_xml_dict[xml_id][1].set_text(0,target_xml_stat.filename + " (*)")
 	else:
 		tree_xml_dict[xml_id][1].set_text(0,target_xml_stat.filename)
-	
+		
 
 # TODO: how to receive treeitem checkbox changed event?
-# TODO: selectability/visibility is not stored when active project changed
 func _process(delta): 
 	for xml_id in tree_xml_dict:
 		var xml_stat = tree_xml_dict[xml_id][0]
@@ -84,3 +85,10 @@ func _process(delta):
 			xml_stat.is_selectable = xml_item.is_checked(2)
 			xml_selectability_changed.emit(xml_id)
 		
+
+func _on_tree_item_selected():
+	selected = tree.get_selected()
+
+
+func _on_tree_nothing_selected():
+	selected = null

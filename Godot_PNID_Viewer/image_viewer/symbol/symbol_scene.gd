@@ -10,9 +10,6 @@ var selected_candidate: Array[StaticSymbol]
 var selection_filter
 var xml_stat
 
-func _ready():
-	SymbolManager.symbol_added.connect(add_new_symbol)
-
 
 func populate_symbol_bboxes(xml_stat: XML_Status) -> void:
 	self.xml_stat = xml_stat

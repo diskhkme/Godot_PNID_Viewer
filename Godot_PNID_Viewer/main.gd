@@ -6,11 +6,14 @@ extends Node
 @onready var main_menu: Control = $CanvasLayer/MainWindow/MainMenu
 @onready var image_viewer: Control = $CanvasLayer/MainWindow/Middle/ImageViewer
 @onready var image_view_camera = $CanvasLayer/MainWindow/Middle/ImageViewer/SubViewportContainer/SubViewport/ImageViewCamera
-@onready var image_viewer_context_menu = $CanvasLayer/MainWindow/Middle/ImageViewer/ContextMenu/ImageViewContextMenu
 @onready var project_viewer: Control = $CanvasLayer/MainWindow/Middle/RightSide/ProjectViewer
 @onready var xml_viewer: Control = $CanvasLayer/MainWindow/Middle/RightSide/XMLTreeViewer
 
 @onready var type_change_window = $CanvasLayer/Dialogs/TypeChangeWindow
+@onready var image_viewer_context_menu = $CanvasLayer/ContextMenus/ImageViewContextMenu
+@onready var project_viewer_context_menu = $CanvasLayer/ContextMenus/ProjectViewContextMenu
+
+var is_context_on = false
 
 func _ready():
 	if OS.get_name() == "Windows":
@@ -26,7 +29,21 @@ func _ready():
 	
 	project_viewer.xml_visibility_changed.connect(on_xml_visibility_changed)
 	project_viewer.xml_selectability_changed.connect(on_xml_selectabilty_changed)
-
+	
+	
+func _input(event):
+	if event is InputEventMouseButton:
+		is_context_on = image_viewer_context_menu.visible or project_viewer_context_menu
+		
+		# TODO: Exclusive context popup
+		if is_context_on:
+			if image_viewer.get_global_rect().has_point(event.position):
+				image_viewer_context_menu.process_input(event)
+			elif project_viewer.get_global_rect().has_point(event.position):
+				project_viewer_context_menu.process_input(event)
+		else:
+			image_viewer.process_input()
+			
 
 func on_new_project(args: Variant): # web & windows
 	var project: Project = ProjectManager.add_project(args)
