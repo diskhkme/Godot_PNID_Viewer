@@ -12,9 +12,8 @@ class_name ImageViewer
 @onready var symbol_selection_filter = $SubViewportContainer/SubViewport/SymbolSelectionFilter
 @onready var image_view_context_menu = %ImageViewContextMenu
 
-var xml_stat_scene_dict = {}
-var project_symbol_scenes_dict = {}
-var project_image_scene_dict = {}
+var project_scene_group_dict = {} 
+var active_project_xml_dict = {} # key: xml_stat, value: symbol scene
 var is_mouse_on = false
 
 
@@ -28,55 +27,53 @@ func _input(event):
 	if !image_view_context_menu.visible:
 		image_view_camera.process_input(event)
 
-	symbol_selection_filter.process_input(event)
-	image_view_context_menu.process_input(event)
+	if is_mouse_on:
+		symbol_selection_filter.process_input(event)
+		image_view_context_menu.process_input(event)
 
 
-func use_project(target_project: Project) -> void:
-	if project_image_scene_dict.has(target_project): # move tab focus
-		for project in project_image_scene_dict:
-			if project == target_project:
-				for scene in project_symbol_scenes_dict[project]:
-					scene.visible = true
-				project_image_scene_dict[project].visible = true
+func use_project(active_project: Project) -> void:
+	if project_scene_group_dict.has(active_project): # move tab focus
+		for project in project_scene_group_dict:
+			if project == active_project:
+				project_scene_group_dict[project].visible = true
 			else:
-				for scene in project_symbol_scenes_dict[project]:
-					scene.visible = false
-				project_image_scene_dict[project].visible = false
-	else: # new tab add
-		var image_scene_instance = image_scene.instantiate() as ImageScene
-		image_viewport.add_child(image_scene_instance)
-		var texture_size = image_scene_instance.set_texture(target_project.img)
-		project_image_scene_dict[target_project] = image_scene_instance
-		project_symbol_scenes_dict[target_project] = []
-		for xml_stat in target_project.xml_status:
-			var symbol_scene_instance = symbol_scene.instantiate() as SymbolScene
-			symbol_scene_instance.populate_symbol_bboxes(xml_stat)
-			symbol_scene_instance.set_watched_filter(symbol_selection_filter)
-			symbol_selection_filter.update_watch(symbol_scene_instance)
-			image_viewport.add_child(symbol_scene_instance)
-			xml_stat_scene_dict[xml_stat] = symbol_scene_instance
+				project_scene_group_dict[project].visible = false
+	else: # new tab add (=open new project)
+		var scene_group = Node2D.new() # has image & symbol scenes
+		image_viewport.add_child(scene_group)
+		add_child_scenes(scene_group, active_project)
+		project_scene_group_dict[active_project] = scene_group
 	
-			project_symbol_scenes_dict[target_project].push_back(symbol_scene_instance)
+	reset_active_project_xml_dict(active_project)
+	symbol_selection_filter.set_current(active_project_xml_dict)
+		
+		
+func add_child_scenes(parent: Node2D, active_project: Project):
+	var image_scene_instance = image_scene.instantiate() as ImageScene
+	var texture_size = image_scene_instance.set_texture(active_project.img)
+	image_view_camera.global_position = texture_size/2
+	parent.add_child(image_scene_instance)
+	for xml_stat in active_project.xml_status:
+		var symbol_scene_instance = symbol_scene.instantiate() as SymbolScene
+		symbol_scene_instance.populate_symbol_bboxes(xml_stat)
+		#symbol_scene_instance.set_watched_filter(symbol_selection_filter)
+		#symbol_selection_filter.update_watch(symbol_scene_instance)
+		parent.add_child(symbol_scene_instance)
 	
-		adjust_viewport_to_fullscreen()
-		image_view_camera.global_position = texture_size/2
 	
-
-func adjust_viewport_to_fullscreen() -> void:
-	image_viewport.size = self.size
+func reset_active_project_xml_dict(active_project: Project):
+	active_project_xml_dict
+	for child_node in project_scene_group_dict[active_project].get_children():
+		if child_node is SymbolScene:
+			active_project_xml_dict[child_node.xml_stat] = child_node
 
 
 func change_visibility(xml_id: int):
 	var xml_stat = ProjectManager.get_xml(xml_id)
-	xml_stat_scene_dict[xml_stat].visible = xml_stat.is_visible
+	active_project_xml_dict[xml_stat].visible = xml_stat.is_visible
 
 
-func change_selectability(xml_id: int):
-	var xml_stat = ProjectManager.get_xml(xml_id)
-	symbol_selection_filter.update_watch(xml_stat_scene_dict[xml_stat])
-	
-	
 func on_context_popup():
 	image_view_camera.is_dragging = false 
 	
@@ -88,6 +85,7 @@ func on_add_symbol(pos: Vector2):
 	SymbolManager.symbol_added.emit(0, new_symbol_id)
 	SymbolManager.symbol_selected_from_image.emit(0, new_symbol_id)	
 	SymbolManager.symbol_edit_started.emit(0, new_symbol_id)
+	SymbolManager.symbol_edited.emit(0, new_symbol_id)
 	
 	
 func on_remove_symbol():
@@ -99,3 +97,11 @@ func on_remove_symbol():
 	SymbolManager.symbol_deselected.emit()
 	SymbolManager.symbol_edit_ended.emit()
 	
+
+
+func _on_mouse_entered():
+	is_mouse_on = true
+
+
+func _on_mouse_exited():
+	is_mouse_on = false

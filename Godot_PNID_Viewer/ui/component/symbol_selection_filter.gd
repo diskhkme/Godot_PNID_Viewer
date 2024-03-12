@@ -7,16 +7,14 @@ class_name SymbolSelectionFilter
 
 signal clear_selected_candidate
 
-var watching_scenes: Array[SymbolScene]
+var active_scenes: Array
 
-func update_watch(symbol_scene: SymbolScene):
-	if symbol_scene.xml_stat.is_selectable == false:
-		assert(watching_scenes.has(symbol_scene), "Selectability change error, removing symbol scene not exist in filter watchings")
-		watching_scenes.erase(symbol_scene)
-	else:
-		assert(!watching_scenes.has(symbol_scene), "Selectability change error, adding symbol scene already exist in filter watchings")
-		watching_scenes.push_back(symbol_scene)
-	
+
+func set_current(active_project_xml_dict): # key: xml_stat, value: symbol scene
+	active_scenes = active_project_xml_dict.values()
+	for symbol_scene in active_scenes:
+		symbol_scene.set_watched_filter(self)
+		
 
 func process_input(event):
 	if ProjectManager.active_project == null:
@@ -28,8 +26,9 @@ func process_input(event):
 	if event is InputEventMouseButton and (event.button_index == MOUSE_BUTTON_LEFT or event.button_index == MOUSE_BUTTON_RIGHT):
 		if !event.is_pressed():
 			var candidates: Array[StaticSymbol] = []
-			for scene in watching_scenes:
-				candidates.append_array(scene.selected_candidate)
+			for scene in active_scenes:
+				if scene.xml_stat.is_selectable:
+					candidates.append_array(scene.selected_candidate)
 			
 			# get_global_mouse_position() returns 2d world coord position if it is in subviewport
 			var mouse_pos = get_global_mouse_position()

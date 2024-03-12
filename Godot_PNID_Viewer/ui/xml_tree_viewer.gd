@@ -68,6 +68,7 @@ func create_symbol(parent: TreeItem, symbol_object: SymbolObject) -> TreeItem:
 	var symbol_item: TreeItem = tree.create_item(parent)
 	fill_treeitem(symbol_item,symbol_object)
 	if symbol_object.is_text:
+		# TODO: text editing does not signal symbol edited
 		symbol_item.set_editable(2, true)
 		
 	return symbol_item

@@ -46,13 +46,14 @@ func make_project_active(project: Project) -> void:
 	xml_viewer.use_project(project)
 	
 
+# TODO: create visibility/selectability signal to Project and
+# watch it from who is responsible (not image_viewer but symbolscene, etc)
 func on_xml_visibility_changed(xml_id: int):
 	image_viewer.change_visibility(xml_id)
 	xml_viewer.change_visibility(xml_id)
 	
 	
 func on_xml_selectabilty_changed(xml_id: int):
-	image_viewer.change_selectability(xml_id)
 	xml_viewer.change_selectability(xml_id)
 	
 	

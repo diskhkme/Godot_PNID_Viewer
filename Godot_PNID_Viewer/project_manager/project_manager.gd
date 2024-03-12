@@ -16,7 +16,6 @@ func _ready():
 	symbol_type_set = DataLoader.parse_symbol_type_to_dict(SymbolTypeClassDef.TXT)
 	
 
-
 func add_project(args: Variant) -> Project:
 	var project = Project.new() as Project
 	

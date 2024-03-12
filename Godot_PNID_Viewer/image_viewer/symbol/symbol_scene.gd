@@ -12,7 +12,6 @@ var xml_stat
 
 func _ready():
 	SymbolManager.symbol_added.connect(add_new_symbol)
-	selection_filter.clear_selected_candidate.connect(clear_candidates)
 
 
 func populate_symbol_bboxes(xml_stat: XML_Status) -> void:
@@ -31,6 +30,7 @@ func add_child_static_symbol(xml_id:int, symbol_object: SymbolObject):
 
 func set_watched_filter(selection_filter: SymbolSelectionFilter):
 	self.selection_filter = selection_filter
+	selection_filter.clear_selected_candidate.connect(clear_candidates)
 	
 
 func add_new_symbol(xml_id:int, symbol_id:int):
