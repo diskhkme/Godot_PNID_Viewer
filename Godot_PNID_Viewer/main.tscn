@@ -1,6 +1,7 @@
-[gd_scene load_steps=12 format=3 uid="uid://en0mt7v4ddrg"]
+[gd_scene load_steps=13 format=3 uid="uid://en0mt7v4ddrg"]
 
 [ext_resource type="Script" path="res://main.gd" id="1_h1xnr"]
+[ext_resource type="Theme" uid="uid://dseywhd5dettr" path="res://resources/project_default.tres" id="2_6rl77"]
 [ext_resource type="Script" path="res://ui/main_menu.gd" id="2_xxrvq"]
 [ext_resource type="Script" path="res://ui/component/image_viewer.gd" id="3_5qiq5"]
 [ext_resource type="PackedScene" uid="uid://caai5y1ec0vrm" path="res://image_viewer/symbol/editing/symbol_editor_scene.tscn" id="3_aygqj"]
@@ -23,6 +24,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = ExtResource("2_6rl77")
 
 [node name="MainMenu" type="HBoxContainer" parent="CanvasLayer/MainWindow" node_paths=PackedStringArray("open_files_dialog")]
 layout_mode = 2
@@ -102,7 +104,7 @@ stretch = true
 [node name="SubViewport" type="SubViewport" parent="CanvasLayer/MainWindow/Middle/ImageViewer/SubViewportContainer"]
 handle_input_locally = false
 physics_object_picking = true
-size = Vector2i(570, 580)
+size = Vector2i(570, 582)
 render_target_update_mode = 4
 
 [node name="SymbolSelectionFilter" type="Control" parent="CanvasLayer/MainWindow/Middle/ImageViewer/SubViewportContainer/SubViewport"]
