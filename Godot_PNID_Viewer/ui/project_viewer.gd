@@ -7,71 +7,78 @@ signal xml_selectability_changed(xml_id: int)
 
 @export var icon_color = preload("res://assets/icons/rectangle_tool.png")
 
-var xml_file_items = {} # key: treeitem, value: xml_status
+var tree_xml_dict = {} # key: xml_id, value: [xml_stat, xml_item]
+var root
 
 func _ready():
-	SymbolManager.symbol_edited.connect(update_xml_status)
-		
-
-func use_project(project: Project) -> void:
-	xml_file_items.clear()
-	tree.clear()
+	SymbolManager.symbol_edited.connect(_on_symbol_edited)
+	
+	
+func reset_root(img_filename: String):
 	tree.set_columns(4)
-	var root = tree.create_item()
-	root.set_text(0, project.img_filename)
+	root = tree.create_item()
+	root.set_text(0, img_filename)
 	# TODO: Show symbol & text separately
 	root.set_text(1, "Show")
 	root.set_text(2, "Selectable")
 	root.set_text(3, "Color")
+	
+	
+func reset_xml(xml_stat: XML_Status):
+	var xml_item: TreeItem = tree.create_item(root)
+	xml_item.set_text(0,xml_stat.filename)
+	xml_item.set_cell_mode(1, TreeItem.CELL_MODE_CHECK)
+	xml_item.set_editable(1, true)
+	xml_item.set_cell_mode(2, TreeItem.CELL_MODE_CHECK)
+	xml_item.set_editable(2, true)
+	xml_item.set_cell_mode(3, TreeItem.CELL_MODE_ICON)
+	xml_item.set_icon_modulate(3,xml_stat.color)
+	xml_item.set_icon(3, icon_color)
+	xml_item.set_editable(3, true)
+	
+	xml_item.set_checked(1, xml_stat.is_visible)
+	xml_item.set_checked(2, xml_stat.is_selectable)
+	tree_xml_dict[xml_stat.id] = [xml_stat, xml_item]
+	
+	
+func reset_tree(project: Project):
+	reset_root(project.img_filename)
 	for xml_stat in project.xml_status:
-		var child: TreeItem = tree.create_item(root)
-		child.set_text(0,xml_stat.filename)
-		child.set_cell_mode(1, TreeItem.CELL_MODE_CHECK)
-		child.set_editable(1, true)
-		child.set_cell_mode(2, TreeItem.CELL_MODE_CHECK)
-		child.set_editable(2, true)
-		child.set_cell_mode(3, TreeItem.CELL_MODE_ICON)
-		child.set_icon_modulate(3,xml_stat.color)
-		child.set_icon(3, icon_color)
-		child.set_editable(3, true)
-		
-		child.set_checked(1, true)
-		child.set_checked(2, true)
-		
-		xml_file_items[child] = xml_stat
+		reset_xml(xml_stat)
+	
 
+func use_project(project: Project) -> void:
+	tree_xml_dict.clear()
+	tree.clear()
+	reset_tree(project)
+	
 
-func get_xml_item(xml_id: int):
-	var xml_stat = ProjectManager.active_project.xml_status[xml_id]
-	var root: TreeItem = tree.get_root()
-	var xml_item = root.get_children().filter(func(item): return item.get_text(0).contains(xml_stat.filename))
-	return xml_item[0]
-
-
-func update_xml_status(xml_id:int, symbol_id:int):
-	var xml_stat = ProjectManager.active_project.xml_status[xml_id]
-	var xml_item = get_xml_item(xml_id)
-	if xml_stat.dirty == true:
-		xml_item.set_text(0,xml_stat.filename + " (*)")
+func _on_symbol_edited(xml_id:int, symbol_id:int):
+	var target_xml_stat = tree_xml_dict[xml_id][0]
+	if target_xml_stat.dirty == true:
+		tree_xml_dict[xml_id][1].set_text(0,target_xml_stat.filename + " (*)")
 	else:
-		xml_item.set_text(0,xml_stat.filename)
+		tree_xml_dict[xml_id][1].set_text(0,target_xml_stat.filename)
 	
 
 # TODO: how to receive treeitem checkbox changed event?
 # TODO: selectability/visibility is not stored when active project changed
 func _process(delta): 
-	for item in xml_file_items:
-		if item.is_checked(1) != xml_file_items[item].is_visible:
-			xml_file_items[item].is_visible = item.is_checked(1)
-			xml_visibility_changed.emit(xml_file_items[item].id)
-			if item.is_checked(1) == false: # if not visible, not selectable
-				item.set_checked(2,false)
-				item.set_editable(2,false)
+	for xml_id in tree_xml_dict:
+		var xml_stat = tree_xml_dict[xml_id][0]
+		var xml_item = tree_xml_dict[xml_id][1]
+		if xml_item.is_checked(1) != xml_stat.is_visible:
+			xml_stat.is_visible = xml_item.is_checked(1)
+			if xml_item.is_checked(1) == false: # if not visible, not selectable
+				xml_item.set_checked(2,false)
+				xml_item.set_editable(2,false)
 			else:
-				item.set_checked(2,true)
-				item.set_editable(2,true)
+				xml_item.set_checked(2,true)
+				xml_item.set_editable(2,true)
+				
+			xml_visibility_changed.emit(xml_id)
 			
-		if item.is_checked(2) != xml_file_items[item].is_selectable:
-			xml_file_items[item].is_selectable = item.is_checked(2)
-			xml_selectability_changed.emit(xml_file_items[item].id)
+		if xml_item.is_checked(2) != xml_stat.is_selectable:
+			xml_stat.is_selectable = xml_item.is_checked(2)
+			xml_selectability_changed.emit(xml_id)
 		
