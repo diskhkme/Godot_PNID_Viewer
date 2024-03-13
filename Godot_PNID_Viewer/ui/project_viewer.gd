@@ -1,8 +1,5 @@
 extends PanelContainer
 
-signal xml_visibility_changed(xml_id: int)
-signal xml_selectability_changed(xml_id: int)
-
 @onready var tree = $Tree
 
 @export var icon_color = preload("res://assets/icons/rectangle_tool.png")
@@ -77,13 +74,13 @@ func _process(delta):
 				xml_item.set_checked(2,true)
 				xml_item.set_editable(2,true)
 				
-			xml_visibility_changed.emit(xml_id)
+			ProjectManager.xml_visibility_changed.emit(xml_id)
 			
 		if xml_item.is_checked(2) != xml_stat.is_selectable:
 			if !xml_item.is_checked(1): # not allow selectable if not visible
-				return
+				xml_item.set_checked(2,false)
 			xml_stat.is_selectable = xml_item.is_checked(2)
-			xml_selectability_changed.emit(xml_id)
+			ProjectManager.xml_selectability_changed.emit(xml_id)
 		
 
 func _on_tree_item_selected():

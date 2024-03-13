@@ -18,6 +18,7 @@ var is_mouse_on = false
 
 func _ready():
 	SymbolManager.symbol_added.connect(_on_add_new_symbol)
+	ProjectManager.xml_visibility_changed.connect(_on_xml_visibility_changed)
 	
 
 func process_input(event):
@@ -68,7 +69,7 @@ func reset_active_project_xml_dict(active_project: Project):
 			active_project_xml_dict[child_node.xml_stat] = child_node
 
 
-func change_visibility(xml_id: int):
+func _on_xml_visibility_changed(xml_id: int):
 	var xml_stat = ProjectManager.get_xml(xml_id)
 	active_project_xml_dict[xml_stat].visible = xml_stat.is_visible
 

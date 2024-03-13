@@ -1,18 +1,15 @@
 # 파일 집합으로 로드하는 프로젝트 전체를 관리하는 클래스 (singleton)
 extends Node
 
-# currently, assume single text resource for extire project
+signal xml_visibility_changed(xml_id: int)
+signal xml_selectability_changed(xml_id: int)
+
 var symbol_type_set = {} 
 
 var open_projects: Array[Project]
 var active_project: Project
 
 func _ready():
-	#if OS.get_name() == "Web":
-		#symbol_type_set = DataLoader.symboltype_load_from_web(Config.SYMBOL_TYPE_TXT_URL_ABS)
-	#if OS.get_name() == "Windows":
-		#symbol_type_set = DataLoader.symboltype_load_from_path(Config.SYMBOL_TYPE_TXT_URL)
-	
 	symbol_type_set = DataLoader.parse_symbol_type_to_dict(SymbolTypeClassDef.TXT)
 	
 

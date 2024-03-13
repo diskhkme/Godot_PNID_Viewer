@@ -27,22 +27,20 @@ func _ready():
 	main_menu.active_project_changed.connect(on_changed_active_project)
 	xml_viewer.request_type_change_window.connect(on_type_change)
 	
-	project_viewer.xml_visibility_changed.connect(on_xml_visibility_changed)
-	project_viewer.xml_selectability_changed.connect(on_xml_selectabilty_changed)
-	
 	
 func _input(event):
-	if event is InputEventMouseButton:
-		is_context_on = image_viewer_context_menu.visible or project_viewer_context_menu
+	if event is InputEventMouse:
+		is_context_on = image_viewer_context_menu.visible or project_viewer_context_menu.visible
+		
+		if !is_context_on:
+			image_viewer.process_input(event)
 		
 		# TODO: Exclusive context popup
-		if is_context_on:
-			if image_viewer.get_global_rect().has_point(event.position):
-				image_viewer_context_menu.process_input(event)
-			elif project_viewer.get_global_rect().has_point(event.position):
-				project_viewer_context_menu.process_input(event)
-		else:
-			image_viewer.process_input()
+		if image_viewer.get_global_rect().has_point(event.position):
+			image_viewer_context_menu.process_input(event)
+		elif project_viewer.get_global_rect().has_point(event.position):
+			project_viewer_context_menu.process_input(event)
+			
 			
 
 func on_new_project(args: Variant): # web & windows
@@ -65,13 +63,13 @@ func make_project_active(project: Project) -> void:
 
 # TODO: create visibility/selectability signal to Project and
 # watch it from who is responsible (not image_viewer but symbolscene, etc)
-func on_xml_visibility_changed(xml_id: int):
-	image_viewer.change_visibility(xml_id)
-	xml_viewer.change_visibility(xml_id)
-	
-	
-func on_xml_selectabilty_changed(xml_id: int):
-	xml_viewer.change_selectability(xml_id)
+#func on_xml_visibility_changed(xml_id: int):
+	#image_viewer.change_visibility(xml_id)
+	#xml_viewer.change_visibility(xml_id)
+	#
+	#
+#func on_xml_selectabilty_changed(xml_id: int):
+	#xml_viewer.change_selectability(xml_id)
 	
 	
 func on_changed_active_project(project: Project):
