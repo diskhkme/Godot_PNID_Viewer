@@ -5,9 +5,9 @@ class_name ProjectViewer
 
 @export var icon_color = preload("res://assets/icons/rectangle_tool.png")
 
-var tree_xml_dict = {} # key: xml_id, value: [xml_stat, xml_item]
+var tree_xml_dict = {} # key: xml_item, value: xml_stat
 var root
-var selected
+var selected_xml
 
 func _ready():
 	SymbolManager.symbol_edited.connect(_on_symbol_edited)
@@ -40,7 +40,7 @@ func reset_xml(xml_stat: XML_Status):
 	
 	xml_item.set_checked(1, xml_stat.is_visible)
 	xml_item.set_checked(2, xml_stat.is_selectable)
-	tree_xml_dict[xml_stat.id] = [xml_stat, xml_item]
+	tree_xml_dict[xml_item] = xml_stat
 	
 	
 func reset_tree(project: Project):
@@ -57,11 +57,11 @@ func use_project(project: Project) -> void:
 	
 	
 func update_dirty():
-	for arr in tree_xml_dict.values():
-		if arr[0].dirty == true:
-			arr[1].set_text(0,arr[0].filename + " (*)")
+	for xml_item in tree_xml_dict:
+		if tree_xml_dict[xml_item].dirty == true:
+			xml_item.set_text(0,tree_xml_dict[xml_item].filename + " (*)")
 		else:
-			arr[1].set_text(0,arr[0].filename)
+			xml_item.set_text(0,tree_xml_dict[xml_item].filename)
 
 # TODO: dirty state is not maintained when active project changed
 func _on_symbol_edited(xml_id:int, symbol_id:int):
@@ -70,9 +70,8 @@ func _on_symbol_edited(xml_id:int, symbol_id:int):
 
 # TODO: how to receive treeitem checkbox changed event?
 func _process(delta): 
-	for xml_id in tree_xml_dict:
-		var xml_stat = tree_xml_dict[xml_id][0]
-		var xml_item = tree_xml_dict[xml_id][1]
+	for xml_item in tree_xml_dict:
+		var xml_stat = tree_xml_dict[xml_item]
 		if xml_item.is_checked(1) != xml_stat.is_visible:
 			xml_stat.is_visible = xml_item.is_checked(1)
 			if xml_item.is_checked(1) == false: # if not visible, not selectable
@@ -82,19 +81,20 @@ func _process(delta):
 				xml_item.set_checked(2,true)
 				xml_item.set_editable(2,true)
 				
-			ProjectManager.xml_visibility_changed.emit(xml_id)
+			ProjectManager.xml_visibility_changed.emit(xml_stat.id)
 			
 		if xml_item.is_checked(2) != xml_stat.is_selectable:
 			if !xml_item.is_checked(1): # not allow selectable if not visible
 				xml_item.set_checked(2,false)
 			xml_stat.is_selectable = xml_item.is_checked(2)
-			ProjectManager.xml_selectability_changed.emit(xml_id)
+			ProjectManager.xml_selectability_changed.emit(xml_stat.id)
 		
 
 func _on_tree_item_selected():
-	selected = tree.get_selected()
+	var selected_item = tree.get_selected()
+	selected_xml = tree_xml_dict[selected_item]
 
 
 func _on_tree_nothing_selected():
-	selected = null
+	selected_xml = null
 	tree.deselect_all()

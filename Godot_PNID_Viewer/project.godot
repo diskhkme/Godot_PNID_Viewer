@@ -20,11 +20,11 @@ config/icon="res://icon.svg"
 
 ProjectManager="*res://project_manager/project_manager.gd"
 SymbolManager="*res://project_manager/symbol_manager.gd"
-PnidXmlParser="*res://project_manager/pnid_xml_parser.gd"
 Util="*res://project_manager/util.gd"
 Config="*res://config.gd"
 DataLoader="*res://project_manager/data_loader.gd"
 SymbolTypeClassDef="*res://symbol_type_class_def.gd"
+PnidXmlIo="*res://project_manager/pnid_xml_IO.gd"
 
 [rendering]
 

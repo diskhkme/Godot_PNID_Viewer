@@ -1,18 +1,20 @@
 extends Control
 
 @export var project_viewer: ProjectViewer
+@export var save_file_dialog: FileDialog
 
 @onready var save_as_button = $PanelContainer/VBoxContainer/SaveAsButton
 
 var is_in_context_menu
 
-var xml_id
-var symbol_id
+func _ready():
+	save_file_dialog.file_selected.connect(_on_save_path_selected)
+	
 
 func process_input(event):
 	reset_size()
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_RIGHT:
-		if !event.is_pressed() and !visible and project_viewer.selected != null:
+		if !event.is_pressed() and !visible and project_viewer.selected_xml != null:
 			position = event.position
 			visible = true
 			
@@ -22,8 +24,29 @@ func process_input(event):
 
 
 func _on_save_as_button_pressed():
-	print("save_as pressed")
+	assert(project_viewer.selected_xml != null, "No XML Selected for export")
+	
+	if OS.get_name() == "Windows":
+		save_file_dialog.popup()
+	elif OS.get_name() == "Web":
+		#var window = JavaScriptBridge.get_interface("window")
+		#window.input.click()
+		pass
+
 	visible = false
+	
+	
+func _on_save_path_selected(path: String):
+	if !path.contains(".xml"):
+		path += ".xml"
+		
+	var xml_dump = PnidXmlIo.dump_pnid_xml(project_viewer.selected_xml.symbol_objects)
+	if OS.get_name() == "Windows":
+		var file = FileAccess.open(path, FileAccess.WRITE)
+		file.store_string(xml_dump)
+	elif OS.get_name() == "Web":
+		pass
+
 
 
 func _on_mouse_entered():
