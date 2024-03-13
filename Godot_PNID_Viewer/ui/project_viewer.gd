@@ -1,4 +1,5 @@
 extends PanelContainer
+class_name ProjectViewer
 
 @onready var tree = $Tree
 
@@ -27,12 +28,15 @@ func reset_xml(xml_stat: XML_Status):
 	xml_item.set_text(0,xml_stat.filename)
 	xml_item.set_cell_mode(1, TreeItem.CELL_MODE_CHECK)
 	xml_item.set_editable(1, true)
+	xml_item.set_selectable(1, false)
 	xml_item.set_cell_mode(2, TreeItem.CELL_MODE_CHECK)
 	xml_item.set_editable(2, true)
+	xml_item.set_selectable(2, false)
 	xml_item.set_cell_mode(3, TreeItem.CELL_MODE_ICON)
 	xml_item.set_icon_modulate(3,xml_stat.color)
 	xml_item.set_icon(3, icon_color)
 	xml_item.set_editable(3, true)
+	xml_item.set_selectable(3, false)
 	
 	xml_item.set_checked(1, xml_stat.is_visible)
 	xml_item.set_checked(2, xml_stat.is_selectable)
@@ -89,3 +93,4 @@ func _on_tree_item_selected():
 
 func _on_tree_nothing_selected():
 	selected = null
+	tree.deselect_all()

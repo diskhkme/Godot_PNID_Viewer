@@ -97,7 +97,7 @@ stretch = true
 [node name="SubViewport" type="SubViewport" parent="CanvasLayer/MainWindow/Middle/ImageViewer/SubViewportContainer"]
 handle_input_locally = false
 physics_object_picking = true
-size = Vector2i(2, 2)
+size = Vector2i(570, 582)
 render_target_update_mode = 4
 
 [node name="SymbolSelectionFilter" type="Control" parent="CanvasLayer/MainWindow/Middle/ImageViewer/SubViewportContainer/SubViewport"]
@@ -170,9 +170,10 @@ anchors_preset = 0
 [node name="ImageViewContextMenu" parent="CanvasLayer/ContextMenus" node_paths=PackedStringArray("image_view_camera") instance=ExtResource("12_p38sp")]
 image_view_camera = NodePath("../../MainWindow/Middle/ImageViewer/SubViewportContainer/SubViewport/ImageViewCamera")
 
-[node name="ProjectViewContextMenu" parent="CanvasLayer/ContextMenus" instance=ExtResource("13_sobsl")]
+[node name="ProjectViewContextMenu" parent="CanvasLayer/ContextMenus" node_paths=PackedStringArray("project_viewer") instance=ExtResource("13_sobsl")]
 visible = false
 layout_mode = 1
+project_viewer = NodePath("../../MainWindow/Middle/RightSide/ProjectViewer")
 
 [connection signal="pressed" from="CanvasLayer/MainWindow/MainMenu/Left/OpenFilesButton" to="CanvasLayer/MainWindow/MainMenu" method="_on_open_files_button_pressed"]
 [connection signal="tab_changed" from="CanvasLayer/MainWindow/MainMenu/Left/TabBar" to="CanvasLayer/MainWindow/MainMenu" method="_on_tab_bar_tab_changed"]

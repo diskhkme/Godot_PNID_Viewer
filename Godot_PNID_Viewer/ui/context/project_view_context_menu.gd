@@ -1,8 +1,6 @@
 extends Control
 
-signal context_poped_up
-signal context_canceled
-signal context_save_as_clicked
+@export var project_viewer: ProjectViewer
 
 @onready var save_as_button = $PanelContainer/VBoxContainer/SaveAsButton
 
@@ -14,7 +12,7 @@ var symbol_id
 func process_input(event):
 	reset_size()
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_RIGHT:
-		if !event.is_pressed() and !visible:
+		if !event.is_pressed() and !visible and project_viewer.selected != null:
 			position = event.position
 			visible = true
 			
