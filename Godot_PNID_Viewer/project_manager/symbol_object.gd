@@ -7,7 +7,7 @@ var type: String :
 		if value.to_lower().contains(Config.TEXT_TYPE_NAME):
 			is_text = true
 		else:
-				is_text = false
+			is_text = false
 		type = value
 var cls: String
 var bndbox: Vector4
@@ -57,6 +57,10 @@ func set_bndbox(center: Vector2, size: Vector2):
 		
 	bndbox = Vector4(min_coord.x, min_coord.y, max_coord.x, max_coord.y)
 		
+
+# rotation handiness is different in Godot
+func get_degree(): return -degree
+	
 	
 func set_degree(angle: float):
 	var new_degree = rad_to_deg(angle)
@@ -64,4 +68,4 @@ func set_degree(angle: float):
 	if Config.FORCE_QUANTIZED_DEGREE:
 		new_degree = snappedf(new_degree, Config.QUANTIZED_DEGREE_VALUE)
 		
-	degree = new_degree
+	degree = -new_degree

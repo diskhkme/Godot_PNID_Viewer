@@ -14,8 +14,6 @@ var xml_id: int
 var symbol_id: int
 var target_symbol: SymbolObject
 
-# TODO: rotated symbol editing has error. possibly simplify scene nodes by manual calculation
-
 func _ready():
 	add_to_group("draw_group")
 	SymbolManager.symbol_edit_started.connect(initialize_editor)
@@ -63,7 +61,7 @@ func initialize_editor(xml_id: int, symbol_id: int):
 	target_symbol = ProjectManager.get_symbol_in_xml(xml_id, symbol_id)
 	var symbol_position = target_symbol.get_center()
 	var symbol_size = target_symbol.get_size()
-	var symbol_angle = deg_to_rad(target_symbol.degree)
+	var symbol_angle = deg_to_rad(target_symbol.get_degree())
 	center_node.global_position = symbol_position
 	center_node.scale = symbol_size
 	center_node.rotation = symbol_angle

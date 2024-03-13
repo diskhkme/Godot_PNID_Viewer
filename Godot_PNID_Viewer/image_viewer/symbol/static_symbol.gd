@@ -28,10 +28,10 @@ func _ready():
 func update_symbol():
 	area.global_position = symbol_object.get_center()
 	area.scale = symbol_object.get_size()
-	area.rotation = deg_to_rad(symbol_object.degree)
+	area.rotation = deg_to_rad(symbol_object.get_degree())
 	
 	static_symbol_draw.global_position = symbol_object.get_center()
-	static_symbol_draw.rotation = deg_to_rad(symbol_object.degree)
+	static_symbol_draw.rotation = deg_to_rad(symbol_object.get_degree())
 	
 	var size = symbol_object.get_rect().size
 	var color = ProjectManager.active_project.xml_status[xml_id].color
