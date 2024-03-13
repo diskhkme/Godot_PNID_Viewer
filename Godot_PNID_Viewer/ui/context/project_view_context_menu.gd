@@ -29,9 +29,8 @@ func _on_save_as_button_pressed():
 	if OS.get_name() == "Windows":
 		save_file_dialog.popup()
 	elif OS.get_name() == "Web":
-		#var window = JavaScriptBridge.get_interface("window")
-		#window.input.click()
-		pass
+		var xml_dump = PnidXmlIo.dump_pnid_xml(project_viewer.selected_xml.symbol_objects)
+		JavaScriptBridge.download_buffer(xml_dump.to_utf8_buffer(), "export.xml")
 
 	visible = false
 	
@@ -44,9 +43,6 @@ func _on_save_path_selected(path: String):
 	if OS.get_name() == "Windows":
 		var file = FileAccess.open(path, FileAccess.WRITE)
 		file.store_string(xml_dump)
-	elif OS.get_name() == "Web":
-		pass
-
 
 
 func _on_mouse_entered():
