@@ -53,15 +53,19 @@ func use_project(project: Project) -> void:
 	tree_xml_dict.clear()
 	tree.clear()
 	reset_tree(project)
+	update_dirty()
 	
+	
+func update_dirty():
+	for arr in tree_xml_dict.values():
+		if arr[0].dirty == true:
+			arr[1].set_text(0,arr[0].filename + " (*)")
+		else:
+			arr[1].set_text(0,arr[0].filename)
 
 # TODO: dirty state is not maintained when active project changed
 func _on_symbol_edited(xml_id:int, symbol_id:int):
-	var target_xml_stat = tree_xml_dict[xml_id][0]
-	if target_xml_stat.dirty == true:
-		tree_xml_dict[xml_id][1].set_text(0,target_xml_stat.filename + " (*)")
-	else:
-		tree_xml_dict[xml_id][1].set_text(0,target_xml_stat.filename)
+	update_dirty()
 		
 
 # TODO: how to receive treeitem checkbox changed event?

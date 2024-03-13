@@ -73,6 +73,9 @@ func make_project_active(project: Project) -> void:
 	
 	
 func on_changed_active_project(project: Project):
+	# end on-going process
+	SymbolManager.symbol_edit_ended.emit()
+	SymbolManager.symbol_deselected.emit()
 	make_project_active(project)
 	
 

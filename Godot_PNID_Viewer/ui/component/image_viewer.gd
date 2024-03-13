@@ -10,6 +10,7 @@ class_name ImageViewer
 @onready var image_viewport = $SubViewportContainer/SubViewport
 @onready var image_view_camera = $SubViewportContainer/SubViewport/ImageViewCamera
 @onready var symbol_selection_filter = $SubViewportContainer/SubViewport/SymbolSelectionFilter
+@onready var symbol_editor_scene = $SubViewportContainer/SubViewport/SymbolEditorScene
 
 var project_scene_group_dict = {} 
 var active_project_xml_dict = {} # key: xml_stat, value: symbol scene

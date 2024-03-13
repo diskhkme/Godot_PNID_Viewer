@@ -20,6 +20,3 @@ func show_editor(xml_id:int, symbol_id:int):
 func hide_editor():
 	visible = false
 	
-	
-# TODO: continuously report symbol change to symbol manager, by receiveing the information from editor controller
-	
