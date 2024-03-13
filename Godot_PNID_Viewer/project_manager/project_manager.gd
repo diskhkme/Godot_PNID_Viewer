@@ -1,8 +1,10 @@
 # 파일 집합으로 로드하는 프로젝트 전체를 관리하는 클래스 (singleton)
 extends Node
 
+# TODO: Consider re-factoring these signals 
 signal xml_visibility_changed(xml_id: int)
 signal xml_selectability_changed(xml_id: int)
+signal xml_added(xml_id: int)
 
 var symbol_type_set = {} 
 
@@ -31,6 +33,11 @@ func add_project(args: Variant) -> Project:
 	active_project = project # 새로 추가된 project를 active로 하는 것이 default
 	return project
 	
+	
+func add_xml_stat(xml_stat: XML_Status):
+	active_project.xml_status.push_back(xml_stat)
+	xml_added.emit(xml_stat.id)
+
 
 func make_project_active(project: Project) -> void:
 	active_project = project

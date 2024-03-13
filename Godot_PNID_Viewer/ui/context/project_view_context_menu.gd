@@ -2,6 +2,7 @@ extends Control
 
 @export var project_viewer: ProjectViewer
 @export var save_file_dialog: FileDialog
+@export var diff_dialog: DiffDialog
 
 @onready var save_as_button = $PanelContainer/VBoxContainer/SaveAsButton
 
@@ -32,6 +33,12 @@ func _on_save_as_button_pressed():
 		var xml_dump = PnidXmlIo.dump_pnid_xml(project_viewer.selected_xml.symbol_objects)
 		JavaScriptBridge.download_buffer(xml_dump.to_utf8_buffer(), "export.xml")
 
+	visible = false
+
+
+func _on_diff_button_pressed():
+	diff_dialog.popup()
+	diff_dialog.set_first_selected(project_viewer.selected_xml)
 	visible = false
 	
 	

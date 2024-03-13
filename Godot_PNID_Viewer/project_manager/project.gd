@@ -16,17 +16,12 @@ func initialize(id, img_filename, img, num_xml, xml_filenames, xml_strs):
 	
 	xml_status.clear()
 	for i in range(num_xml):
-		var xml_stat = parse_xml_status(xml_filenames[i], xml_strs[i].to_utf8_buffer())
+		var xml_stat = XML_Status.new()
+		xml_stat.initialize_by_xml_str(xml_status.size(), xml_filenames[i], xml_strs[i].to_utf8_buffer())
 		xml_status.push_back(xml_stat)
 			
 	return true
 	
-
-func parse_xml_status(xml_filename:String, xml_str: PackedByteArray):
-	var id = xml_status.size()
-	var xml_stat = XML_Status.new(id, xml_filename, xml_str)
-	return xml_stat
-		
 
 func get_xml_id_from_filename(filename: String) -> int:
 	for xml_stat in xml_status:

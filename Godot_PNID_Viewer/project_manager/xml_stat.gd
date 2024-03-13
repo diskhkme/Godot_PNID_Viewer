@@ -10,11 +10,20 @@ var dirty: bool # true if any symbol_object is modified
 var is_visible: bool
 var is_selectable: bool
 
-
-func _init(id:int, xml_filename:String, xml_str: PackedByteArray):
+func initialize_by_xml_str(id:int, xml_filename:String, xml_str: PackedByteArray):
 	self.id = id
 	self.filename = xml_filename
 	symbol_objects = PnidXmlIo.parse_pnid_xml_from_byte_array(xml_str)
+	var is_sane = check_sanity(symbol_objects) # TODO: what to do if check sanity failes?
+	is_visible = true
+	is_selectable = true
+	color = Config.SYMBOL_COLOR_PRESET[id]
+	
+# No constructore overloading...	
+func initialize_by_symbols(id: int, filename:String, symbol_objects: Array[SymbolObject]):
+	self.id = id
+	self.filename = filename
+	self.symbol_objects = symbol_objects
 	var is_sane = check_sanity(symbol_objects) # TODO: what to do if check sanity failes?
 	is_visible = true
 	is_selectable = true

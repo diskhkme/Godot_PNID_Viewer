@@ -9,7 +9,9 @@ extends Node
 @onready var project_viewer: Control = $CanvasLayer/MainWindow/Middle/RightSide/ProjectViewer
 @onready var xml_viewer: Control = $CanvasLayer/MainWindow/Middle/RightSide/XMLTreeViewer
 
+# TODO: handover dialog control to xml viewer
 @onready var type_change_dialog = $CanvasLayer/Dialogs/TypeChangeWindow
+#@onready var diff_window = $CanvasLayer/Dialogs/DiffWindow
 
 @onready var image_viewer_context_menu = $CanvasLayer/ContextMenus/ImageViewContextMenu
 @onready var project_viewer_context_menu = $CanvasLayer/ContextMenus/ProjectViewContextMenu
@@ -27,6 +29,8 @@ func _ready():
 		
 	main_menu.active_project_changed.connect(_on_changed_active_project)
 	xml_viewer.request_type_change_window.connect(_on_type_change)
+	
+	ProjectManager.xml_added.connect(_on_xml_added)
 	
 	
 func _input(event):
@@ -54,9 +58,15 @@ func _on_type_change(xml_stat:XML_Status, symbol_object:SymbolObject):
 	type_change_dialog.show_type_change_window(xml_stat, symbol_object)
 
 
-func make_project_active(project: Project) -> void:
+func _on_xml_added(xml_id:int):
+	# Just re-initialize everything
+	image_viewer.use_project(ProjectManager.active_project)
+	project_viewer.use_project(ProjectManager.active_project)
+	xml_viewer.use_project(ProjectManager.active_project)
+
+
+func make_project_active(project: Project):
 	ProjectManager.make_project_active(project)
-	
 	image_viewer.use_project(project)
 	project_viewer.use_project(project)
 	xml_viewer.use_project(project)

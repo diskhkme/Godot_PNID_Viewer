@@ -47,6 +47,20 @@ func is_type_class_same(type: String, cls: String):
 	return false
 	
 	
+func get_rotated_bndbox() -> Vector4:
+	var center = get_center()
+	var centered = bndbox - Vector4(center.x, center.y, center.x, center.y)
+	var rotated_min = Vector2(centered.x, centered.y).rotated(deg_to_rad(-degree))
+	var rotated_max = Vector2(centered.z, centered.w).rotated(deg_to_rad(-degree))
+	
+	var minx = min(rotated_min.x, rotated_max.x) + center.x
+	var miny = min(rotated_min.y, rotated_max.y) + center.y
+	var maxx = max(rotated_min.x, rotated_max.x) + center.x
+	var maxy = max(rotated_min.y, rotated_max.y) + center.y
+	
+	return Vector4(minx, miny, maxx, maxy)
+	
+	
 func set_bndbox(center: Vector2, size: Vector2):
 	var min_coord = center - size/2
 	var max_coord = center + size/2

@@ -20,6 +20,7 @@ var is_mouse_on = false
 func _ready():
 	SymbolManager.symbol_added.connect(_on_add_new_symbol)
 	ProjectManager.xml_visibility_changed.connect(_on_xml_visibility_changed)
+	ProjectManager.xml_added.connect(_on_xml_added)
 	
 
 func process_input(event):
@@ -39,12 +40,19 @@ func use_project(active_project: Project) -> void:
 	else: # new tab add (=open new project)
 		var scene_group = Node2D.new() # has image & symbol scenes
 		image_viewport.add_child(scene_group)
-		add_child_scenes(scene_group, active_project)
+		add_image_scene(scene_group, active_project)
+		for xml_stat in active_project.xml_status:
+			add_symbol_scene(scene_group, xml_stat)
 		project_scene_group_dict[active_project] = scene_group
 	
 	reset_active_project_xml_dict(active_project)
 	symbol_selection_filter.set_current(active_project_xml_dict)
 	
+	
+func _on_xml_added(xml_id: int):
+	var scene_group = project_scene_group_dict[ProjectManager.active_project]
+	add_symbol_scene(scene_group, ProjectManager.get_xml(xml_id))
+
 	
 # let only active symbol scene adds new symbol
 func _on_add_new_symbol(xml_id:int, symbol_id:int):
@@ -52,19 +60,20 @@ func _on_add_new_symbol(xml_id:int, symbol_id:int):
 	active_project_xml_dict[xml_stat].add_new_symbol(xml_id, symbol_id)
 		
 		
-func add_child_scenes(parent: Node2D, active_project: Project):
+func add_symbol_scene(parent: Node2D, xml_stat: XML_Status):
+	var symbol_scene_instance = symbol_scene.instantiate() as SymbolScene
+	symbol_scene_instance.populate_symbol_bboxes(xml_stat)
+	parent.add_child(symbol_scene_instance)
+	
+		
+func add_image_scene(parent: Node2D, active_project: Project):
 	var image_scene_instance = image_scene.instantiate() as ImageScene
 	var texture_size = image_scene_instance.set_texture(active_project.img)
 	image_view_camera.global_position = texture_size/2
 	parent.add_child(image_scene_instance)
-	for xml_stat in active_project.xml_status:
-		var symbol_scene_instance = symbol_scene.instantiate() as SymbolScene
-		symbol_scene_instance.populate_symbol_bboxes(xml_stat)
-		parent.add_child(symbol_scene_instance)
 	
 	
 func reset_active_project_xml_dict(active_project: Project):
-	active_project_xml_dict
 	for child_node in project_scene_group_dict[active_project].get_children():
 		if child_node is SymbolScene:
 			active_project_xml_dict[child_node.xml_stat] = child_node

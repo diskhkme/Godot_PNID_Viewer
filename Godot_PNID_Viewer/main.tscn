@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://en0mt7v4ddrg"]
+[gd_scene load_steps=14 format=3 uid="uid://en0mt7v4ddrg"]
 
 [ext_resource type="Script" path="res://main.gd" id="1_h1xnr"]
 [ext_resource type="Theme" uid="uid://dseywhd5dettr" path="res://resources/project_default.tres" id="2_6rl77"]
@@ -10,6 +10,7 @@
 [ext_resource type="PackedScene" uid="uid://mmirfa2yhj50" path="res://ui/xml_tree_viewer.tscn" id="5_4qjjb"]
 [ext_resource type="PackedScene" uid="uid://bdsyjmvhhrl76" path="res://ui/dialogs/type_change_window.tscn" id="6_xn5xa"]
 [ext_resource type="Script" path="res://image_viewer/image_view_camera.gd" id="8_6tcqo"]
+[ext_resource type="PackedScene" uid="uid://fxwcfnsk0rgt" path="res://ui/dialogs/diff_window.tscn" id="11_3hrp5"]
 [ext_resource type="PackedScene" uid="uid://drge4asvwjmcu" path="res://ui/context/image_view_context_menu.tscn" id="12_p38sp"]
 [ext_resource type="PackedScene" uid="uid://chyc6mjjmyek7" path="res://ui/context/project_view_context_menu.tscn" id="13_sobsl"]
 
@@ -170,6 +171,9 @@ use_native_dialog = true
 [node name="TypeChangeWindow" parent="CanvasLayer/Dialogs" instance=ExtResource("6_xn5xa")]
 visible = false
 
+[node name="DiffWindow" parent="CanvasLayer/Dialogs" instance=ExtResource("11_3hrp5")]
+visible = false
+
 [node name="ContextMenus" type="Control" parent="CanvasLayer"]
 layout_mode = 3
 anchors_preset = 0
@@ -177,11 +181,12 @@ anchors_preset = 0
 [node name="ImageViewContextMenu" parent="CanvasLayer/ContextMenus" node_paths=PackedStringArray("image_view_camera") instance=ExtResource("12_p38sp")]
 image_view_camera = NodePath("../../MainWindow/Middle/ImageViewer/SubViewportContainer/SubViewport/ImageViewCamera")
 
-[node name="ProjectViewContextMenu" parent="CanvasLayer/ContextMenus" node_paths=PackedStringArray("project_viewer", "save_file_dialog") instance=ExtResource("13_sobsl")]
+[node name="ProjectViewContextMenu" parent="CanvasLayer/ContextMenus" node_paths=PackedStringArray("project_viewer", "save_file_dialog", "diff_dialog") instance=ExtResource("13_sobsl")]
 visible = false
 layout_mode = 1
 project_viewer = NodePath("../../MainWindow/Middle/RightSide/ProjectViewer")
 save_file_dialog = NodePath("../../Dialogs/SaveAsFilesDialog")
+diff_dialog = NodePath("../../Dialogs/DiffWindow")
 
 [connection signal="pressed" from="CanvasLayer/MainWindow/MainMenu/Left/OpenFilesButton" to="CanvasLayer/MainWindow/MainMenu" method="_on_open_files_button_pressed"]
 [connection signal="tab_changed" from="CanvasLayer/MainWindow/MainMenu/Left/TabBar" to="CanvasLayer/MainWindow/MainMenu" method="_on_tab_bar_tab_changed"]
