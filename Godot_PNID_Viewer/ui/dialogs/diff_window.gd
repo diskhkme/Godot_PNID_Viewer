@@ -23,12 +23,12 @@ func gather_calculate_options():
 	
 func get_symbols(selected_xml):
 	var selected_xml_id = ProjectManager.active_project.get_xml_id_from_filename(selected_xml.get_item_text(selected_xml.get_selected_id()))
-	var symbols = ProjectManager.active_project.xml_status[selected_xml_id].symbol_objects
+	var symbols = ProjectManager.active_project.xml_datas[selected_xml_id].symbol_objects
 	return symbols
 	
 	
-func set_first_selected(selected_xml_stat: XML_Status):
-	var id = filename_id_dict[selected_xml_stat.filename]
+func set_first_selected(selected_xml_data: XMLData):
+	var id = filename_id_dict[selected_xml_data.filename]
 	first_xml.select(id)
 	if second_xml.get_selected_id() == id and second_xml.item_count > 1:
 		second_xml.select(id % second_xml.item_count + 1)
@@ -50,13 +50,13 @@ func _on_ok_button_pressed():
 	var options = gather_calculate_options()
 		
 	var result = Diff.calculate_diff(first_symbols, second_symbols, options)
-	var new_id = ProjectManager.active_project.xml_status.size()
+	var new_id = ProjectManager.active_project.xml_datas.size()
 	var new_name = "Diff"
 	
-	var xml_stat = XML_Status.new()
-	xml_stat.initialize_from_symbols(new_id, new_name, result)
-	xml_stat.dirty = true
-	ProjectManager.add_xml_stat(xml_stat)
+	var xml_data = XMLData.new()
+	xml_data.initialize_from_symbols(new_id, new_name, result)
+	xml_data.dirty = true
+	ProjectManager.add_xml_data(xml_data)
 	visible = false
 	pass # Replace with function body.
 
@@ -70,10 +70,10 @@ func _on_about_to_popup():
 	filename_id_dict.clear()
 	
 	var id = 0
-	for xml_stat in ProjectManager.active_project.xml_status:
-		filename_id_dict[xml_stat.filename] = id
-		first_xml.add_item(xml_stat.filename)
-		second_xml.add_item(xml_stat.filename)
+	for xml_data in ProjectManager.active_project.xml_datas:
+		filename_id_dict[xml_data.filename] = id
+		first_xml.add_item(xml_data.filename)
+		second_xml.add_item(xml_data.filename)
 		id += 1
 	
 

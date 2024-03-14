@@ -6,18 +6,16 @@ signal type_change_window_closed
 @onready var cls_option_button = $VBoxContainer/MarginContainer/VBoxContainer/HBoxContainer2/ClassOptionButton
 @onready var cls_text_edit = $VBoxContainer/MarginContainer/VBoxContainer/HBoxContainer2/TextEdit
 
-var xml_stat: XML_Status
 var symbol_object: SymbolObject
 
 
-func show_type_change_window(xml_stat: XML_Status, symbol_object: SymbolObject):
+func show_type_change_window(symbol_object: SymbolObject):
 	type_option_button.clear()
 	for type in ProjectManager.symbol_type_set:
 		type_option_button.add_item(type)
 		
 	reset_class_with_type(symbol_object.type)
 	
-	self.xml_stat = xml_stat
 	self.symbol_object = symbol_object
 		
 	type_option_button.select(ProjectManager.symbol_type_set.keys().find(symbol_object.type))
@@ -76,7 +74,7 @@ func update_symbol_object():
 func _on_ok_button_pressed():
 	if check_symbol_updated():
 		update_symbol_object()
-		SymbolManager.symbol_edited.emit(xml_stat.id, symbol_object.id)
+		SymbolManager.symbol_edited.emit(symbol_object)
 				
 	self.visible = false
 

@@ -1,4 +1,4 @@
-class_name XML_Status
+class_name XMLData # TODO: separate diff xml
 
 var id: int
 var filename: String
@@ -16,6 +16,7 @@ func initialize_from_xml_str(id:int, xml_filename:String, xml_str: PackedByteArr
 	colors[Config.SYMBOL_COLOR_PRESET[id]] = null
 	symbol_objects = PnidXmlIo.parse_pnid_xml_from_byte_array(xml_str)
 	symbol_objects.map(func(s): s.color = self.colors.keys()[0])
+	symbol_objects.map(func(s): s.source_xml = self)
 	var is_sane = check_sanity(symbol_objects) # TODO: what to do if check sanity failes?
 	is_visible = true
 	is_selectable = true
@@ -52,15 +53,12 @@ func check_sanity(symbol_objects):
 	return true
 
 
-func remove_symbol(symbol_id: int):
-	symbol_objects[symbol_id].removed = true
-
-
-func add_new_symbol(position: Vector2) -> int:
+func add_new_symbol(position: Vector2) -> SymbolObject:
 	var new_symbol = SymbolObject.new()
 	new_symbol.bndbox += Vector4(position.x, position.y, position.x, position.y) # translate min/max
 	var new_symbol_id = symbol_objects.size()
 	new_symbol.id = new_symbol_id
+	new_symbol.source_xml = self
 	symbol_objects.push_back(new_symbol)
 	
-	return new_symbol_id
+	return new_symbol

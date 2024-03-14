@@ -13,7 +13,7 @@ func _ready():
 	visible = false
 
 
-func _show_editor(xml_id:int, symbol_id:int):
+func _show_editor(symbol_object: SymbolObject):
 	visible = true
 
 

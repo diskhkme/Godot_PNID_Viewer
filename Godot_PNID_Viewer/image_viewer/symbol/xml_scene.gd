@@ -8,13 +8,13 @@ class_name SymbolScene
 
 var selected_candidate: Array[StaticSymbol]
 var selection_filter
-var xml_stat
+var xml_data
 
 
-func populate_symbol_bboxes(xml_stat: XML_Status) -> void:
-	self.xml_stat = xml_stat
-	for symbol_object in xml_stat.symbol_objects:	
-		add_child_static_symbol(xml_stat.id, symbol_object)
+func populate_symbol_bboxes(xml_data: XMLData) -> void:
+	self.xml_data = xml_data
+	for symbol_object in xml_data.symbol_objects:	
+		add_child_static_symbol(xml_data.id, symbol_object)
 
 
 func add_child_static_symbol(xml_id:int, symbol_object: SymbolObject):

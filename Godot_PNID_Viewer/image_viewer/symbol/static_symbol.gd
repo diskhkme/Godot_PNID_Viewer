@@ -60,8 +60,8 @@ func _on_area_2d_mouse_exited():
 
 
 # --- selected(received)
-func _hide_symbol(xml_id:int, symbol_id: int):
-	if self.xml_id == xml_id and self.symbol_object.id == symbol_id:
+func _hide_symbol(symbol_object: SymbolObject):
+	if self.symbol_object == symbol_object:
 		static_symbol_draw.visible = false
 	else:
 		static_symbol_draw.visible = true
@@ -72,8 +72,8 @@ func _show_symbol() -> void:
 
 
 # --- edited(received)
-func _update_symbol(xml_id: int, symbol_id: int):
-	if self.xml_id == xml_id and self.symbol_object.id == symbol_id:
+func _update_symbol(symbol_object: SymbolObject):
+	if self.symbol_object == symbol_object:
 		update_symbol()
 	
 

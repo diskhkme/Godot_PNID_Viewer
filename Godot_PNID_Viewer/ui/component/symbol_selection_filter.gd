@@ -10,7 +10,7 @@ signal clear_selected_candidate
 var active_xml_scenes: Array
 
 
-func set_current(active_project_xml_dict): # key: xml_stat, value: symbol scene
+func set_current(active_project_xml_dict): # key: xml_data, value: symbol scene
 	active_xml_scenes = active_project_xml_dict.values()
 		
 
@@ -25,7 +25,7 @@ func process_input(event):
 		if !event.is_pressed():
 			var candidates: Array[StaticSymbol] = []
 			for scene in active_xml_scenes:
-				if scene.xml_stat.is_selectable:
+				if scene.xml_data.is_selectable:
 					candidates.append_array(scene.selected_candidate)
 			
 			# get_global_mouse_position() returns 2d world coord position if it is in subviewport
@@ -34,8 +34,8 @@ func process_input(event):
 			if selected == null:
 				SymbolManager.symbol_deselected.emit()
 			else:
-				SymbolManager.symbol_selected_from_image.emit(selected.xml_id, selected.symbol_object.id)
-				SymbolManager.symbol_edit_started.emit(selected.xml_id, selected.symbol_object.id)
+				SymbolManager.symbol_selected_from_image.emit(selected.symbol_object)
+				SymbolManager.symbol_edit_started.emit(selected.symbol_object)
 				
 			for scene in active_xml_scenes: # direct call
 				scene.clear_candidates()

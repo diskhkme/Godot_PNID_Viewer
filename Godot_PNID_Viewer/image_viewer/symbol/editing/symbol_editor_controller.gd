@@ -54,11 +54,8 @@ func _draw():
 	draw_line(bl_pos, tl_pos, color, (line_width/zoom_level.x))
 	
 	
-func _initialize_editor(xml_id: int, symbol_id: int):
-	self.xml_id = xml_id
-	self.symbol_id = symbol_id
-	
-	target_symbol = ProjectManager.get_symbol_in_xml(xml_id, symbol_id)
+func _initialize_editor(symbol_object: SymbolObject):
+	target_symbol = symbol_object
 	var symbol_position = target_symbol.get_center()
 	var symbol_size = target_symbol.get_size()
 	var symbol_angle = deg_to_rad(target_symbol.get_degree())
@@ -156,6 +153,6 @@ func on_indicator_moved(target: Handle, mouse_pos: Vector2, mouse_pos_delta: Vec
 func report_symbol_edited():
 	target_symbol.set_bndbox(center_node.global_position, center_node.scale)
 	target_symbol.set_degree(center_node.rotation)
-	SymbolManager.symbol_edited.emit(xml_id, symbol_id)
+	SymbolManager.symbol_edited.emit(target_symbol)
 	
 

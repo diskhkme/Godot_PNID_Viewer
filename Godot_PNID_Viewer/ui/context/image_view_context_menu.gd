@@ -42,21 +42,20 @@ func close():
 
 func _on_add_button_pressed():
 	var pos_in_image = image_view_camera.get_pixel_from_image_canvas(position)
-	var new_symbol_id = ProjectManager.active_project.xml_status[0].add_new_symbol(pos_in_image) # TODO: how to set target xml?
+	var new_symbol = ProjectManager.active_project.xml_datas[0].add_new_symbol(pos_in_image) # TODO: how to set target xml?
 	
-	SymbolManager.symbol_added.emit(0, new_symbol_id)
-	SymbolManager.symbol_selected_from_image.emit(0, new_symbol_id)	
-	SymbolManager.symbol_edit_started.emit(0, new_symbol_id)
-	SymbolManager.symbol_edited.emit(0, new_symbol_id)
+	SymbolManager.symbol_added.emit(new_symbol)
+	SymbolManager.symbol_selected_from_image.emit(new_symbol)	
+	SymbolManager.symbol_edit_started.emit(new_symbol)
+	SymbolManager.symbol_edited.emit(new_symbol)
 	close()
 
 
 func _on_remove_button_pressed():
-	var xml_id = SymbolManager.selected_xml_id
-	var symbol_id = SymbolManager.selected_symbol_id
-	ProjectManager.active_project.xml_status[xml_id].remove_symbol(symbol_id)
+	var symbol = SymbolManager.selected_symbol
+	symbol.removed = true
 	
-	SymbolManager.symbol_edited.emit(xml_id, symbol_id)
+	SymbolManager.symbol_edited.emit(symbol)
 	SymbolManager.symbol_deselected.emit()
 	SymbolManager.symbol_edit_ended.emit()
 	close()

@@ -16,11 +16,13 @@ var is_large: bool
 var degree: float
 var flip: bool
 
+var source_xml: XMLData
 var color: Color
 
 var is_text: bool = false
 var removed: bool = false
 
+# TODO: strictly define constructor (prevent missing property)
 func _init():
 	bndbox = Vector4(0,0,100,100)
 	is_large = false

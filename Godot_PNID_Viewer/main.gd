@@ -54,11 +54,11 @@ func _add_project(args: Variant): # web & windows
 		main_menu.add_project_tab(project)
 		
 		
-func _show_type_change_window(xml_stat:XML_Status, symbol_object:SymbolObject):
-	type_change_dialog.show_type_change_window(xml_stat, symbol_object)
+func _show_type_change_window(symbol_object:SymbolObject):
+	type_change_dialog.show_type_change_window(symbol_object)
 
 
-func _on_xml_added(xml_id:int):
+func _on_xml_added(xml_data: XMLData):
 	# Just re-initialize everything
 	image_viewer.use_project(ProjectManager.active_project)
 	project_viewer.use_project(ProjectManager.active_project)

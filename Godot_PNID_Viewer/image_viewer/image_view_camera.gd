@@ -36,12 +36,11 @@ func process_input(event):
 		self.global_translate((-event.relative)/self.zoom)
 
 
-func _focus_symbol(xml_id:int, symbol_id:int):
-	var target_symbol = ProjectManager.get_symbol_in_xml(xml_id, symbol_id)
-	if is_symbol_visible(target_symbol):
+func _focus_symbol(symbol_object: SymbolObject):
+	if is_symbol_visible(symbol_object):
 		return
 		
-	global_position = target_symbol.get_center()
+	global_position = symbol_object.get_center()
 
 
 func is_symbol_visible(target_symbol: SymbolObject):
