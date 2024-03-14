@@ -9,8 +9,6 @@ var file_read_callback = JavaScriptBridge.create_callback(data_load_from_web)
 # The returns of callback is [img_filename, img, xml_filenames, xml_buffers], which is also
 # implemented in getFile
 
-
-
 var buffer
 
 var console = JavaScriptBridge.get_interface("console")
@@ -47,7 +45,7 @@ func data_load_from_paths(paths):
 
 
 func data_load_from_web(args):
-	# image_filename, image(base64str), num_xml, xml_filenames, xml_strs
+	# args = [image_filename, image(base64str), num_xml, xml_filenames, xml_strs]
 	if args.size() < 1:
 		print("Error!")
 	
@@ -65,17 +63,6 @@ func data_load_from_web(args):
 	file_opened.emit([img_filename, img, num_xml, xml_filenames, xml_strs])
 
 
-# TODO: Need to refer definitions from external file. (couldn't resolve the CORS problem in case of the web)
-#func symboltype_load_from_web(symbol_type_str: String):
-	#console.log(symbol_type_str)
-	#return parse_symbol_type_to_dict(symbol_type_str)
-	#
-#
-#func symboltype_load_from_path(symbol_type_path: String):
-	#var symboltype_buffer = FileAccess.get_file_as_string(symbol_type_path)
-	#return parse_symbol_type_to_dict(symboltype_buffer)
-	
-	
 func parse_symbol_type_to_dict(symbol_type_str: String):
 	var symbol_type_set = {}
 	var lines = symbol_type_str.split("\n")

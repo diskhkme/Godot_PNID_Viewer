@@ -21,14 +21,14 @@ var is_context_on = false
 func _ready():
 	if OS.get_name() == "Windows":
 		# for windows, start new project if dialog closed
-		main_menu.file_opened.connect(_on_new_project)
+		main_menu.file_opened.connect(_add_project)
 	if OS.get_name() == "Web":
 		# for web, start new project if dataloader signaled
-		DataLoader.file_opened.connect(_on_new_project)
+		DataLoader.file_opened.connect(_add_project)
 		
 		
 	main_menu.active_project_changed.connect(_on_changed_active_project)
-	xml_viewer.request_type_change_window.connect(_on_type_change)
+	xml_viewer.request_type_change_window.connect(_show_type_change_window)
 	
 	ProjectManager.xml_added.connect(_on_xml_added)
 	
@@ -48,13 +48,13 @@ func _input(event):
 			
 			
 
-func _on_new_project(args: Variant): # web & windows
+func _add_project(args: Variant): # web & windows
 	var project: Project = ProjectManager.add_project(args)
 	if project != null: # TODO: fail case dialog
 		main_menu.add_project_tab(project)
 		
 		
-func _on_type_change(xml_stat:XML_Status, symbol_object:SymbolObject):
+func _show_type_change_window(xml_stat:XML_Status, symbol_object:SymbolObject):
 	type_change_dialog.show_type_change_window(xml_stat, symbol_object)
 
 

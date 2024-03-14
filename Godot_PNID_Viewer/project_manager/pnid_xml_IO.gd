@@ -1,6 +1,6 @@
-extends Node
+class_name PnidXmlIo
 
-func yes_no_to_bool(str: String) -> bool:
+static func yes_no_to_bool(str: String) -> bool:
 	if str == "y":
 		return true
 	elif str == "n":
@@ -9,21 +9,21 @@ func yes_no_to_bool(str: String) -> bool:
 		print("Wrong case")
 		return false
 		
-func bool_to_yn(b: bool) -> String:
+static func bool_to_yn(b: bool) -> String:
 	if b:
 		return "y"
 	else: 
 		return "n"
 	
 
-func get_current_node_data(parser: XMLParser) -> String:
+static func get_current_node_data(parser: XMLParser) -> String:
 	if parser.read() != ERR_FILE_EOF && parser.get_node_type() == XMLParser.NODE_TEXT:
 		return parser.get_node_data()
 		
 	return ""
 		
 		
-func parse_pnid_xml_from_byte_array(contents: PackedByteArray) -> Array[SymbolObject]:
+static func parse_pnid_xml_from_byte_array(contents: PackedByteArray) -> Array[SymbolObject]:
 	var symbol_objects: Array[SymbolObject] = []
 	
 	var parser = XMLParser.new()
@@ -63,7 +63,7 @@ func parse_pnid_xml_from_byte_array(contents: PackedByteArray) -> Array[SymbolOb
 	return symbol_objects
 
 
-func dump_pnid_xml(symbol_objects: Array[SymbolObject]) -> String:
+static func dump_pnid_xml(symbol_objects: Array[SymbolObject]) -> String:
 	var xml_str = String()
 	
 	xml_str += "<annotation>\r\n"
@@ -89,27 +89,3 @@ func dump_pnid_xml(symbol_objects: Array[SymbolObject]) -> String:
 		
 	return xml_str
 	
-
-#func dump_pnid_xml(symbol_objects: Array[SymbolObject]) -> String:
-	#var doc = XMLDocument.new()
-	#var root = XMLNode.new()
-	#root.name = "annotation"
-	#doc.root = root
-	#
-	#var symbol_object_node_array: Array[XMLNode] = []
-	#for symbol_object in symbol_objects:
-		#var symbol_object_node = XMLNode.new()
-		#symbol_object_node.name = "symbol_object"
-		#
-		#var type_node = XMLNode.new()
-		#type_node.name = "type"
-		#type_node.content = symbol_object.type
-		#
-		#symbol_object_node.children.push_back(type_node)
-		#
-		#root.children.push_back(symbol_object_node)
-	#
-	#var xml_str = XML.dump_str(doc,true,0,4)
-	#print(xml_str)
-	#return xml_str
-		

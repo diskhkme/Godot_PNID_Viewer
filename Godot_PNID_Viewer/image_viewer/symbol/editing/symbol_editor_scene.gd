@@ -7,16 +7,16 @@ class_name SymbolEditor
 @onready var symbol_editor_controller = $SymbolEditorController
 
 func _ready():
-	SymbolManager.symbol_edit_started.connect(show_editor)
-	SymbolManager.symbol_edit_ended.connect(hide_editor)
-	SymbolManager.symbol_deselected.connect(hide_editor)
+	SymbolManager.symbol_edit_started.connect(_show_editor)
+	SymbolManager.symbol_edit_ended.connect(_hide_editor)
+	SymbolManager.symbol_deselected.connect(_hide_editor)
 	visible = false
 
 
-func show_editor(xml_id:int, symbol_id:int):
+func _show_editor(xml_id:int, symbol_id:int):
 	visible = true
 
 
-func hide_editor():
+func _hide_editor():
 	visible = false
 	

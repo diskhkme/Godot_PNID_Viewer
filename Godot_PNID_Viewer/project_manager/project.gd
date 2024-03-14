@@ -17,7 +17,7 @@ func initialize(id, img_filename, img, num_xml, xml_filenames, xml_strs):
 	xml_status.clear()
 	for i in range(num_xml):
 		var xml_stat = XML_Status.new()
-		xml_stat.initialize_by_xml_str(xml_status.size(), xml_filenames[i], xml_strs[i].to_utf8_buffer())
+		xml_stat.initialize_from_xml_str(xml_status.size(), xml_filenames[i], xml_strs[i].to_utf8_buffer())
 		xml_status.push_back(xml_stat)
 			
 	return true

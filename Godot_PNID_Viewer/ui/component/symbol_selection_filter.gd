@@ -7,11 +7,11 @@ class_name SymbolSelectionFilter
 
 signal clear_selected_candidate
 
-var active_scenes: Array
+var active_xml_scenes: Array
 
 
 func set_current(active_project_xml_dict): # key: xml_stat, value: symbol scene
-	active_scenes = active_project_xml_dict.values()
+	active_xml_scenes = active_project_xml_dict.values()
 		
 
 func process_input(event):
@@ -24,7 +24,7 @@ func process_input(event):
 	if event is InputEventMouseButton and (event.button_index == MOUSE_BUTTON_LEFT or event.button_index == MOUSE_BUTTON_RIGHT):
 		if !event.is_pressed():
 			var candidates: Array[StaticSymbol] = []
-			for scene in active_scenes:
+			for scene in active_xml_scenes:
 				if scene.xml_stat.is_selectable:
 					candidates.append_array(scene.selected_candidate)
 			
@@ -37,10 +37,11 @@ func process_input(event):
 				SymbolManager.symbol_selected_from_image.emit(selected.xml_id, selected.symbol_object.id)
 				SymbolManager.symbol_edit_started.emit(selected.xml_id, selected.symbol_object.id)
 				
-			for scene in active_scenes: # direct call
+			for scene in active_xml_scenes: # direct call
 				scene.clear_candidates()
 			
 			
+# TODO: change selection criteria to closest edge
 func decide_selected(mouse_pos: Vector2, selected_candidate: Array[StaticSymbol]):
 	# select symbol that has closest center
 	if selected_candidate.size() == 0:

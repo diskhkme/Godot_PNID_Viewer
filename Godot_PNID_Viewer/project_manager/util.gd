@@ -1,4 +1,4 @@
-extends Node
+class_name Util
 
 static func get_img_path(paths) -> String:
 	for path in paths:

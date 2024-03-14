@@ -18,10 +18,10 @@ var on_cursor: bool = false
 
 
 func _ready():
-	SymbolManager.symbol_selected_from_tree.connect(hide_selected)
-	SymbolManager.symbol_selected_from_image.connect(hide_selected)
-	SymbolManager.symbol_deselected.connect(show_deselected) 
-	SymbolManager.symbol_edited.connect(update_edited) 
+	SymbolManager.symbol_selected_from_tree.connect(_hide_symbol)
+	SymbolManager.symbol_selected_from_image.connect(_hide_symbol)
+	SymbolManager.symbol_deselected.connect(_show_symbol) 
+	SymbolManager.symbol_edited.connect(_update_symbol) 
 	update_symbol()
 	
 	
@@ -60,19 +60,19 @@ func _on_area_2d_mouse_exited():
 
 
 # --- selected(received)
-func hide_selected(xml_id:int, symbol_id: int):
+func _hide_symbol(xml_id:int, symbol_id: int):
 	if self.xml_id == xml_id and self.symbol_object.id == symbol_id:
 		static_symbol_draw.visible = false
 	else:
 		static_symbol_draw.visible = true
 		
 
-func show_deselected() -> void:
+func _show_symbol() -> void:
 	static_symbol_draw.visible = true
 
 
 # --- edited(received)
-func update_edited(xml_id: int, symbol_id: int):
+func _update_symbol(xml_id: int, symbol_id: int):
 	if self.xml_id == xml_id and self.symbol_object.id == symbol_id:
 		update_symbol()
 	

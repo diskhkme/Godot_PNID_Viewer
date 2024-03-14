@@ -10,9 +10,6 @@ extends Control
 var start_mouse_pos
 var is_in_context_menu
 
-var xml_id
-var symbol_id
-
 func process_input(event):
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_RIGHT:
 		if event.is_pressed():

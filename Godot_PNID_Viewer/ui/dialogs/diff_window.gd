@@ -55,6 +55,7 @@ func _on_ok_button_pressed():
 	
 	var xml_stat = XML_Status.new()
 	xml_stat.initialize_by_symbols(new_id, new_name, result)
+	xml_stat.dirty = true
 	ProjectManager.add_xml_stat(xml_stat)
 	visible = false
 	pass # Replace with function body.

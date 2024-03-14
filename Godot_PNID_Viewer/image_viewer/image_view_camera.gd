@@ -7,7 +7,7 @@ var is_dragging: bool = false
 
 func _ready():
 	add_to_group("draw_group")
-	SymbolManager.symbol_selected_from_tree.connect(focus_symbol)
+	SymbolManager.symbol_selected_from_tree.connect(_focus_symbol)
 
 
 func process_input(event):
@@ -36,7 +36,7 @@ func process_input(event):
 		self.global_translate((-event.relative)/self.zoom)
 
 
-func focus_symbol(xml_id:int, symbol_id:int):
+func _focus_symbol(xml_id:int, symbol_id:int):
 	var target_symbol = ProjectManager.get_symbol_in_xml(xml_id, symbol_id)
 	if is_symbol_visible(target_symbol):
 		return

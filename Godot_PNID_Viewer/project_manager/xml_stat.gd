@@ -10,7 +10,7 @@ var dirty: bool # true if any symbol_object is modified
 var is_visible: bool
 var is_selectable: bool
 
-func initialize_by_xml_str(id:int, xml_filename:String, xml_str: PackedByteArray):
+func initialize_from_xml_str(id:int, xml_filename:String, xml_str: PackedByteArray):
 	self.id = id
 	self.filename = xml_filename
 	symbol_objects = PnidXmlIo.parse_pnid_xml_from_byte_array(xml_str)
@@ -20,7 +20,7 @@ func initialize_by_xml_str(id:int, xml_filename:String, xml_str: PackedByteArray
 	color = Config.SYMBOL_COLOR_PRESET[id]
 	
 # No constructore overloading...	
-func initialize_by_symbols(id: int, filename:String, symbol_objects: Array[SymbolObject]):
+func initialize_from_symbols(id: int, filename:String, symbol_objects: Array[SymbolObject]):
 	self.id = id
 	self.filename = filename
 	self.symbol_objects = symbol_objects
@@ -34,17 +34,15 @@ func initialize_by_symbols(id: int, filename:String, symbol_objects: Array[Symbo
 func check_sanity(symbol_objects):
 	for symbol_object in symbol_objects:
 		if !ProjectManager.symbol_type_set.has(symbol_object.type):
-			return false
 			print("XML has undefined symbol type!")
+			return false
 		if !symbol_object.is_text:
 			if !ProjectManager.symbol_type_set[symbol_object.type].has(symbol_object.cls):
-				return false
 				print("XML has undefined symbol type!")
+				return false
 
 	return true
 
-
-# TODO: symbol edtied here?
 
 func remove_symbol(symbol_id: int):
 	symbol_objects[symbol_id].removed = true

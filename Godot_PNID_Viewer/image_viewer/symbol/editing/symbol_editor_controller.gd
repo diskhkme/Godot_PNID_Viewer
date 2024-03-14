@@ -16,7 +16,7 @@ var target_symbol: SymbolObject
 
 func _ready():
 	add_to_group("draw_group")
-	SymbolManager.symbol_edit_started.connect(initialize_editor)
+	SymbolManager.symbol_edit_started.connect(_initialize_editor)
 	
 	for handle in handles:
 		if handle.type == Handle.TYPE.ROTATE or handle.scale_type == Handle.TYPE.TRANSLATE:
@@ -54,7 +54,7 @@ func _draw():
 	draw_line(bl_pos, tl_pos, color, (line_width/zoom_level.x))
 	
 	
-func initialize_editor(xml_id: int, symbol_id: int):
+func _initialize_editor(xml_id: int, symbol_id: int):
 	self.xml_id = xml_id
 	self.symbol_id = symbol_id
 	
@@ -127,8 +127,6 @@ func on_indicator_moved(target: Handle, mouse_pos: Vector2, mouse_pos_delta: Vec
 	var right_vec = Vector2.RIGHT.rotated(center_node.rotation)
 	var up_vec = Vector2.UP.rotated(center_node.rotation)
 		
-	var diag_vec: Vector2
-	
 	if target.type == Handle.TYPE.TRANSLATE:
 		center_node.translate(mouse_pos_delta)
 	elif target.type == Handle.TYPE.ROTATE:

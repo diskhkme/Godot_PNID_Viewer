@@ -10,7 +10,7 @@ var root
 var selected_xml
 
 func _ready():
-	SymbolManager.symbol_edited.connect(_on_symbol_edited)
+	SymbolManager.symbol_edited.connect(_update_dirty)
 	
 	
 func reset_root(img_filename: String):
@@ -64,7 +64,7 @@ func update_dirty():
 			xml_item.set_text(0,tree_xml_dict[xml_item].filename)
 
 # TODO: dirty state is not maintained when active project changed
-func _on_symbol_edited(xml_id:int, symbol_id:int):
+func _update_dirty(xml_id:int, symbol_id:int):
 	update_dirty()
 		
 

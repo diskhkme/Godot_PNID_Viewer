@@ -6,7 +6,6 @@ signal active_project_changed(project: Project)
 
 @export var open_files_dialog: FileDialog
 
-@onready var _open_files_button: Button = $Left/OpenFilesButton
 @onready var tab_bar = $Left/TabBar
 
 var tab_project_array: Array

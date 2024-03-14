@@ -17,13 +17,13 @@ const COLUMN_COUNT = 8
 
 func _ready():
 	reset_tree()
-	SymbolManager.symbol_selected_from_image.connect(_on_symbol_selected)
-	SymbolManager.symbol_deselected.connect(_on_symbol_deselected)
-	SymbolManager.symbol_edited.connect(_on_symbol_edited)
-	SymbolManager.symbol_added.connect(_on_add_symbol)
+	SymbolManager.symbol_selected_from_image.connect(_select_symbol)
+	SymbolManager.symbol_deselected.connect(_deselect_symbol)
+	SymbolManager.symbol_edited.connect(_edit_symbol)
+	SymbolManager.symbol_added.connect(_add_symbol)
 	
-	ProjectManager.xml_visibility_changed.connect(_on_xml_visibility_changed)
-	ProjectManager.xml_selectability_changed.connect(_on_xml_selectability_changed)
+	ProjectManager.xml_visibility_changed.connect(_change_visibility)
+	ProjectManager.xml_selectability_changed.connect(_change_selectability)
 
 #-------------------------------------------------------------
 # Tree Initialization-----------------------------------------
@@ -41,8 +41,8 @@ func use_project(project: Project):
 			symbol_items_dict[xml_stat.id][symbol_object.id] = symbol_item
 			symbol_item.set_custom_color(0, xml_stat.color)
 		
-		_on_xml_visibility_changed(xml_stat.id)
-		_on_xml_selectability_changed(xml_stat.id)	
+		_change_visibility(xml_stat.id)
+		_change_selectability(xml_stat.id)	
 
 
 func reset_tree():
@@ -170,17 +170,17 @@ func _on_mouse_exited():
 #-------------------------------------------------------------
 # Received Evnet Handle---------------------------------------
 #-------------------------------------------------------------			
-func _on_symbol_selected(xml_id:int, symbol_id:int):
+func _select_symbol(xml_id:int, symbol_id:int):
 	var symbol_item = symbol_items_dict[xml_id][symbol_id]
 	symbol_item.select(0)
 	tree.scroll_to_item(symbol_item)
 	
 	
-func _on_symbol_deselected():
+func _deselect_symbol():
 	tree.deselect_all()
 
 	
-func _on_add_symbol(xml_id:int, symbol_id: int):
+func _add_symbol(xml_id:int, symbol_id: int):
 	var xml_tree = xml_item_arr[xml_id]
 	var symbol_object = ProjectManager.get_symbol_in_xml(xml_id, symbol_id)
 	var symbol_item = add_symbol_on_tree(xml_tree, symbol_object)
@@ -188,19 +188,19 @@ func _on_add_symbol(xml_id:int, symbol_id: int):
 	symbol_update_cache[symbol_object] = symbol_item
 
 
-func _on_symbol_edited(xml_id: int, symbol_id: int):
+func _edit_symbol(xml_id: int, symbol_id: int):
 	var symbol_object = ProjectManager.get_symbol_in_xml(xml_id, symbol_id)
 	var symbol_item = symbol_items_dict[xml_id][symbol_id]
 	fill_treeitem(symbol_item, symbol_object)
 	symbol_update_cache[symbol_object] = symbol_item
 
 
-func _on_xml_visibility_changed(xml_id: int):
+func _change_visibility(xml_id: int):
 	var xml_stat = ProjectManager.get_xml(xml_id)
 	xml_item_arr[xml_id].visible = xml_stat.is_visible
 			
 			
-func _on_xml_selectability_changed(xml_id: int):
+func _change_selectability(xml_id: int):
 	var xml_stat = ProjectManager.get_xml(xml_id)
 	for symbol_item in symbol_items_dict[xml_id].values():
 		for i in range(COLUMN_COUNT):
