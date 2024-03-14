@@ -39,7 +39,7 @@ func use_project(project: Project):
 		for symbol_object in xml_stat.symbol_objects:
 			var symbol_item = add_symbol_on_tree(xml_item, symbol_object)
 			symbol_items_dict[xml_stat.id][symbol_object.id] = symbol_item
-			symbol_item.set_custom_color(0, xml_stat.color)
+			symbol_item.set_custom_color(0, symbol_object.color)
 		
 		_change_visibility(xml_stat.id)
 		_change_selectability(xml_stat.id)	

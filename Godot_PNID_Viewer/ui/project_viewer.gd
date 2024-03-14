@@ -5,6 +5,8 @@ class_name ProjectViewer
 
 @export var icon_color = preload("res://assets/icons/rectangle_tool.png")
 
+const COLUMN_NUM = 5
+
 var tree_xml_dict = {} # key: xml_item, value: xml_stat
 var root
 var selected_xml
@@ -14,7 +16,7 @@ func _ready():
 	
 	
 func reset_root(img_filename: String):
-	tree.set_columns(4)
+	tree.set_columns(COLUMN_NUM)
 	root = tree.create_item()
 	root.set_text(0, img_filename)
 	# TODO: Show symbol & text separately
@@ -32,11 +34,13 @@ func reset_xml(xml_stat: XML_Status):
 	xml_item.set_cell_mode(2, TreeItem.CELL_MODE_CHECK)
 	xml_item.set_editable(2, true)
 	xml_item.set_selectable(2, false)
-	xml_item.set_cell_mode(3, TreeItem.CELL_MODE_ICON)
-	xml_item.set_icon_modulate(3,xml_stat.color)
-	xml_item.set_icon(3, icon_color)
-	xml_item.set_editable(3, true)
-	xml_item.set_selectable(3, false)
+
+	var ind = 0
+	for color in xml_stat.colors.keys():
+		xml_item.set_cell_mode(ind+3, TreeItem.CELL_MODE_ICON)
+		xml_item.set_icon_modulate(ind+3, color)
+		xml_item.set_icon(ind+3, icon_color)
+		ind += 1
 	
 	xml_item.set_checked(1, xml_stat.is_visible)
 	xml_item.set_checked(2, xml_stat.is_selectable)

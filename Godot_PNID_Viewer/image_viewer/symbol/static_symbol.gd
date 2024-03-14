@@ -34,7 +34,7 @@ func update_symbol():
 	static_symbol_draw.rotation = deg_to_rad(symbol_object.get_degree())
 	
 	var size = symbol_object.get_rect().size
-	var color = ProjectManager.active_project.xml_status[xml_id].color
+	var color = symbol_object.color
 	var width = Config.DEFAULT_LINE_WIDTH
 	static_symbol_draw.update_draw(size,color,width, symbol_object.removed)
 	

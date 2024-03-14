@@ -486,4 +486,6 @@ instrument_symbol|venturi
 instrument_symbol|vortex
 instrument_symbol|wedge_meter
 instrument_symbol|weir
+unspecified_symbol|annotation
+unspecified_symbol|spec_break
 "

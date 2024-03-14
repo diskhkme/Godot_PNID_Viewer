@@ -1,5 +1,6 @@
 class_name SymbolObject
 
+# TODO: save type and class using id
 var id: int
 var type: String :
 	get: return type
@@ -14,6 +15,8 @@ var bndbox: Vector4
 var is_large: bool
 var degree: float
 var flip: bool
+
+var color: Color
 
 var is_text: bool = false
 var removed: bool = false

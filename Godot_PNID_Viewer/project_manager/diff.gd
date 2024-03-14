@@ -20,10 +20,8 @@ static func calculate_diff(first: Array[SymbolObject], second: Array[SymbolObjec
 	var second_filtered = filter_by_iou_string_degree(second, first, iou_th, compare_string, compare_degree)
 	diffs.append_array(second_filtered)
 
-	# return deep copied	
-	# TODO: is deep copy requred?
 	# TODO: how to handle id? (for selection)
-	return diffs.duplicate(true)
+	return diffs
 
 
 static func filter_by_type(symbol_array: Array[SymbolObject], include_symbol: bool, include_text: bool):

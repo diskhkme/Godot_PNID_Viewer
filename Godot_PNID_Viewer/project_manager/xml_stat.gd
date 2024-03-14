@@ -3,7 +3,7 @@ class_name XML_Status
 var id: int
 var filename: String
 var symbol_objects: Array[SymbolObject]
-var color: Color
+var colors = {}
 var dirty: bool # true if any symbol_object is modified
 
 # show and lock controlled by project viewer
@@ -13,22 +13,30 @@ var is_selectable: bool
 func initialize_from_xml_str(id:int, xml_filename:String, xml_str: PackedByteArray):
 	self.id = id
 	self.filename = xml_filename
+	colors[Config.SYMBOL_COLOR_PRESET[id]] = null
 	symbol_objects = PnidXmlIo.parse_pnid_xml_from_byte_array(xml_str)
+	symbol_objects.map(func(s): s.color = self.colors.keys()[0])
 	var is_sane = check_sanity(symbol_objects) # TODO: what to do if check sanity failes?
 	is_visible = true
 	is_selectable = true
-	color = Config.SYMBOL_COLOR_PRESET[id]
+	
 	
 # No constructore overloading...	
 func initialize_from_symbols(id: int, filename:String, symbol_objects: Array[SymbolObject]):
 	self.id = id
 	self.filename = filename
+	colors = find_unique_colors(symbol_objects)
 	self.symbol_objects = symbol_objects
 	var is_sane = check_sanity(symbol_objects) # TODO: what to do if check sanity failes?
 	is_visible = true
 	is_selectable = true
-	color = Config.SYMBOL_COLOR_PRESET[id]
 	
+
+func find_unique_colors(symbol_objects: Array[SymbolObject]):
+	var colors = {}
+	for symbol_object in symbol_objects:
+		colors[symbol_object.color] = null
+	return colors
 
 # TODO: add more constraints
 func check_sanity(symbol_objects):
