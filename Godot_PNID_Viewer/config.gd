@@ -6,6 +6,7 @@ extends Node
 # Static visual
 const SYMBOL_COLOR_PRESET = [Color.RED, Color.GREEN, Color.BLUE, Color.MAGENTA, Color.CYAN, Color.ORANGE]
 const DEFAULT_LINE_WIDTH = 3.0
+const SHOW_ROTATION_LINE = true
 
 # Symbol editing visuals
 const EDITOR_RECT_COLOR: Color = Color.CORAL
