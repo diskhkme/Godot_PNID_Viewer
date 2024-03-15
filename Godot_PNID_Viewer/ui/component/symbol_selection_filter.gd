@@ -8,7 +8,7 @@ class_name SymbolSelectionFilter
 signal clear_selected_candidate
 
 var active_xml_scenes: Array
-
+var last_selected
 
 func set_current(active_project_xml_dict): # key: xml_data, value: symbol scene
 	active_xml_scenes = active_project_xml_dict.values()
@@ -32,10 +32,12 @@ func process_input(event):
 			var mouse_pos = get_global_mouse_position()
 			var selected = decide_selected(mouse_pos, candidates)
 			if selected == null:
-				SignalManager.symbol_deselected.emit()
+				if last_selected != null:
+					last_selected.symbol_object.set_selected(false)
 			else:
-				SignalManager.symbol_selected_from_image.emit(selected.symbol_object)
-				SignalManager.symbol_edit_started.emit(selected.symbol_object)
+				selected.symbol_object.set_selected(true)
+				selected.symbol_object.set_edit_status(true)
+				last_selected = selected
 				
 			for scene in active_xml_scenes: # direct call
 				scene.clear_candidates()

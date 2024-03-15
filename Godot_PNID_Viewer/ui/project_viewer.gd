@@ -77,21 +77,18 @@ func _process(delta):
 	for xml_item in tree_xml_dict:
 		var xml_data = tree_xml_dict[xml_item]
 		if xml_item.is_checked(1) != xml_data.is_visible:
-			xml_data.is_visible = xml_item.is_checked(1)
+			xml_data.set_visibility(xml_item.is_checked(1))
 			if xml_item.is_checked(1) == false: # if not visible, not selectable
 				xml_item.set_checked(2,false)
 				xml_item.set_editable(2,false)
 			else:
 				xml_item.set_checked(2,true)
 				xml_item.set_editable(2,true)
-				
-			SignalManager.xml_visibility_changed.emit(xml_data)
 			
 		if xml_item.is_checked(2) != xml_data.is_selectable:
 			if !xml_item.is_checked(1): # not allow selectable if not visible
 				xml_item.set_checked(2,false)
-			xml_data.is_selectable = xml_item.is_checked(2)
-			SignalManager.xml_selectability_changed.emit(xml_data)
+			xml_data.set_selectability(xml_item.is_checked(2))
 		
 
 func _on_tree_item_selected():

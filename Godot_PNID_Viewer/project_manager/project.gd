@@ -30,3 +30,7 @@ func get_xml_id_from_filename(filename: String) -> int:
 			
 	return -1
 
+
+func add_xml_data(xml_data: XMLData):
+	xml_datas.push_back(xml_data)
+	SignalManager.xml_added.emit(xml_data)

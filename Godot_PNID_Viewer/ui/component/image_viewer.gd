@@ -54,10 +54,8 @@ func _add_xml_scene(xml_data: XMLData):
 	add_child_xml_scene(scene_group, xml_data)
 
 	
-# let only active symbol scene adds new symbol
-func _add_new_symbol_to_xml_scene(xml_id:int, symbol_id:int):
-	var xml_data = ProjectManager.get_xml(xml_id)
-	active_project_xml_dict[xml_data].add_new_symbol(xml_id, symbol_id)
+func _add_new_symbol_to_xml_scene(symbol_object: SymbolObject):
+	active_project_xml_dict[symbol_object.source_xml].add_child_static_symbol(symbol_object)
 		
 		
 func add_child_xml_scene(parent: Node2D, xml_data: XMLData):

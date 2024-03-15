@@ -59,6 +59,22 @@ func add_new_symbol(position: Vector2) -> SymbolObject:
 	var new_symbol_id = symbol_objects.size()
 	new_symbol.id = new_symbol_id
 	new_symbol.source_xml = self
+	new_symbol.color = colors.keys()[0]
 	symbol_objects.push_back(new_symbol)
 	
+	SignalManager.symbol_added.emit(new_symbol)
+	SignalManager.symbol_selected_from_image.emit(new_symbol)	
+	SignalManager.symbol_edit_started.emit(new_symbol)
+	SignalManager.symbol_edited.emit(new_symbol)
+	
 	return new_symbol
+	
+	
+func set_visibility(visible: bool):
+	is_visible = visible
+	SignalManager.xml_visibility_changed.emit(self)
+
+
+func set_selectability(selectable: bool):
+	is_selectable = selectable
+	SignalManager.xml_visibility_changed.emit(self)

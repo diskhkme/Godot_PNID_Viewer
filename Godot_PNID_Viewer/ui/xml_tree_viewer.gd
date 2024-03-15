@@ -108,8 +108,7 @@ func fill_treeitem(symbol_child: TreeItem, symbol_object: SymbolObject):
 #-------------------------------------------------------------
 func _on_tree_item_selected():
 	var selected_symbol = symbol_items_dict.keys().filter(func(a): return symbol_items_dict[a] == tree.get_selected())
-	SignalManager.symbol_selected_from_tree.emit(selected_symbol[0])
-	SignalManager.symbol_edit_started.emit(selected_symbol[0])
+	selected_symbol[0].set_selected(true)
 	
 
 func _input(event):

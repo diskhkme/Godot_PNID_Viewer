@@ -79,7 +79,8 @@ func _input(event):
 				if handle.on_cursor == true:
 					return
 					
-			SignalManager.symbol_edit_ended.emit()
+			if target_symbol:
+				target_symbol.set_edit_status(false)
 				
 				
 func update_handle_positions():
@@ -153,6 +154,6 @@ func on_indicator_moved(target: Handle, mouse_pos: Vector2, mouse_pos_delta: Vec
 func report_symbol_edited():
 	target_symbol.set_bndbox(center_node.global_position, center_node.scale)
 	target_symbol.set_degree(center_node.rotation)
-	SignalManager.symbol_edited.emit(target_symbol)
+	
 	
 

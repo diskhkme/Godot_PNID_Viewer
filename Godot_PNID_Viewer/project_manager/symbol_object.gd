@@ -20,7 +20,10 @@ var source_xml: XMLData
 var color: Color
 
 var is_text: bool = false
-var removed: bool = false
+var removed: bool = false 
+
+var selected: bool = false
+var editing: bool = false # if currently editing
 
 # TODO: strictly define constructor (prevent missing property)
 func _init():
@@ -68,7 +71,13 @@ func get_rotated_bndbox() -> Vector4:
 	
 	return Vector4(minx, miny, maxx, maxy)
 	
+# rotation handiness is different in Godot
+func get_degree(): return -degree
 	
+
+# -------------------------------------------------------------------------------
+# ----- Setters (emits signal) --------------------------------------------------
+# -------------------------------------------------------------------------------
 func set_bndbox(center: Vector2, size: Vector2):
 	var min_coord = center - size/2
 	var max_coord = center + size/2
@@ -78,10 +87,7 @@ func set_bndbox(center: Vector2, size: Vector2):
 		max_coord = Vector2(max_coord)
 		
 	bndbox = Vector4(min_coord.x, min_coord.y, max_coord.x, max_coord.y)
-		
-
-# rotation handiness is different in Godot
-func get_degree(): return -degree
+	SignalManager.symbol_edited.emit(self)
 	
 	
 func set_degree(angle: float):
@@ -91,3 +97,38 @@ func set_degree(angle: float):
 		new_degree = snappedf(new_degree, Config.QUANTIZED_DEGREE_VALUE)
 		
 	degree = -new_degree
+	SignalManager.symbol_edited.emit(self)
+	
+	
+func set_edit_status(is_editing: bool):
+	editing = is_editing
+	if editing:
+		SignalManager.symbol_edit_started.emit(self)
+	else:
+		SignalManager.symbol_edit_ended.emit()
+	
+	
+func set_selected(is_selected: bool):
+	selected = is_selected
+	if selected:
+		SignalManager.symbol_selected_from_image.emit(self)
+	else:
+		SignalManager.symbol_deselected.emit()
+
+
+func set_removed(is_removed: bool):
+	removed = is_removed
+	if removed:
+		SignalManager.symbol_edited.emit(self)
+		SignalManager.symbol_deselected.emit()
+		SignalManager.symbol_edit_ended.emit()
+		
+		
+func set_type(new_type: String):
+	type = new_type
+	SignalManager.symbol_edited.emit(self)
+	
+	
+func set_cls(new_cls: String):
+	cls = new_cls
+	SignalManager.symbol_edited.emit(self)

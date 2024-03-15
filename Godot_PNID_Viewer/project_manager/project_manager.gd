@@ -28,14 +28,12 @@ func add_project(args: Variant) -> Project:
 	active_project = project # 새로 추가된 project를 active로 하는 것이 default
 	return project
 	
-	
-func add_xml_data(xml_data: XMLData):
-	active_project.xml_datas.push_back(xml_data)
-	SignalManager.xml_added.emit(xml_data)
-
 
 func make_project_active(project: Project) -> void:
 	active_project = project
+	# end on-going process
+	SignalManager.symbol_edit_ended.emit()
+	SignalManager.symbol_deselected.emit()
 
 
 func is_symbol_type_text(index: int):

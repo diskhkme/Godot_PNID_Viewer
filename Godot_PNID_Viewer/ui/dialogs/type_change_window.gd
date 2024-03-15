@@ -62,11 +62,11 @@ func check_symbol_updated() -> bool:
 	
 	
 func update_symbol_object():
-	symbol_object.type = type_option_button.get_item_text(type_option_button.selected)
+	symbol_object.set_type(type_option_button.get_item_text(type_option_button.selected))
 	if cls_text_edit.visible:
-		symbol_object.cls = cls_text_edit.text
+		symbol_object.set_cls(cls_text_edit.text)
 	else:
-		symbol_object.cls = cls_option_button.get_item_text(cls_option_button.selected)
+		symbol_object.set_cls(cls_option_button.get_item_text(cls_option_button.selected))
 
 
 # change only applied when pressed OK
@@ -74,7 +74,6 @@ func update_symbol_object():
 func _on_ok_button_pressed():
 	if check_symbol_updated():
 		update_symbol_object()
-		SignalManager.symbol_edited.emit(symbol_object)
 				
 	self.visible = false
 
