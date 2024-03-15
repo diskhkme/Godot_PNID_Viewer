@@ -13,6 +13,7 @@ signal symbol_edit_ended()
 
 signal xml_visibility_changed(xml_data: XMLData)
 signal xml_selectability_changed(xml_data: XMLData)
+signal xml_label_visibility_changed(xml_data: XMLData)
 signal xml_added(xml_data: XMLData)
 
 var is_editing: bool = false

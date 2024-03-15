@@ -57,7 +57,10 @@ static func parse_pnid_xml_from_byte_array(contents: PackedByteArray) -> Array[S
 					symbol_object._degree = get_current_node_data(parser).to_float()
 				"flip":
 					symbol_object._flip = yes_no_to_bool(get_current_node_data(parser))
+					
 					symbol_object._id = symbol_objects.size()
+					if symbol_object._type.to_lower().contains(Config.TEXT_TYPE_NAME):
+						symbol_object.is_text = true
 					symbol_objects.push_back(symbol_object)
 					
 	return symbol_objects

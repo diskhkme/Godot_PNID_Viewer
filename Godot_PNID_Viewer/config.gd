@@ -8,6 +8,11 @@ const SYMBOL_COLOR_PRESET = [Color.RED, Color.GREEN, Color.BLUE, Color.MAGENTA, 
 const DEFAULT_LINE_WIDTH = 3.0
 const SHOW_ROTATION_LINE = true
 
+# Static label visual
+const SYMBOL_LABEL_PANEL_ALPHA = 1.0
+const SYMBOL_LABEL_MAX_LENGTH = 10
+const SYMBOL_LABEL_OFFSET_RATIO = 0.5
+
 # Symbol editing visuals
 const EDITOR_RECT_COLOR: Color = Color.CORAL
 const EDITOR_RECT_LINE_WIDTH: float = 5

@@ -19,6 +19,12 @@ var is_selectable: bool = true :
 		if is_selectable != value:
 			is_selectable = value
 			SignalManager.xml_selectability_changed.emit(self)
+var is_show_label: bool = false :
+	get: return is_show_label
+	set(value):
+		if is_show_label != value:
+			is_show_label = value
+			SignalManager.xml_label_visibility_changed.emit(self)
 
 func initialize_from_xml_str(id:int, xml_filename:String, xml_str: PackedByteArray):
 	self.id = id

@@ -5,7 +5,7 @@ class_name ProjectViewer
 
 @export var color_icon = preload("res://assets/icons/rectangle_tool.png")
 
-const COLUMN_NUM = 5
+const COLUMN_NUM = 6
 
 var tree_xml_dict = {} # key: xml_item, value: xml_data
 var root
@@ -21,29 +21,29 @@ func reset_root(img_filename: String):
 	root.set_text(0, img_filename)
 	# TODO: Show symbol & text separately
 	root.set_text(1, "Show")
-	root.set_text(2, "Selectable")
-	root.set_text(3, "Color")
+	root.set_text(2, "Select")
+	root.set_text(3, "Label")
+	root.set_text(4, "Color")
 	
 	
 func reset_xml(xml_data: XMLData):
 	var xml_item: TreeItem = tree.create_item(root)
 	xml_item.set_text(0,xml_data.filename)
-	xml_item.set_cell_mode(1, TreeItem.CELL_MODE_CHECK)
-	xml_item.set_editable(1, true)
-	xml_item.set_selectable(1, false)
-	xml_item.set_cell_mode(2, TreeItem.CELL_MODE_CHECK)
-	xml_item.set_editable(2, true)
-	xml_item.set_selectable(2, false)
-
+	for i in range(3):
+		xml_item.set_cell_mode(i+1, TreeItem.CELL_MODE_CHECK)
+		xml_item.set_editable(i+1, true)
+		xml_item.set_selectable(i+1, false)	
+	
 	var ind = 0
 	for color in xml_data.colors.keys():
-		xml_item.set_cell_mode(ind+3, TreeItem.CELL_MODE_ICON)
-		xml_item.set_icon_modulate(ind+3, color)
-		xml_item.set_icon(ind+3, color_icon)
+		xml_item.set_cell_mode(ind+4, TreeItem.CELL_MODE_ICON)
+		xml_item.set_icon_modulate(ind+4, color)
+		xml_item.set_icon(ind+4, color_icon)
 		ind += 1
 	
 	xml_item.set_checked(1, xml_data.is_visible)
 	xml_item.set_checked(2, xml_data.is_selectable)
+	xml_item.set_checked(3, xml_data.is_show_label)
 	tree_xml_dict[xml_item] = xml_data
 	
 	
@@ -81,14 +81,21 @@ func _process(delta):
 			if xml_item.is_checked(1) == false: # if not visible, not selectable
 				xml_item.set_checked(2,false)
 				xml_item.set_editable(2,false)
+				xml_item.set_checked(3,false)
+				xml_item.set_editable(3,false)
 			else:
-				xml_item.set_checked(2,true)
 				xml_item.set_editable(2,true)
+				xml_item.set_editable(3,true)
 			
 		if xml_item.is_checked(2) != xml_data.is_selectable:
 			if !xml_item.is_checked(1): # not allow selectable if not visible
 				xml_item.set_checked(2,false)
 			xml_data.is_selectable = xml_item.is_checked(2)
+			
+		if xml_item.is_checked(3) != xml_data.is_show_label:
+			if !xml_item.is_checked(1): # not allow selectable if not visible
+				xml_item.set_checked(3,false)
+			xml_data.is_show_label = xml_item.is_checked(3)
 		
 
 func _on_tree_item_selected():

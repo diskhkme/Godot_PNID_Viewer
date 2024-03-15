@@ -16,7 +16,6 @@ var project_scene_group_dict = {}
 var active_project_xml_dict = {} # key: xml_data, value: symbol scene
 var is_mouse_on = false
 
-
 func _ready():
 	SignalManager.symbol_added.connect(_add_new_symbol_to_xml_scene)
 	SignalManager.xml_visibility_changed.connect(_update_xml_visibility)

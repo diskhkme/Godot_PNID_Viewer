@@ -19,6 +19,7 @@ func update_draw(size:Vector2, color:Color, line_width:float, removed: bool):
 	self.color = color
 	self.line_width = line_width
 	self.removed = removed
+	
 
 func _draw(): # draw with size (position and rotation is applied to node2d)
 	if removed:

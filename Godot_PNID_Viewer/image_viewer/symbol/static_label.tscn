@@ -1,0 +1,24 @@
+[gd_scene load_steps=2 format=3 uid="uid://bwbdpb164qkuo"]
+
+[ext_resource type="Script" path="res://image_viewer/symbol/static_label.gd" id="1_2njsg"]
+
+[node name="StaticLabel" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_2njsg")
+
+[node name="ClsPanel" type="PanelContainer" parent="."]
+z_index = 2
+layout_mode = 1
+offset_right = 28.0
+offset_bottom = 23.0
+
+[node name="ClsLabel" type="Label" parent="ClsPanel"]
+layout_mode = 2
+text = "123"
+
+[connection signal="resized" from="ClsPanel" to="." method="_on_cls_panel_resized"]

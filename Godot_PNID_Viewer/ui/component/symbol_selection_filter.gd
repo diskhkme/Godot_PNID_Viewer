@@ -18,8 +18,8 @@ func process_input(event):
 	if ProjectManager.active_project == null:
 		return
 	
-	#if SignalManager.is_editing == true:
-		#return
+	if SignalManager.is_editing == true:
+		return
 	
 	if event is InputEventMouseButton and (event.button_index == MOUSE_BUTTON_LEFT or event.button_index == MOUSE_BUTTON_RIGHT):
 		if !event.is_pressed():
