@@ -18,8 +18,8 @@ func process_input(event):
 	if ProjectManager.active_project == null:
 		return
 	
-	if SignalManager.is_editing == true:
-		return
+	#if SignalManager.is_editing == true:
+		#return
 	
 	if event is InputEventMouseButton and (event.button_index == MOUSE_BUTTON_LEFT or event.button_index == MOUSE_BUTTON_RIGHT):
 		if !event.is_pressed():
@@ -43,18 +43,32 @@ func process_input(event):
 				scene.clear_candidates()
 			
 			
-# TODO: change selection criteria to closest edge
+# Decide the symbol that has closest upper edge
 func decide_selected(mouse_pos: Vector2, selected_candidate: Array[StaticSymbol]):
-	# select symbol that has closest center
 	if selected_candidate.size() == 0:
 		return null
 		
 	var min_dist = 1e10
 	var min_object
 	for candidate in selected_candidate:
-		var dist = (candidate.symbol_object.get_center() - mouse_pos).length()
+		var rect_size = candidate.symbol_object.get_size()
+		var upper_left = Vector2(-rect_size.x*0.5, -rect_size.y*0.5)
+		var upper_right = Vector2(rect_size.x*0.5, -rect_size.y*0.5)
+		
+		upper_left = upper_left.rotated(deg_to_rad(candidate.symbol_object.get_godot_degree()))
+		upper_right = upper_right.rotated(deg_to_rad(candidate.symbol_object.get_godot_degree()))
+		
+		var centered_mouse_pos = mouse_pos - candidate.symbol_object.get_center()
+		
+		var dist = line_point_dist(centered_mouse_pos, upper_left, upper_right)
 		if dist < min_dist:
 			min_dist = dist
 			min_object = candidate
 			
 	return min_object
+	
+	
+func line_point_dist(p:Vector2, l1: Vector2, l2: Vector2):
+	var num = absf((l2.x-l1.x)*(l1.y - p.y) - (l1.x - p.x)*(l2.y - l1.y))
+	return num / (l2-l1).length()
+	
