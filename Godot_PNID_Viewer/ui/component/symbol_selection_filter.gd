@@ -33,10 +33,10 @@ func process_input(event):
 			var selected = decide_selected(mouse_pos, candidates)
 			if selected == null:
 				if last_selected != null:
-					last_selected.symbol_object.set_selected(false)
+					last_selected.symbol_object.is_selected = false
 			else:
-				selected.symbol_object.set_selected(true)
-				selected.symbol_object.set_edit_status(true)
+				selected.symbol_object.is_selected = true
+				selected.symbol_object.is_editing = true
 				last_selected = selected
 				
 			for scene in active_xml_scenes: # direct call

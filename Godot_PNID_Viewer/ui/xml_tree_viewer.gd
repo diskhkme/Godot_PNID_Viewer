@@ -108,7 +108,7 @@ func fill_treeitem(symbol_child: TreeItem, symbol_object: SymbolObject):
 #-------------------------------------------------------------
 func _on_tree_item_selected():
 	var selected_symbol = symbol_items_dict.keys().filter(func(a): return symbol_items_dict[a] == tree.get_selected())
-	selected_symbol[0].set_selected(true)
+	selected_symbol[0].is_selected = true
 	
 
 func _input(event):

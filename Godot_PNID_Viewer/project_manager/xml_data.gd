@@ -7,8 +7,18 @@ var colors = {}
 var dirty: bool # true if any symbol_object is modified
 
 # show and lock controlled by project viewer
-var is_visible: bool
-var is_selectable: bool
+var is_visible: bool = true :
+	get: return is_visible
+	set(value):
+		if is_visible != value:
+			is_visible = value
+			SignalManager.xml_visibility_changed.emit(self)
+var is_selectable: bool = true :
+	get: return is_selectable
+	set(value):
+		if is_selectable != value:
+			is_selectable = value
+			SignalManager.xml_visibility_changed.emit(self)
 
 func initialize_from_xml_str(id:int, xml_filename:String, xml_str: PackedByteArray):
 	self.id = id
@@ -18,8 +28,6 @@ func initialize_from_xml_str(id:int, xml_filename:String, xml_str: PackedByteArr
 	symbol_objects.map(func(s): s.color = self.colors.keys()[0])
 	symbol_objects.map(func(s): s.source_xml = self)
 	var is_sane = check_sanity(symbol_objects) # TODO: what to do if check sanity failes?
-	is_visible = true
-	is_selectable = true
 	
 	
 # No constructore overloading...	
@@ -29,8 +37,6 @@ func initialize_from_symbols(id: int, filename:String, symbol_objects: Array[Sym
 	colors = find_unique_colors(symbol_objects)
 	self.symbol_objects = symbol_objects
 	var is_sane = check_sanity(symbol_objects) # TODO: what to do if check sanity failes?
-	is_visible = true
-	is_selectable = true
 	
 
 func find_unique_colors(symbol_objects: Array[SymbolObject]):
@@ -55,10 +61,10 @@ func check_sanity(symbol_objects):
 
 func add_new_symbol(position: Vector2) -> SymbolObject:
 	var new_symbol = SymbolObject.new()
-	new_symbol.bndbox += Vector4(position.x, position.y, position.x, position.y) # translate min/max
-	var new_symbol_id = symbol_objects.size()
-	new_symbol.id = new_symbol_id
 	new_symbol.source_xml = self
+	var new_symbol_id = symbol_objects.size()
+	new_symbol._id = new_symbol_id
+	new_symbol._bndbox += Vector4(position.x, position.y, position.x, position.y) # translate min/max
 	new_symbol.color = colors.keys()[0]
 	symbol_objects.push_back(new_symbol)
 	
@@ -69,12 +75,4 @@ func add_new_symbol(position: Vector2) -> SymbolObject:
 	
 	return new_symbol
 	
-	
-func set_visibility(visible: bool):
-	is_visible = visible
-	SignalManager.xml_visibility_changed.emit(self)
 
-
-func set_selectability(selectable: bool):
-	is_selectable = selectable
-	SignalManager.xml_visibility_changed.emit(self)

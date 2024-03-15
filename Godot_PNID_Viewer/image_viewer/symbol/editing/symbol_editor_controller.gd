@@ -58,7 +58,7 @@ func _initialize_editor(symbol_object: SymbolObject):
 	target_symbol = symbol_object
 	var symbol_position = target_symbol.get_center()
 	var symbol_size = target_symbol.get_size()
-	var symbol_angle = deg_to_rad(target_symbol.get_degree())
+	var symbol_angle = deg_to_rad(target_symbol.get_godot_degree())
 	center_node.global_position = symbol_position
 	center_node.scale = symbol_size
 	center_node.rotation = symbol_angle
@@ -80,7 +80,7 @@ func _input(event):
 					return
 					
 			if target_symbol:
-				target_symbol.set_edit_status(false)
+				target_symbol.is_editing = false
 				
 				
 func update_handle_positions():
@@ -148,12 +148,12 @@ func on_indicator_moved(target: Handle, mouse_pos: Vector2, mouse_pos_delta: Vec
 		center_node.global_position += (width_vec + height_vec)*0.5
 		
 	update_handle_positions()
-	report_symbol_edited()
+	update_symbol_box()
 
 
-func report_symbol_edited():
-	target_symbol.set_bndbox(center_node.global_position, center_node.scale)
-	target_symbol.set_degree(center_node.rotation)
+func update_symbol_box():
+	target_symbol.set_bndbox_from_rect2(Rect2(center_node.global_position, center_node.scale))
+	target_symbol.set_degree_from_godot(center_node.rotation)
 	
 	
 

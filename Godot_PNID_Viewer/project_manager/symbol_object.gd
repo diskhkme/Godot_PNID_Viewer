@@ -1,38 +1,108 @@
 class_name SymbolObject
 
-# TODO: save type and class using id
-var id: int
-var type: String :
-	get: return type
+# --------------------------------------------------------------------
+# --- Properties -----------------------------------------------------
+# --------------------------------------------------------------------
+var _id: int
+var id: int :
+	get: return _id
 	set(value):
-		if value.to_lower().contains(Config.TEXT_TYPE_NAME):
-			is_text = true
-		else:
-			is_text = false
-		type = value
-var cls: String
-var bndbox: Vector4
-var is_large: bool
-var degree: float
-var flip: bool
+		if _id != value:
+			_id = value
+			SignalManager.symbol_edited.emit(self)
+var _type
+var type: String : # TODO: save type and class using id
+	get: return _type
+	set(value):
+		if _type != value:
+			_type = value
+			if value.to_lower().contains(Config.TEXT_TYPE_NAME):
+				is_text = true
+			else:
+				is_text = false
+			SignalManager.symbol_edited.emit(self)
+var _cls
+var cls: String :
+	get: return _cls
+	set(value):
+		if _cls != value:
+			_cls = value
+			SignalManager.symbol_edited.emit(self)
+var _bndbox
+var bndbox: Vector4 :
+	get: return _bndbox
+	set(value):
+		if _bndbox != value:
+			_bndbox = value
+			SignalManager.symbol_edited.emit(self)
+var _is_large
+var is_large: bool :
+	get: return _is_large
+	set(value):
+		if _is_large != value:
+			_is_large = value
+			SignalManager.symbol_edited.emit(self)
+var _degree
+var degree: float :
+	get: return _degree
+	set(value):
+		if _degree != value:
+			_degree = value
+			SignalManager.symbol_edited.emit(self)
+var _flip
+var flip: bool :
+	get: return _flip
+	set(value):
+		if _flip != value:
+			_flip = value
+			SignalManager.symbol_edited.emit(self)
 
 var source_xml: XMLData
 var color: Color
+var is_text: bool = false :
+	get: return is_text
 
-var is_text: bool = false
-var removed: bool = false 
+var removed: bool = false :
+	get: return removed
+	set(value):
+		if value != removed:
+			removed = value
+			SignalManager.symbol_edited.emit(self)
+			if value:
+				SignalManager.symbol_deselected.emit()
+				SignalManager.symbol_edit_ended.emit()
+				
 
-var selected: bool = false
-var editing: bool = false # if currently editing
+var is_selected: bool = false :
+	get: return is_selected
+	set(value):
+		is_selected = value
+		if value:
+			SignalManager.symbol_selected_from_image.emit(self)
+		else:
+			SignalManager.symbol_deselected.emit()
+var is_editing: bool = false :
+	get: return is_editing
+	set(value):
+		is_editing = value
+		if value:
+			SignalManager.symbol_edit_started.emit(self)
+		else:
+			SignalManager.symbol_edit_ended.emit()
+			
+
+# --------------------------------------------------------------------
+# --- Methods    -----------------------------------------------------
+# --------------------------------------------------------------------
 
 # TODO: strictly define constructor (prevent missing property)
 func _init():
-	bndbox = Vector4(0,0,100,100)
-	is_large = false
-	degree = 0
-	flip = false
-	type = "None"
-	cls = "None"
+	_bndbox = Vector4(0,0,100,100)
+	_is_large = false
+	_degree = 0
+	_flip = false
+	_type = "None"
+	_cls = "None"
 
 
 func get_rect() -> Rect2:
@@ -72,63 +142,27 @@ func get_rotated_bndbox() -> Vector4:
 	return Vector4(minx, miny, maxx, maxy)
 	
 # rotation handiness is different in Godot
-func get_degree(): return -degree
+func get_godot_degree(): return -degree
 	
 
-# -------------------------------------------------------------------------------
-# ----- Setters (emits signal) --------------------------------------------------
-# -------------------------------------------------------------------------------
-func set_bndbox(center: Vector2, size: Vector2):
-	var min_coord = center - size/2
-	var max_coord = center + size/2
+func set_bndbox_from_rect2(rect: Rect2):
+	var min_coord = rect.position - rect.size/2
+	var max_coord = rect.position + rect.size/2
 	
 	if Config.FORCE_INT_COORD:
 		min_coord = Vector2(min_coord)
 		max_coord = Vector2(max_coord)
 		
 	bndbox = Vector4(min_coord.x, min_coord.y, max_coord.x, max_coord.y)
-	SignalManager.symbol_edited.emit(self)
 	
 	
-func set_degree(angle: float):
+func set_degree_from_godot(angle: float):
 	var new_degree = rad_to_deg(angle)
 	
 	if Config.FORCE_QUANTIZED_DEGREE:
 		new_degree = snappedf(new_degree, Config.QUANTIZED_DEGREE_VALUE)
 		
 	degree = -new_degree
-	SignalManager.symbol_edited.emit(self)
 	
-	
-func set_edit_status(is_editing: bool):
-	editing = is_editing
-	if editing:
-		SignalManager.symbol_edit_started.emit(self)
-	else:
-		SignalManager.symbol_edit_ended.emit()
-	
-	
-func set_selected(is_selected: bool):
-	selected = is_selected
-	if selected:
-		SignalManager.symbol_selected_from_image.emit(self)
-	else:
-		SignalManager.symbol_deselected.emit()
 
-
-func set_removed(is_removed: bool):
-	removed = is_removed
-	if removed:
-		SignalManager.symbol_edited.emit(self)
-		SignalManager.symbol_deselected.emit()
-		SignalManager.symbol_edit_ended.emit()
-		
-		
-func set_type(new_type: String):
-	type = new_type
-	SignalManager.symbol_edited.emit(self)
 	
-	
-func set_cls(new_cls: String):
-	cls = new_cls
-	SignalManager.symbol_edited.emit(self)

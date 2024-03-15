@@ -55,7 +55,6 @@ func _on_ok_button_pressed():
 	
 	var xml_data = XMLData.new()
 	xml_data.initialize_from_symbols(new_id, new_name, result)
-	xml_data.dirty = true
 	ProjectManager.active_project.add_xml_data(xml_data)
 	visible = false
 	pass # Replace with function body.

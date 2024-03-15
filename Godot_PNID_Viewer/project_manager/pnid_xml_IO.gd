@@ -38,26 +38,26 @@ static func parse_pnid_xml_from_byte_array(contents: PackedByteArray) -> Array[S
 				Config.OBJECT_TAG_NAME:
 					symbol_object = SymbolObject.new()
 				"type":
-					symbol_object.type = get_current_node_data(parser)
+					symbol_object._type = get_current_node_data(parser)
 				"class":
-					symbol_object.cls = get_current_node_data(parser)
+					symbol_object._cls = get_current_node_data(parser)
 				"bndbox":
-					symbol_object.bndbox = Vector4()
+					symbol_object._bndbox = Vector4()
 				"xmin":
-					symbol_object.bndbox.x = get_current_node_data(parser).to_float()
+					symbol_object._bndbox.x = get_current_node_data(parser).to_float()
 				"ymin":
-					symbol_object.bndbox.y = get_current_node_data(parser).to_float()
+					symbol_object._bndbox.y = get_current_node_data(parser).to_float()
 				"xmax":
-					symbol_object.bndbox.z = get_current_node_data(parser).to_float()
+					symbol_object._bndbox.z = get_current_node_data(parser).to_float()
 				"ymax":
-					symbol_object.bndbox.w = get_current_node_data(parser).to_float()
+					symbol_object._bndbox.w = get_current_node_data(parser).to_float()
 				"isLarge":
-					symbol_object.is_large = yes_no_to_bool(get_current_node_data(parser))
+					symbol_object._is_large = yes_no_to_bool(get_current_node_data(parser))
 				"degree":
-					symbol_object.degree = get_current_node_data(parser).to_float()
+					symbol_object._degree = get_current_node_data(parser).to_float()
 				"flip":
-					symbol_object.flip = yes_no_to_bool(get_current_node_data(parser))
-					symbol_object.id = symbol_objects.size()
+					symbol_object._flip = yes_no_to_bool(get_current_node_data(parser))
+					symbol_object._id = symbol_objects.size()
 					symbol_objects.push_back(symbol_object)
 					
 	return symbol_objects
