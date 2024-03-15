@@ -78,7 +78,8 @@ var is_selected: bool = false :
 	set(value):
 		is_selected = value
 		if value:
-			SignalManager.symbol_selected_from_image.emit(self)
+			SignalManager.symbol_selected.emit(self)
+			SignalManager.symbol_edit_started.emit(self)
 		else:
 			SignalManager.symbol_deselected.emit()
 var is_editing: bool = false :

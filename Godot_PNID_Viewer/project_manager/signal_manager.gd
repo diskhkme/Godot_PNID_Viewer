@@ -3,8 +3,7 @@
 
 extends Node # TODO: scene instead of autoload?
 
-signal symbol_selected_from_image(symbol_object: SymbolObject)
-signal symbol_selected_from_tree(symbol_object: SymbolObject)
+signal symbol_selected(symbol_object: SymbolObject)
 signal symbol_deselected()
 
 signal symbol_edit_started(symbol_object: SymbolObject)
@@ -21,8 +20,7 @@ var selected_symbol: SymbolObject
 var is_selected: bool = false
 
 func _ready():
-	symbol_selected_from_image.connect(_save_selected_symbol)
-	symbol_selected_from_tree.connect(_save_selected_symbol)
+	symbol_selected.connect(_save_selected_symbol)
 	symbol_deselected.connect(_free_selected_symbol)
 	
 	symbol_edit_started.connect(_turn_edit_state_on)

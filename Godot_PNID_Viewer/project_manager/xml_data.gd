@@ -18,7 +18,7 @@ var is_selectable: bool = true :
 	set(value):
 		if is_selectable != value:
 			is_selectable = value
-			SignalManager.xml_visibility_changed.emit(self)
+			SignalManager.xml_selectability_changed.emit(self)
 
 func initialize_from_xml_str(id:int, xml_filename:String, xml_str: PackedByteArray):
 	self.id = id
@@ -69,7 +69,7 @@ func add_new_symbol(position: Vector2) -> SymbolObject:
 	symbol_objects.push_back(new_symbol)
 	
 	SignalManager.symbol_added.emit(new_symbol)
-	SignalManager.symbol_selected_from_image.emit(new_symbol)	
+	SignalManager.symbol_selected.emit(new_symbol)	
 	SignalManager.symbol_edit_started.emit(new_symbol)
 	SignalManager.symbol_edited.emit(new_symbol)
 	

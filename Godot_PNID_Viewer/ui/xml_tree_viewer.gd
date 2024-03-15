@@ -16,7 +16,7 @@ const COLUMN_COUNT = 8
 
 func _ready():
 	reset_tree()
-	SignalManager.symbol_selected_from_image.connect(_select_symbol)
+	SignalManager.symbol_selected.connect(_select_symbol)
 	SignalManager.symbol_deselected.connect(_deselect_symbol)
 	SignalManager.symbol_edited.connect(_edit_symbol)
 	SignalManager.symbol_added.connect(_add_symbol)
@@ -162,8 +162,9 @@ func _on_mouse_exited():
 #-------------------------------------------------------------			
 func _select_symbol(symbol_object: SymbolObject):
 	var symbol_item = symbol_items_dict[symbol_object]
-	symbol_item.select(0)
-	tree.scroll_to_item(symbol_item)
+	if not symbol_item.is_selected(0):
+		symbol_item.select(0)
+		tree.scroll_to_item(symbol_item, true) 
 	
 	
 func _deselect_symbol():
@@ -182,7 +183,7 @@ func _edit_symbol(symbol_object: SymbolObject):
 
 
 func _change_visibility(xml_data: XMLData):
-	xml_items_dict[xml_data].visible = xml_data.is_visible
+	xml_items_dict[xml_data].collapsed = not xml_data.is_visible
 			
 			
 func _change_selectability(xml_data: XMLData):

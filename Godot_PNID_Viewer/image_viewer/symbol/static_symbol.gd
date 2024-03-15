@@ -18,8 +18,7 @@ var on_cursor: bool = false
 
 
 func _ready():
-	SignalManager.symbol_selected_from_tree.connect(_hide_symbol)
-	SignalManager.symbol_selected_from_image.connect(_hide_symbol)
+	SignalManager.symbol_selected.connect(_hide_symbol)
 	SignalManager.symbol_deselected.connect(_show_symbol) 
 	SignalManager.symbol_edited.connect(_update_symbol) 
 	update_symbol()

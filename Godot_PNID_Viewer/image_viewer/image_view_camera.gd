@@ -7,7 +7,7 @@ var is_dragging: bool = false
 
 func _ready():
 	add_to_group("draw_group")
-	SignalManager.symbol_selected_from_tree.connect(_focus_symbol)
+	SignalManager.symbol_selected.connect(_focus_symbol)
 
 
 func process_input(event):
