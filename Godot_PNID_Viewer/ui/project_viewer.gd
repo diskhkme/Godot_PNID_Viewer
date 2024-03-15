@@ -3,7 +3,7 @@ class_name ProjectViewer
 
 @onready var tree = $Tree
 
-@export var icon_color = preload("res://assets/icons/rectangle_tool.png")
+@export var color_icon = preload("res://assets/icons/rectangle_tool.png")
 
 const COLUMN_NUM = 5
 
@@ -12,7 +12,7 @@ var root
 var selected_xml
 
 func _ready():
-	SymbolManager.symbol_edited.connect(_update_dirty)
+	SignalManager.symbol_edited.connect(_update_dirty)
 	
 	
 func reset_root(img_filename: String):
@@ -39,7 +39,7 @@ func reset_xml(xml_data: XMLData):
 	for color in xml_data.colors.keys():
 		xml_item.set_cell_mode(ind+3, TreeItem.CELL_MODE_ICON)
 		xml_item.set_icon_modulate(ind+3, color)
-		xml_item.set_icon(ind+3, icon_color)
+		xml_item.set_icon(ind+3, color_icon)
 		ind += 1
 	
 	xml_item.set_checked(1, xml_data.is_visible)
@@ -67,7 +67,7 @@ func update_dirty():
 		else:
 			xml_item.set_text(0,tree_xml_dict[xml_item].filename)
 
-# TODO: dirty state is not maintained when active project changed
+
 func _update_dirty(symbol_object: SymbolObject):
 	update_dirty()
 		
@@ -85,13 +85,13 @@ func _process(delta):
 				xml_item.set_checked(2,true)
 				xml_item.set_editable(2,true)
 				
-			ProjectManager.xml_visibility_changed.emit(xml_data)
+			SignalManager.xml_visibility_changed.emit(xml_data)
 			
 		if xml_item.is_checked(2) != xml_data.is_selectable:
 			if !xml_item.is_checked(1): # not allow selectable if not visible
 				xml_item.set_checked(2,false)
 			xml_data.is_selectable = xml_item.is_checked(2)
-			ProjectManager.xml_selectability_changed.emit(xml_data)
+			SignalManager.xml_selectability_changed.emit(xml_data)
 		
 
 func _on_tree_item_selected():

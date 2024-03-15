@@ -18,9 +18,9 @@ var is_mouse_on = false
 
 
 func _ready():
-	SymbolManager.symbol_added.connect(_add_new_symbol_to_xml_scene)
-	ProjectManager.xml_visibility_changed.connect(_update_xml_visibility)
-	ProjectManager.xml_added.connect(_add_xml_scene)
+	SignalManager.symbol_added.connect(_add_new_symbol_to_xml_scene)
+	SignalManager.xml_visibility_changed.connect(_update_xml_visibility)
+	SignalManager.xml_added.connect(_add_xml_scene)
 	
 
 func process_input(event):

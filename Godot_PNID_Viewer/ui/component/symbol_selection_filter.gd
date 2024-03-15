@@ -18,7 +18,7 @@ func process_input(event):
 	if ProjectManager.active_project == null:
 		return
 	
-	if SymbolManager.is_editing == true:
+	if SignalManager.is_editing == true:
 		return
 	
 	if event is InputEventMouseButton and (event.button_index == MOUSE_BUTTON_LEFT or event.button_index == MOUSE_BUTTON_RIGHT):
@@ -32,10 +32,10 @@ func process_input(event):
 			var mouse_pos = get_global_mouse_position()
 			var selected = decide_selected(mouse_pos, candidates)
 			if selected == null:
-				SymbolManager.symbol_deselected.emit()
+				SignalManager.symbol_deselected.emit()
 			else:
-				SymbolManager.symbol_selected_from_image.emit(selected.symbol_object)
-				SymbolManager.symbol_edit_started.emit(selected.symbol_object)
+				SignalManager.symbol_selected_from_image.emit(selected.symbol_object)
+				SignalManager.symbol_edit_started.emit(selected.symbol_object)
 				
 			for scene in active_xml_scenes: # direct call
 				scene.clear_candidates()

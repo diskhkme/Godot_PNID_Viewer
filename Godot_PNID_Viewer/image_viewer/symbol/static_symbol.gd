@@ -18,10 +18,10 @@ var on_cursor: bool = false
 
 
 func _ready():
-	SymbolManager.symbol_selected_from_tree.connect(_hide_symbol)
-	SymbolManager.symbol_selected_from_image.connect(_hide_symbol)
-	SymbolManager.symbol_deselected.connect(_show_symbol) 
-	SymbolManager.symbol_edited.connect(_update_symbol) 
+	SignalManager.symbol_selected_from_tree.connect(_hide_symbol)
+	SignalManager.symbol_selected_from_image.connect(_hide_symbol)
+	SignalManager.symbol_deselected.connect(_show_symbol) 
+	SignalManager.symbol_edited.connect(_update_symbol) 
 	update_symbol()
 	
 	
@@ -40,7 +40,7 @@ func update_symbol():
 	
 
 func _input(event):
-	if SymbolManager.is_editing:
+	if SignalManager.is_editing:
 		return
 		
 	if symbol_object.removed:

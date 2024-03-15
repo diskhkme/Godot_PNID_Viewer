@@ -19,10 +19,10 @@ config/icon="res://icon.svg"
 [autoload]
 
 ProjectManager="*res://project_manager/project_manager.gd"
-SymbolManager="*res://project_manager/symbol_manager.gd"
 Config="*res://config.gd"
 DataLoader="*res://project_manager/data_loader.gd"
 SymbolTypeClassDef="*res://symbol_type_class_def.gd"
+SignalManager="*res://project_manager/signal_manager.gd"
 
 [rendering]
 

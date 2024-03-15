@@ -30,7 +30,7 @@ func _ready():
 	main_menu.active_project_changed.connect(_on_changed_active_project)
 	xml_viewer.request_type_change_window.connect(_show_type_change_window)
 	
-	ProjectManager.xml_added.connect(_on_xml_added)
+	SignalManager.xml_added.connect(_on_xml_added)
 	
 	
 func _input(event):
@@ -74,8 +74,8 @@ func make_project_active(project: Project):
 	
 func _on_changed_active_project(project: Project):
 	# end on-going process
-	SymbolManager.symbol_edit_ended.emit()
-	SymbolManager.symbol_deselected.emit()
+	SignalManager.symbol_edit_ended.emit()
+	SignalManager.symbol_deselected.emit()
 	make_project_active(project)
 	
 	

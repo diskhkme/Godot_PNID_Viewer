@@ -16,13 +16,13 @@ const COLUMN_COUNT = 8
 
 func _ready():
 	reset_tree()
-	SymbolManager.symbol_selected_from_image.connect(_select_symbol)
-	SymbolManager.symbol_deselected.connect(_deselect_symbol)
-	SymbolManager.symbol_edited.connect(_edit_symbol)
-	SymbolManager.symbol_added.connect(_add_symbol)
+	SignalManager.symbol_selected_from_image.connect(_select_symbol)
+	SignalManager.symbol_deselected.connect(_deselect_symbol)
+	SignalManager.symbol_edited.connect(_edit_symbol)
+	SignalManager.symbol_added.connect(_add_symbol)
 	
-	ProjectManager.xml_visibility_changed.connect(_change_visibility)
-	ProjectManager.xml_selectability_changed.connect(_change_selectability)
+	SignalManager.xml_visibility_changed.connect(_change_visibility)
+	SignalManager.xml_selectability_changed.connect(_change_selectability)
 
 #-------------------------------------------------------------
 # Tree Initialization-----------------------------------------
@@ -108,8 +108,8 @@ func fill_treeitem(symbol_child: TreeItem, symbol_object: SymbolObject):
 #-------------------------------------------------------------
 func _on_tree_item_selected():
 	var selected_symbol = symbol_items_dict.keys().filter(func(a): return symbol_items_dict[a] == tree.get_selected())
-	SymbolManager.symbol_selected_from_tree.emit(selected_symbol[0])
-	SymbolManager.symbol_edit_started.emit(selected_symbol[0])
+	SignalManager.symbol_selected_from_tree.emit(selected_symbol[0])
+	SignalManager.symbol_edit_started.emit(selected_symbol[0])
 	
 
 func _input(event):

@@ -17,7 +17,7 @@ func process_input(event):
 		if event.is_released() and visible == false:
 			var dist = (event.position - start_mouse_pos).length_squared()
 			if dist < pow(Config.CONTEXT_MENU_THRESHOLD,2):
-				popup(event.position, SymbolManager.is_selected) 
+				popup(event.position, SignalManager.is_selected) 
 
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
 		if !is_in_context_menu:
@@ -44,20 +44,20 @@ func _on_add_button_pressed():
 	var pos_in_image = image_view_camera.get_pixel_from_image_canvas(position)
 	var new_symbol = ProjectManager.active_project.xml_datas[0].add_new_symbol(pos_in_image) # TODO: how to set target xml?
 	
-	SymbolManager.symbol_added.emit(new_symbol)
-	SymbolManager.symbol_selected_from_image.emit(new_symbol)	
-	SymbolManager.symbol_edit_started.emit(new_symbol)
-	SymbolManager.symbol_edited.emit(new_symbol)
+	SignalManager.symbol_added.emit(new_symbol)
+	SignalManager.symbol_selected_from_image.emit(new_symbol)	
+	SignalManager.symbol_edit_started.emit(new_symbol)
+	SignalManager.symbol_edited.emit(new_symbol)
 	close()
 
 
 func _on_remove_button_pressed():
-	var symbol = SymbolManager.selected_symbol
+	var symbol = SignalManager.selected_symbol
 	symbol.removed = true
 	
-	SymbolManager.symbol_edited.emit(symbol)
-	SymbolManager.symbol_deselected.emit()
-	SymbolManager.symbol_edit_ended.emit()
+	SignalManager.symbol_edited.emit(symbol)
+	SignalManager.symbol_deselected.emit()
+	SignalManager.symbol_edit_ended.emit()
 	close()
 
 

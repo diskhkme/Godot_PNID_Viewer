@@ -1,6 +1,5 @@
-# Symbol manager
-# Global signal passthrough from symbol select/edit interface
-# Maintain is_editing state
+# Signal manager (autoload)
+# Global signal passthrough from symbol select/edit + xml visilibility change
 
 extends Node # TODO: scene instead of autoload?
 
@@ -12,6 +11,10 @@ signal symbol_edit_started(symbol_object: SymbolObject)
 signal symbol_edited(symbol_object: SymbolObject)
 signal symbol_added(symbol_object: SymbolObject)
 signal symbol_edit_ended()
+
+signal xml_visibility_changed(xml_data: XMLData)
+signal xml_selectability_changed(xml_data: XMLData)
+signal xml_added(xml_data: XMLData)
 
 var is_editing: bool = false
 var selected_symbol: SymbolObject

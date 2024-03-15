@@ -74,7 +74,7 @@ func update_symbol_object():
 func _on_ok_button_pressed():
 	if check_symbol_updated():
 		update_symbol_object()
-		SymbolManager.symbol_edited.emit(symbol_object)
+		SignalManager.symbol_edited.emit(symbol_object)
 				
 	self.visible = false
 
