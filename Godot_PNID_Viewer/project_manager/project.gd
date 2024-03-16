@@ -31,6 +31,15 @@ func get_xml_id_from_filename(filename: String) -> int:
 	return -1
 
 
-func add_xml_data(xml_data: XMLData):
+func add_xml_from_data(xml_data: XMLData):
 	xml_datas.push_back(xml_data)
 	SignalManager.xml_added.emit(xml_data)
+	
+	
+func add_xml_from_file(num_xml, xml_filenames, xml_strs):
+	for i in range(num_xml):
+		var xml_data = XMLData.new()
+		xml_data.initialize_from_xml_str(xml_datas.size(), xml_filenames[i], xml_strs[i].to_utf8_buffer())
+		xml_datas.push_back(xml_data)
+		SignalManager.xml_added.emit(xml_data)
+	

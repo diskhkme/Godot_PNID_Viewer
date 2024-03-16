@@ -17,7 +17,7 @@ func add_project(args: Variant) -> Project:
 	if OS.get_name() == "Web":
 		data = args
 	if OS.get_name() == "Windows":
-		data = DataLoader.data_load_from_paths(args)
+		data = DataLoader.project_files_load_from_paths(args)
 		
 	if project.initialize(open_projects.size(), data[0], data[1], data[2], data[3], data[4]) == true:
 		open_projects.append(project)

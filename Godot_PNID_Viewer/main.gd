@@ -21,10 +21,10 @@ var is_context_on = false
 func _ready():
 	if OS.get_name() == "Windows":
 		# for windows, start new project if dialog closed
-		main_menu.file_opened.connect(_add_project)
+		main_menu.project_files_opened.connect(_add_project)
 	if OS.get_name() == "Web":
 		# for web, start new project if dataloader signaled
-		DataLoader.file_opened.connect(_add_project)
+		DataLoader.project_files_opened.connect(_add_project)
 		
 		
 	main_menu.active_project_changed.connect(_on_changed_active_project)

@@ -1,10 +1,11 @@
-[gd_scene load_steps=14 format=3 uid="uid://en0mt7v4ddrg"]
+[gd_scene load_steps=15 format=3 uid="uid://en0mt7v4ddrg"]
 
 [ext_resource type="Script" path="res://main.gd" id="1_h1xnr"]
 [ext_resource type="Theme" uid="uid://dseywhd5dettr" path="res://resources/project_default.tres" id="2_6rl77"]
 [ext_resource type="Script" path="res://ui/main_menu.gd" id="2_xxrvq"]
 [ext_resource type="Script" path="res://ui/component/image_viewer.gd" id="3_5qiq5"]
 [ext_resource type="PackedScene" uid="uid://caai5y1ec0vrm" path="res://image_viewer/symbol/editing/symbol_editor_scene.tscn" id="3_aygqj"]
+[ext_resource type="Script" path="res://ui/toolbar.gd" id="4_8h0kk"]
 [ext_resource type="PackedScene" uid="uid://cypy5mb0rfmk7" path="res://ui/project_viewer.tscn" id="4_48ush"]
 [ext_resource type="Script" path="res://ui/component/symbol_selection_filter.gd" id="4_vp6ol"]
 [ext_resource type="PackedScene" uid="uid://mmirfa2yhj50" path="res://ui/xml_tree_viewer.tscn" id="5_4qjjb"]
@@ -27,10 +28,10 @@ grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("2_6rl77")
 
-[node name="MainMenu" type="HBoxContainer" parent="CanvasLayer/MainWindow" node_paths=PackedStringArray("open_files_dialog")]
+[node name="MainMenu" type="HBoxContainer" parent="CanvasLayer/MainWindow" node_paths=PackedStringArray("new_project_dialog")]
 layout_mode = 2
 script = ExtResource("2_xxrvq")
-open_files_dialog = NodePath("../../Dialogs/OpenFilesDialog")
+new_project_dialog = NodePath("../../Dialogs/NewProjectDialog")
 
 [node name="Left" type="HBoxContainer" parent="CanvasLayer/MainWindow/MainMenu"]
 layout_mode = 2
@@ -38,7 +39,7 @@ size_flags_horizontal = 3
 
 [node name="OpenFilesButton" type="Button" parent="CanvasLayer/MainWindow/MainMenu/Left"]
 layout_mode = 2
-text = "Open File(s)"
+text = "New Project"
 
 [node name="TabBar" type="TabBar" parent="CanvasLayer/MainWindow/MainMenu/Left"]
 layout_mode = 2
@@ -54,28 +55,29 @@ visible = false
 layout_mode = 2
 text = "dumb"
 
-[node name="Toolbar_TODO" type="HBoxContainer" parent="CanvasLayer/MainWindow"]
-visible = false
+[node name="Toolbar" type="HBoxContainer" parent="CanvasLayer/MainWindow" node_paths=PackedStringArray("add_xml_dialog")]
 layout_mode = 2
+script = ExtResource("4_8h0kk")
+add_xml_dialog = NodePath("../../Dialogs/AddXMLDialog")
 
-[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/MainWindow/Toolbar_TODO"]
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/MainWindow/Toolbar"]
 layout_mode = 2
 size_flags_horizontal = 2
 
-[node name="Button" type="Button" parent="CanvasLayer/MainWindow/Toolbar_TODO/HBoxContainer"]
+[node name="AddXMLButton" type="Button" parent="CanvasLayer/MainWindow/Toolbar/HBoxContainer"]
+layout_mode = 2
+text = "Add XML"
+
+[node name="Button2" type="Button" parent="CanvasLayer/MainWindow/Toolbar/HBoxContainer"]
 layout_mode = 2
 text = "Dummy"
 
-[node name="Button2" type="Button" parent="CanvasLayer/MainWindow/Toolbar_TODO/HBoxContainer"]
-layout_mode = 2
-text = "Dummy"
-
-[node name="HBoxContainer3" type="HBoxContainer" parent="CanvasLayer/MainWindow/Toolbar_TODO"]
+[node name="HBoxContainer3" type="HBoxContainer" parent="CanvasLayer/MainWindow/Toolbar"]
 layout_mode = 2
 size_flags_horizontal = 8
 alignment = 2
 
-[node name="Button5" type="Button" parent="CanvasLayer/MainWindow/Toolbar_TODO/HBoxContainer3"]
+[node name="Button5" type="Button" parent="CanvasLayer/MainWindow/Toolbar/HBoxContainer3"]
 layout_mode = 2
 text = "Dummy"
 
@@ -98,7 +100,7 @@ stretch = true
 [node name="SubViewport" type="SubViewport" parent="CanvasLayer/MainWindow/Middle/ImageViewer/SubViewportContainer"]
 handle_input_locally = false
 physics_object_picking = true
-size = Vector2i(570, 582)
+size = Vector2i(570, 552)
 render_target_update_mode = 4
 
 [node name="SymbolSelectionFilter" type="Control" parent="CanvasLayer/MainWindow/Middle/ImageViewer/SubViewportContainer/SubViewport"]
@@ -154,11 +156,20 @@ text = "Symbol: "
 
 [node name="Dialogs" type="Node" parent="CanvasLayer"]
 
-[node name="OpenFilesDialog" type="FileDialog" parent="CanvasLayer/Dialogs"]
+[node name="NewProjectDialog" type="FileDialog" parent="CanvasLayer/Dialogs"]
 title = "Open File(s)"
 ok_button_text = "열기"
 file_mode = 1
 access = 2
+use_native_dialog = true
+
+[node name="AddXMLDialog" type="FileDialog" parent="CanvasLayer/Dialogs"]
+title = "Open XML(s)"
+size = Vector2i(334, 159)
+ok_button_text = "열기"
+file_mode = 1
+access = 2
+filters = PackedStringArray("*.xml;XML Files")
 use_native_dialog = true
 
 [node name="SaveAsFilesDialog" type="FileDialog" parent="CanvasLayer/Dialogs"]
@@ -191,6 +202,7 @@ diff_dialog = NodePath("../../Dialogs/DiffWindow")
 [connection signal="pressed" from="CanvasLayer/MainWindow/MainMenu/Left/OpenFilesButton" to="CanvasLayer/MainWindow/MainMenu" method="_on_open_files_button_pressed"]
 [connection signal="tab_changed" from="CanvasLayer/MainWindow/MainMenu/Left/TabBar" to="CanvasLayer/MainWindow/MainMenu" method="_on_tab_bar_tab_changed"]
 [connection signal="tab_close_pressed" from="CanvasLayer/MainWindow/MainMenu/Left/TabBar" to="CanvasLayer/MainWindow/MainMenu" method="_on_tab_bar_tab_close_pressed"]
+[connection signal="pressed" from="CanvasLayer/MainWindow/Toolbar/HBoxContainer/AddXMLButton" to="CanvasLayer/MainWindow/Toolbar" method="_on_add_xml_button_pressed"]
 [connection signal="mouse_entered" from="CanvasLayer/MainWindow/Middle/ImageViewer" to="CanvasLayer/MainWindow/Middle/ImageViewer" method="_on_mouse_entered"]
 [connection signal="mouse_exited" from="CanvasLayer/MainWindow/Middle/ImageViewer" to="CanvasLayer/MainWindow/Middle/ImageViewer" method="_on_mouse_exited"]
 [connection signal="mouse_entered" from="CanvasLayer/MainWindow/Middle/RightSide/XMLTreeViewer" to="CanvasLayer/MainWindow/Middle/RightSide/XMLTreeViewer" method="_on_mouse_entered"]
