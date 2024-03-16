@@ -22,7 +22,6 @@ func _ready():
 	SignalManager.xml_label_visibility_changed.connect(_update_label_visibility)
 	update_symbol()
 	static_label.update_label(symbol_object)
-	static_label.visible = symbol_object.source_xml.is_show_label
 	
 	
 func update_symbol():
@@ -65,7 +64,8 @@ func _on_area_2d_mouse_exited():
 
 # --- selected(received)
 func _update_label_visibility(xml_data: XMLData):
-	if symbol_object.source_xml == xml_data:
+	# because of diff, label visibility is overrided for each symbol
+	if xml_data.symbol_objects.has(symbol_object):
 		static_label.visible = xml_data.is_show_label
 
 

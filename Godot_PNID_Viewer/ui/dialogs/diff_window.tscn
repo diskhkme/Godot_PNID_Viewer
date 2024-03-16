@@ -6,7 +6,7 @@
 [node name="DiffWindow" type="Window"]
 title = "Calculate Diff"
 position = Vector2i(0, 36)
-size = Vector2i(600, 334)
+size = Vector2i(600, 346)
 wrap_controls = true
 script = ExtResource("1_llhoe")
 
@@ -34,12 +34,20 @@ layout_mode = 2
 layout_mode = 2
 alignment = 1
 
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Source:"
+
 [node name="FirstXML" type="OptionButton" parent="MarginContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 
 [node name="TextureRect" type="TextureRect" parent="MarginContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 texture = ExtResource("1_f8c4n")
+
+[node name="Label2" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Targer:"
 
 [node name="SecondXML" type="OptionButton" parent="MarginContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
@@ -52,12 +60,49 @@ theme_override_constants/margin_bottom = 25
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/MarginContainer"]
 layout_mode = 2
 
+[node name="HBoxContainer3" type="HBoxContainer" parent="MarginContainer/VBoxContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/MarginContainer/VBoxContainer/HBoxContainer3"]
+layout_mode = 2
+tooltip_text = "One Way: Source 중에서 Target과 매칭되지 않은 것들만 표시
+Two Way: Source/Target 서로 매칭되지 않은 것들을 모두 표시
+"
+mouse_filter = 0
+text = "Name:"
+
+[node name="DiffName" type="LineEdit" parent="MarginContainer/VBoxContainer/MarginContainer/VBoxContainer/HBoxContainer3"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+text = "Diff"
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="MarginContainer/VBoxContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/MarginContainer/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+tooltip_text = "One Way: Source 중에서 Target과 매칭되지 않은 것들만 표시
+Two Way: Source/Target 서로 매칭되지 않은 것들을 모두 표시
+"
+mouse_filter = 0
+text = "Direction:"
+
+[node name="DirectionButton" type="OptionButton" parent="MarginContainer/VBoxContainer/MarginContainer/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+item_count = 2
+selected = 0
+popup/item_0/text = "Two Way"
+popup/item_0/id = 1
+popup/item_1/text = "One Way"
+popup/item_1/id = 0
+
 [node name="GridContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
-alignment = 1
 
 [node name="Label" type="Label" parent="MarginContainer/VBoxContainer/MarginContainer/VBoxContainer/GridContainer"]
 layout_mode = 2
+tooltip_text = "매칭이 된 것으로 판단하는 IoU 기준값 (*수직, 수평이 아닌 상자의 경우 계산 오차 있음)"
+mouse_filter = 0
 text = "IoU Threshold: "
 
 [node name="IOUThresholdRange" type="SpinBox" parent="MarginContainer/VBoxContainer/MarginContainer/VBoxContainer/GridContainer"]
@@ -68,7 +113,6 @@ value = 0.5
 
 [node name="GridContainer2" type="HBoxContainer" parent="MarginContainer/VBoxContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
-alignment = 1
 
 [node name="Label" type="Label" parent="MarginContainer/VBoxContainer/MarginContainer/VBoxContainer/GridContainer2"]
 layout_mode = 2
@@ -92,10 +136,12 @@ button_pressed = true
 
 [node name="GridContainer4" type="HBoxContainer" parent="MarginContainer/VBoxContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
-alignment = 1
 
 [node name="Label" type="Label" parent="MarginContainer/VBoxContainer/MarginContainer/VBoxContainer/GridContainer4"]
 layout_mode = 2
+tooltip_text = "String: 문자열의 경우 문자가 일치하는지까지 매칭 기준으로 사용
+Degree: Degree 각도값이 일치하는지까지 매칭 기준으로 사용(4도 이하 차이의 경우 매칭된 것으로 판정)"
+mouse_filter = 0
 text = "Compare: "
 
 [node name="Label3" type="Label" parent="MarginContainer/VBoxContainer/MarginContainer/VBoxContainer/GridContainer4"]
@@ -115,7 +161,7 @@ button_pressed = true
 
 [node name="GridContainer5" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
 layout_mode = 2
-size_flags_horizontal = 4
+alignment = 1
 
 [node name="OKButton" type="Button" parent="MarginContainer/VBoxContainer/GridContainer5"]
 layout_mode = 2
@@ -124,6 +170,16 @@ text = "OK"
 [node name="CancelButton" type="Button" parent="MarginContainer/VBoxContainer/GridContainer5"]
 layout_mode = 2
 text = "Cancel"
+
+[node name="GridContainer6" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="ProgressBar" type="ProgressBar" parent="MarginContainer/VBoxContainer/GridContainer6"]
+visible = false
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+max_value = 1.0
 
 [connection signal="about_to_popup" from="." to="." method="_on_about_to_popup"]
 [connection signal="close_requested" from="." to="." method="_on_close_requested"]

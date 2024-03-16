@@ -3,6 +3,8 @@
 
 extends Node # TODO: scene instead of autoload?
 
+signal report_progress(percent: float)
+
 signal symbol_selected(symbol_object: SymbolObject)
 signal symbol_deselected()
 

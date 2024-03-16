@@ -6,7 +6,7 @@ extends Control
 
 @onready var save_as_button = $PanelContainer/VBoxContainer/SaveAsButton
 
-var is_in_context_menu
+var is_in_context_menu: bool
 
 func _ready():
 	save_file_dialog.file_selected.connect(_on_save_path_selected)
@@ -38,7 +38,7 @@ func _on_save_as_button_pressed():
 
 func _on_diff_button_pressed():
 	diff_dialog.popup()
-	diff_dialog.set_first_selected(project_viewer.selected_xml)
+	diff_dialog.initialize_with_selected(project_viewer.selected_xml)
 	visible = false
 	
 	

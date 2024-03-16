@@ -1,30 +1,47 @@
 extends Node
-class_name Diff
 
 # TODO: rotated bbox iou calculation
 
-static func calculate_diff(first: Array[SymbolObject], second: Array[SymbolObject], options: Variant) -> Array[SymbolObject]:
-	var iou_th: float = options[0]
-	var include_symbol: bool = options[1]
-	var include_text: bool = options[2]
-	var compare_string: bool = options[3]
-	var compare_degree: bool = options[4]
+enum DIRECTION {TWO, ONE,}
+
+var num_total
+var num_current
+
+func calculate_diff(first: Array[SymbolObject], second: Array[SymbolObject], options: Variant) -> Array[SymbolObject]:
+	var direction: DIRECTION = options[0]
+	var iou_th: float = options[1]
+	var include_symbol: bool = options[2]
+	var include_text: bool = options[3]
+	var compare_string: bool = options[4]
+	var compare_degree: bool = options[5]
 	
 	# remove not included
 	first = filter_by_type(first, include_symbol, include_text)
 	second = filter_by_type(second, include_symbol, include_text)
 	
-	var diffs: Array[SymbolObject] = []
-	var first_filtered = filter_by_iou_string_degree(first, second, iou_th, compare_string, compare_degree)
-	diffs.append_array(first_filtered)
-	var second_filtered = filter_by_iou_string_degree(second, first, iou_th, compare_string, compare_degree)
-	diffs.append_array(second_filtered)
+	if direction == DIRECTION.ONE:
+		num_total = first.size()
+	else:
+		num_total = first.size() + second.size()
+	num_current = 0
 
-	# TODO: how to handle id? (for selection)
+	var time_start = Time.get_ticks_msec()
+	# Note: Diff xml has reference for original symbols	
+	var diffs: Array[SymbolObject] = []
+	var first_filtered = await filter_by_iou_string_degree(first, second, iou_th, compare_string, compare_degree)
+	diffs.append_array(first_filtered)
+	
+	if direction == DIRECTION.TWO:
+		var second_filtered = await filter_by_iou_string_degree(second, first, iou_th, compare_string, compare_degree)
+		diffs.append_array(second_filtered)
+	
+	var time_elapsed = Time.get_ticks_msec() - time_start
+	print(time_elapsed, " ms elapsed")
+
 	return diffs
 
 
-static func filter_by_type(symbol_array: Array[SymbolObject], include_symbol: bool, include_text: bool):
+func filter_by_type(symbol_array: Array[SymbolObject], include_symbol: bool, include_text: bool):
 	if !include_symbol:
 		symbol_array = symbol_array.filter(func(a): return !a.is_text)
 	if !include_text:
@@ -32,9 +49,14 @@ static func filter_by_type(symbol_array: Array[SymbolObject], include_symbol: bo
 	return symbol_array
 	
 
-static func filter_by_iou_string_degree(first, second, iou_th, compare_string, compare_degree):
+func filter_by_iou_string_degree(first, second, iou_th, compare_string, compare_degree):
 	var filtered = []
-	for f in first:
+	for i in range(first.size()):
+
+		var progress = num_current/float(num_total)
+		SignalManager.report_progress.emit(progress)
+		
+		var f = first[i]
 		var candidate = second.filter(func(s): return check_iou_cond(f, s, iou_th))
 		
 		if candidate.size() == 0: # if no iou cond meet, store f
@@ -50,14 +72,17 @@ static func filter_by_iou_string_degree(first, second, iou_th, compare_string, c
 		if candidate.size() == 0: # if no cond meet, store f
 			filtered.push_back(f)
 			
+		num_current += 1
+		await get_tree().process_frame
+			
 	return filtered
 
 
-static func check_iou_cond(a: SymbolObject, b: SymbolObject, iou_th:float) -> bool:
+func check_iou_cond(a: SymbolObject, b: SymbolObject, iou_th:float) -> bool:
 	return iou_calc(a.get_rotated_bndbox(), b.get_rotated_bndbox()) > iou_th
 	
 
-static func iou_calc(box1: Vector4, box2: Vector4):
+func iou_calc(box1: Vector4, box2: Vector4):
 	var x_inter_min = max(box1[0], box2[0])
 	var y_inter_min = max(box1[1], box2[1])
 	var x_inter_max = min(box1[2], box2[2])

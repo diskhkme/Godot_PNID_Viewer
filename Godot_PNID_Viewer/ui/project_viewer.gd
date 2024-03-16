@@ -8,8 +8,8 @@ class_name ProjectViewer
 const COLUMN_NUM = 6
 
 var tree_xml_dict = {} # key: xml_item, value: xml_data
-var root
-var selected_xml
+var root: TreeItem
+var selected_xml: XMLData
 
 func _ready():
 	SignalManager.symbol_edited.connect(_update_dirty)
