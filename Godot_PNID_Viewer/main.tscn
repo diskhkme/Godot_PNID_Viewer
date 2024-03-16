@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://en0mt7v4ddrg"]
+[gd_scene load_steps=16 format=3 uid="uid://en0mt7v4ddrg"]
 
 [ext_resource type="Script" path="res://main.gd" id="1_h1xnr"]
 [ext_resource type="Theme" uid="uid://dseywhd5dettr" path="res://resources/project_default.tres" id="2_6rl77"]
@@ -14,6 +14,7 @@
 [ext_resource type="PackedScene" uid="uid://fxwcfnsk0rgt" path="res://ui/dialogs/diff_window.tscn" id="11_3hrp5"]
 [ext_resource type="PackedScene" uid="uid://drge4asvwjmcu" path="res://ui/context/image_view_context_menu.tscn" id="12_p38sp"]
 [ext_resource type="PackedScene" uid="uid://chyc6mjjmyek7" path="res://ui/context/project_view_context_menu.tscn" id="13_sobsl"]
+[ext_resource type="PackedScene" uid="uid://b7lpevg8fi6hw" path="res://ui/dialogs/export_image_window.tscn" id="13_y62s5"]
 
 [node name="Main" type="Node"]
 script = ExtResource("1_h1xnr")
@@ -55,10 +56,13 @@ visible = false
 layout_mode = 2
 text = "dumb"
 
-[node name="Toolbar" type="HBoxContainer" parent="CanvasLayer/MainWindow" node_paths=PackedStringArray("add_xml_dialog")]
+[node name="Toolbar" type="HBoxContainer" parent="CanvasLayer/MainWindow" node_paths=PackedStringArray("add_xml_dialog", "export_img_viewport", "export_img_viewport_container", "save_img_dialog")]
 layout_mode = 2
 script = ExtResource("4_8h0kk")
 add_xml_dialog = NodePath("../../Dialogs/AddXMLDialog")
+export_img_viewport = NodePath("../Middle/ImageViewer/SubViewportContainer/SubViewport")
+export_img_viewport_container = NodePath("../Middle/ImageViewer/SubViewportContainer")
+save_img_dialog = NodePath("../../Dialogs/SaveImageDialog")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/MainWindow/Toolbar"]
 layout_mode = 2
@@ -68,9 +72,9 @@ size_flags_horizontal = 2
 layout_mode = 2
 text = "Add XML"
 
-[node name="Button2" type="Button" parent="CanvasLayer/MainWindow/Toolbar/HBoxContainer"]
+[node name="ExportImageButton" type="Button" parent="CanvasLayer/MainWindow/Toolbar/HBoxContainer"]
 layout_mode = 2
-text = "Dummy"
+text = "Export Image"
 
 [node name="HBoxContainer3" type="HBoxContainer" parent="CanvasLayer/MainWindow/Toolbar"]
 layout_mode = 2
@@ -161,10 +165,11 @@ title = "Open File(s)"
 ok_button_text = "열기"
 file_mode = 1
 access = 2
+filters = PackedStringArray("*.xml, *.png")
 use_native_dialog = true
 
 [node name="AddXMLDialog" type="FileDialog" parent="CanvasLayer/Dialogs"]
-title = "Open XML(s)"
+title = "Open File(s)"
 size = Vector2i(334, 159)
 ok_button_text = "열기"
 file_mode = 1
@@ -179,10 +184,21 @@ access = 2
 filters = PackedStringArray("*.xml ; XML File")
 use_native_dialog = true
 
+[node name="SaveImageDialog" type="FileDialog" parent="CanvasLayer/Dialogs"]
+size = Vector2i(289, 154)
+ok_button_text = "저장"
+access = 2
+filters = PackedStringArray("*.png ; PNG File")
+use_native_dialog = true
+
 [node name="TypeChangeWindow" parent="CanvasLayer/Dialogs" instance=ExtResource("6_xn5xa")]
 visible = false
 
 [node name="DiffWindow" parent="CanvasLayer/Dialogs" instance=ExtResource("11_3hrp5")]
+visible = false
+
+[node name="ExportImageWindow" parent="CanvasLayer/Dialogs" instance=ExtResource("13_y62s5")]
+title = "Export Image"
 visible = false
 
 [node name="ContextMenus" type="Control" parent="CanvasLayer"]
@@ -203,6 +219,7 @@ diff_dialog = NodePath("../../Dialogs/DiffWindow")
 [connection signal="tab_changed" from="CanvasLayer/MainWindow/MainMenu/Left/TabBar" to="CanvasLayer/MainWindow/MainMenu" method="_on_tab_bar_tab_changed"]
 [connection signal="tab_close_pressed" from="CanvasLayer/MainWindow/MainMenu/Left/TabBar" to="CanvasLayer/MainWindow/MainMenu" method="_on_tab_bar_tab_close_pressed"]
 [connection signal="pressed" from="CanvasLayer/MainWindow/Toolbar/HBoxContainer/AddXMLButton" to="CanvasLayer/MainWindow/Toolbar" method="_on_add_xml_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/MainWindow/Toolbar/HBoxContainer/ExportImageButton" to="CanvasLayer/MainWindow/Toolbar" method="_on_export_image_button_pressed"]
 [connection signal="mouse_entered" from="CanvasLayer/MainWindow/Middle/ImageViewer" to="CanvasLayer/MainWindow/Middle/ImageViewer" method="_on_mouse_entered"]
 [connection signal="mouse_exited" from="CanvasLayer/MainWindow/Middle/ImageViewer" to="CanvasLayer/MainWindow/Middle/ImageViewer" method="_on_mouse_exited"]
 [connection signal="mouse_entered" from="CanvasLayer/MainWindow/Middle/RightSide/XMLTreeViewer" to="CanvasLayer/MainWindow/Middle/RightSide/XMLTreeViewer" method="_on_mouse_entered"]

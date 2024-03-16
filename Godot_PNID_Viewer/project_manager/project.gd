@@ -5,8 +5,8 @@ var id: int
 
 var loaded: bool = false
 
-var img_filename 
-var img
+var img_filename: String
+var img: Image
 var xml_datas: Array[XMLData]
 
 func initialize(id, img_filename, img, num_xml, xml_filenames, xml_strs):
