@@ -62,35 +62,28 @@ var color: Color
 var is_text: bool = false :
 	get: return is_text
 
+var _removed
 var removed: bool = false :
 	get: return removed
 	set(value):
-		if value != removed:
-			removed = value
+		if value != _removed:
+			_removed = value
 			SignalManager.symbol_edited.emit(self)
-			if value:
+			if _removed:
 				SignalManager.symbol_deselected.emit()
-				SignalManager.symbol_edit_ended.emit()
 				
-
+var _is_selected
 var is_selected: bool = false :
-	get: return is_selected
+	get: return _is_selected
 	set(value):
-		is_selected = value
-		if value:
-			SignalManager.symbol_selected.emit(self)
-			SignalManager.symbol_edit_started.emit(self)
-		else:
-			SignalManager.symbol_deselected.emit()
-var is_editing: bool = false :
-	get: return is_editing
-	set(value):
-		is_editing = value
-		if value:
-			SignalManager.symbol_edit_started.emit(self)
-		else:
-			SignalManager.symbol_edit_ended.emit()
-			
+		if _is_selected != value: # prevent signal roundtrip
+			_is_selected = value
+			if _is_selected:
+				SignalManager.symbol_selected.emit(self)
+			else:
+				SignalManager.symbol_deselected.emit(self)
+
+var is_dirty = false
 
 # --------------------------------------------------------------------
 # --- Methods    -----------------------------------------------------
@@ -104,6 +97,42 @@ func _init():
 	_flip = false
 	_type = "None"
 	_cls = "None"
+	
+	
+func clone():
+	# manual copy op
+	var symbol = SymbolObject.new()
+	symbol._id = _id
+	symbol._type = _type
+	symbol._cls = _cls
+	symbol._bndbox = _bndbox
+	symbol._is_large = _is_large
+	symbol._degree = _degree
+	symbol._flip = _flip
+	symbol.source_xml = source_xml
+	symbol.color = color
+	symbol.is_text = is_text
+	symbol._removed = _removed
+	symbol._is_selected = _is_selected
+	symbol.is_dirty = is_dirty
+	return symbol
+	
+	
+func restore(other: SymbolObject):
+	id = other.id
+	type = other.type
+	cls = other.cls
+	bndbox = other.bndbox
+	is_large = other.is_large
+	degree = other.degree
+	flip = other.flip
+	source_xml = other.source_xml
+	color = other.color
+	is_text = other.is_text
+	removed = other.removed
+	#is_selected = other.is_selected
+	is_selected = false
+	is_dirty = other.is_dirty
 
 
 func get_rect() -> Rect2:

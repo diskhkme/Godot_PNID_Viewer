@@ -72,6 +72,15 @@ size_flags_horizontal = 2
 layout_mode = 2
 text = "Add XML"
 
+[node name="UndoButton" type="Button" parent="CanvasLayer/MainWindow/Toolbar/HBoxContainer"]
+layout_mode = 2
+text = "Undo"
+
+[node name="RedoButton" type="Button" parent="CanvasLayer/MainWindow/Toolbar/HBoxContainer"]
+layout_mode = 2
+text = "Redo
+"
+
 [node name="ExportImageButton" type="Button" parent="CanvasLayer/MainWindow/Toolbar/HBoxContainer"]
 layout_mode = 2
 text = "Export Image"
@@ -219,6 +228,8 @@ diff_dialog = NodePath("../../Dialogs/DiffWindow")
 [connection signal="tab_changed" from="CanvasLayer/MainWindow/MainMenu/Left/TabBar" to="CanvasLayer/MainWindow/MainMenu" method="_on_tab_bar_tab_changed"]
 [connection signal="tab_close_pressed" from="CanvasLayer/MainWindow/MainMenu/Left/TabBar" to="CanvasLayer/MainWindow/MainMenu" method="_on_tab_bar_tab_close_pressed"]
 [connection signal="pressed" from="CanvasLayer/MainWindow/Toolbar/HBoxContainer/AddXMLButton" to="CanvasLayer/MainWindow/Toolbar" method="_on_add_xml_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/MainWindow/Toolbar/HBoxContainer/UndoButton" to="CanvasLayer/MainWindow/Toolbar" method="_on_undo_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/MainWindow/Toolbar/HBoxContainer/RedoButton" to="CanvasLayer/MainWindow/Toolbar" method="_on_redo_button_pressed"]
 [connection signal="pressed" from="CanvasLayer/MainWindow/Toolbar/HBoxContainer/ExportImageButton" to="CanvasLayer/MainWindow/Toolbar" method="_on_export_image_button_pressed"]
 [connection signal="mouse_entered" from="CanvasLayer/MainWindow/Middle/ImageViewer" to="CanvasLayer/MainWindow/Middle/ImageViewer" method="_on_mouse_entered"]
 [connection signal="mouse_exited" from="CanvasLayer/MainWindow/Middle/ImageViewer" to="CanvasLayer/MainWindow/Middle/ImageViewer" method="_on_mouse_exited"]

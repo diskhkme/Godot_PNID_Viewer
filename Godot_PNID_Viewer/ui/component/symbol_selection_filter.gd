@@ -18,7 +18,7 @@ func process_input(event):
 	if ProjectManager.active_project == null:
 		return
 	
-	if SignalManager.is_editing == true:
+	if SignalManager.is_selected == true:
 		return
 	
 	if event is InputEventMouseButton and (event.button_index == MOUSE_BUTTON_LEFT or event.button_index == MOUSE_BUTTON_RIGHT):
@@ -36,7 +36,6 @@ func process_input(event):
 					last_selected.symbol_object.is_selected = false
 			else:
 				selected.symbol_object.is_selected = true
-				selected.symbol_object.is_editing = true
 				last_selected = selected
 				
 			for scene in active_xml_scenes: # direct call

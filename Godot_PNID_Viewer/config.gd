@@ -1,7 +1,7 @@
 extends Node
 
 # 
-
+const MAX_UNDOREDO_SNAPSHOT = 3
 
 # Static visual
 const SYMBOL_COLOR_PRESET = [Color.RED, Color.GREEN, Color.BLUE, Color.MAGENTA, Color.CYAN, Color.ORANGE]

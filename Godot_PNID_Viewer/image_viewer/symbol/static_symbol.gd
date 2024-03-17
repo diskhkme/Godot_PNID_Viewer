@@ -43,7 +43,7 @@ func update_symbol():
 	
 
 func _input(event):
-	if SignalManager.is_editing:
+	if SignalManager.is_selected:
 		return
 		
 	if symbol_object.removed:
@@ -76,7 +76,7 @@ func _hide_symbol(symbol_object: SymbolObject):
 		static_symbol_draw.visible = true
 		
 
-func _show_symbol() -> void:
+func _show_symbol(symbol_object: SymbolObject):
 	static_symbol_draw.visible = true
 
 

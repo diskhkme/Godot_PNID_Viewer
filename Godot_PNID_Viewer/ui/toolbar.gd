@@ -87,3 +87,11 @@ func load_scene_status(scene_status):
 	export_img_viewport_container.stretch = true
 	export_img_viewport.get_camera_2d().global_position = scene_status[1]
 	export_img_viewport.get_camera_2d().zoom = scene_status[2]
+
+
+func _on_undo_button_pressed():
+	ProjectManager.active_project.undo_redo.undo()
+
+
+func _on_redo_button_pressed():
+	ProjectManager.active_project.undo_redo.redo()

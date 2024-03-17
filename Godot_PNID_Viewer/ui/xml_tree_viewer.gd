@@ -107,7 +107,8 @@ func fill_treeitem(symbol_child: TreeItem, symbol_object: SymbolObject):
 # Self Event Handle  -----------------------------------------
 #-------------------------------------------------------------
 func _on_tree_item_selected():
-	var selected_symbol = symbol_items_dict.keys().filter(func(a): return symbol_items_dict[a] == tree.get_selected())
+	var selected_item = tree.get_selected()
+	var selected_symbol = symbol_items_dict.keys().filter(func(a): return symbol_items_dict[a] == selected_item)
 	selected_symbol[0].is_selected = true
 	
 
@@ -163,11 +164,11 @@ func _on_mouse_exited():
 func _select_symbol(symbol_object: SymbolObject):
 	var symbol_item = symbol_items_dict[symbol_object]
 	if not symbol_item.is_selected(0):
-		symbol_item.select(0)
+		symbol_item.select(0) 
 		tree.scroll_to_item(symbol_item, true) 
 	
 	
-func _deselect_symbol():
+func _deselect_symbol(symbol_object: SymbolObject):
 	tree.deselect_all()
 
 	

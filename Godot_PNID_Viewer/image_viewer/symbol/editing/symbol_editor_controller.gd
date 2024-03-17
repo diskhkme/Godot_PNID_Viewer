@@ -16,7 +16,7 @@ var target_symbol: SymbolObject
 
 func _ready():
 	add_to_group("draw_group")
-	SignalManager.symbol_edit_started.connect(_initialize_editor)
+	SignalManager.symbol_selected.connect(_initialize_editor)
 	
 	for handle in handles:
 		if handle.type == Handle.TYPE.ROTATE or handle.scale_type == Handle.TYPE.TRANSLATE:
@@ -80,7 +80,7 @@ func _input(event):
 					return
 					
 			if target_symbol:
-				target_symbol.is_editing = false
+				target_symbol.is_selected = false
 				
 				
 func update_handle_positions():

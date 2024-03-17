@@ -12,6 +12,7 @@ func _ready():
 
 func add_project(args: Variant) -> Project:
 	var project = Project.new() as Project
+	add_child(project)
 	
 	var data
 	if OS.get_name() == "Web":
@@ -32,8 +33,6 @@ func add_project(args: Variant) -> Project:
 func make_project_active(project: Project) -> void:
 	active_project = project
 	# end on-going process
-	SignalManager.symbol_edit_ended.emit()
-	SignalManager.symbol_deselected.emit()
 
 
 func is_symbol_type_text(index: int):

@@ -76,7 +76,6 @@ func add_new_symbol(position: Vector2) -> SymbolObject:
 	
 	SignalManager.symbol_added.emit(new_symbol)
 	SignalManager.symbol_selected.emit(new_symbol)	
-	SignalManager.symbol_edit_started.emit(new_symbol)
 	SignalManager.symbol_edited.emit(new_symbol)
 	
 	return new_symbol
