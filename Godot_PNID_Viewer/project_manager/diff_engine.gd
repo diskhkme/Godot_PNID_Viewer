@@ -60,7 +60,7 @@ func filter_by_iou_string_degree(first, second, iou_th, compare_string, compare_
 		var candidate = second.filter(func(s): return check_iou_cond(f, s, iou_th))
 		
 		if candidate.size() == 0: # if no iou cond meet, store f
-			filtered.push_back(f)
+			filtered.push_back(f.clone())
 			continue
 		else: # check remaining condition
 			if compare_string and f.is_text:
@@ -70,7 +70,7 @@ func filter_by_iou_string_degree(first, second, iou_th, compare_string, compare_
 				candidate = candidate.filter(func(s): return abs(f.degree - s.degree) < 4)
 				
 		if candidate.size() == 0: # if no cond meet, store f
-			filtered.push_back(f)
+			filtered.push_back(f.clone())
 			
 		num_current += 1
 		await get_tree().process_frame

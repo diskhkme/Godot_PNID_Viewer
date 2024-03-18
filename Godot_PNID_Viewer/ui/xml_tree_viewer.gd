@@ -188,8 +188,7 @@ func _change_visibility(xml_data: XMLData):
 			
 			
 func _change_selectability(xml_data: XMLData):
-	for symbol_object in symbol_items_dict.keys():
-		if symbol_object.source_xml == xml_data:
-			for i in range(COLUMN_COUNT):
-				symbol_items_dict[symbol_object].set_selectable(i,xml_data.is_selectable)
+	for symbol_object in xml_data.symbol_objects:
+		for i in range(COLUMN_COUNT):
+			symbol_items_dict[symbol_object].set_selectable(i,xml_data.is_selectable)
 
