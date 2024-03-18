@@ -72,11 +72,8 @@ func add_new_symbol(position: Vector2) -> SymbolObject:
 	new_symbol._id = new_symbol_id
 	new_symbol._bndbox += Vector4(position.x, position.y, position.x, position.y) # translate min/max
 	new_symbol.color = colors.keys()[0]
-	symbol_objects.push_back(new_symbol)
 	
 	SignalManager.symbol_added.emit(new_symbol)
-	SignalManager.symbol_selected.emit(new_symbol)	
-	SignalManager.symbol_edited.emit(new_symbol)
 	
 	return new_symbol
 	

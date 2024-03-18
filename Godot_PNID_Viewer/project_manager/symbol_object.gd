@@ -62,18 +62,18 @@ var color: Color
 var is_text: bool = false :
 	get: return is_text
 
-var _removed
-var removed: bool = false :
-	get: return removed
+var _removed: bool = false
+var removed:
+	get: return _removed
 	set(value):
 		if value != _removed:
 			_removed = value
 			SignalManager.symbol_edited.emit(self)
 			if _removed:
-				SignalManager.symbol_deselected.emit()
+				is_selected = false
 				
-var _is_selected
-var is_selected: bool = false :
+var _is_selected: bool = false
+var is_selected: 
 	get: return _is_selected
 	set(value):
 		if _is_selected != value: # prevent signal roundtrip

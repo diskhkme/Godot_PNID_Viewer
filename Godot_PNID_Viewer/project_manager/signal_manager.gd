@@ -26,13 +26,13 @@ func _ready():
 	
 	
 func _save_selected_symbol(symbol_object: SymbolObject):
-	print(symbol_object.id, " selected")
+	#print(symbol_object.id, " selected")
 	selected_symbol = symbol_object
 	is_selected = true
 	
 	
 func _free_selected_symbol(symbol_object: SymbolObject):
-	print(symbol_object.id, " deselected")
+	#print(symbol_object.id, " deselected")
 	selected_symbol = null
 	is_selected = false
 	
