@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=3 uid="uid://dilyaefft3sd0"]
+
+[ext_resource type="Script" path="res://ui/image_viewer/symbol/symbol_selection_filter.gd" id="1_1xhn5"]
+
+[node name="SymbolSelectionFilter" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("1_1xhn5")

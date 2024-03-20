@@ -1,8 +1,8 @@
 [gd_scene load_steps=5 format=3 uid="uid://cxj66r5y818vv"]
 
-[ext_resource type="Script" path="res://image_viewer/symbol/static_symbol.gd" id="1_v27ek"]
-[ext_resource type="PackedScene" uid="uid://bwbdpb164qkuo" path="res://image_viewer/symbol/static_label.tscn" id="3_pkybf"]
-[ext_resource type="Script" path="res://image_viewer/symbol/static_symbol_draw.gd" id="4_xte3t"]
+[ext_resource type="Script" path="res://ui/image_viewer/symbol/static_symbol.gd" id="1_v27ek"]
+[ext_resource type="PackedScene" uid="uid://bwbdpb164qkuo" path="res://ui/image_viewer/symbol/static_label.tscn" id="3_pkybf"]
+[ext_resource type="Script" path="res://ui/image_viewer/symbol/static_symbol_draw.gd" id="4_xte3t"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_qaaa1"]
 size = Vector2(1, 1)

@@ -34,6 +34,9 @@ func _ready():
 	
 	
 func _input(event):
+	if ProjectManager.active_project == null:
+		return
+	
 	if event is InputEventMouse:
 		is_context_on = image_viewer_context_menu.visible or project_viewer_context_menu.visible
 		

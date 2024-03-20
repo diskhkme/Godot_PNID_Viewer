@@ -1,0 +1,43 @@
+[gd_scene load_steps=2 format=3 uid="uid://kadsves1l116"]
+
+[ext_resource type="Script" path="res://ui/toolbar.gd" id="1_5vxj8"]
+
+[node name="Toolbar" type="HBoxContainer" node_paths=PackedStringArray("add_xml_dialog", "save_img_dialog")]
+script = ExtResource("1_5vxj8")
+add_xml_dialog = NodePath("")
+save_img_dialog = NodePath("")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 2
+size_flags_horizontal = 2
+
+[node name="AddXMLButton" type="Button" parent="HBoxContainer"]
+layout_mode = 2
+text = "Add XML"
+
+[node name="UndoButton" type="Button" parent="HBoxContainer"]
+layout_mode = 2
+text = "Undo"
+
+[node name="RedoButton" type="Button" parent="HBoxContainer"]
+layout_mode = 2
+text = "Redo
+"
+
+[node name="ExportImageButton" type="Button" parent="HBoxContainer"]
+layout_mode = 2
+text = "Export Image"
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="."]
+layout_mode = 2
+size_flags_horizontal = 8
+alignment = 2
+
+[node name="Button5" type="Button" parent="HBoxContainer3"]
+layout_mode = 2
+text = "Dummy"
+
+[connection signal="pressed" from="HBoxContainer/AddXMLButton" to="." method="_on_add_xml_button_pressed"]
+[connection signal="pressed" from="HBoxContainer/UndoButton" to="." method="_on_undo_button_pressed"]
+[connection signal="pressed" from="HBoxContainer/RedoButton" to="." method="_on_redo_button_pressed"]
+[connection signal="pressed" from="HBoxContainer/ExportImageButton" to="." method="_on_export_image_button_pressed"]

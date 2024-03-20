@@ -1,0 +1,29 @@
+[gd_scene load_steps=3 format=3 uid="uid://dkh7n1euog8gl"]
+
+[ext_resource type="Script" path="res://ui/image_viewer/image_viewer.gd" id="1_de2r1"]
+[ext_resource type="Script" path="res://ui/image_viewer/image_view_camera.gd" id="4_xvf58"]
+
+[node name="ImageViewer" type="PanelContainer"]
+size_flags_horizontal = 3
+focus_mode = 1
+mouse_filter = 1
+script = ExtResource("1_de2r1")
+
+[node name="ImageExport" type="Control" parent="."]
+layout_mode = 2
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="."]
+layout_mode = 2
+stretch = true
+
+[node name="SubViewport" type="SubViewport" parent="SubViewportContainer"]
+handle_input_locally = false
+physics_object_picking = true
+size = Vector2i(2, 2)
+render_target_update_mode = 4
+
+[node name="ImageViewCamera" type="Camera2D" parent="SubViewportContainer/SubViewport"]
+script = ExtResource("4_xvf58")
+
+[connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="." to="." method="_on_mouse_exited"]

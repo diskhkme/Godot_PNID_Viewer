@@ -3,119 +3,57 @@ class_name SymbolObject
 # --------------------------------------------------------------------
 # --- Properties -----------------------------------------------------
 # --------------------------------------------------------------------
-var _id: int
-var id: int :
-	get: return _id
+var id: int 
+var type: String :  # TODO: save type and class using id
+	get: return type
 	set(value):
-		if _id != value:
-			_id = value
-			SignalManager.symbol_edited.emit(self)
-var _type
-var type: String : # TODO: save type and class using id
-	get: return _type
-	set(value):
-		if _type != value:
-			_type = value
-			if value.to_lower().contains(Config.TEXT_TYPE_NAME):
-				is_text = true
-			else:
-				is_text = false
-			SignalManager.symbol_edited.emit(self)
-var _cls
-var cls: String :
-	get: return _cls
-	set(value):
-		if _cls != value:
-			_cls = value
-			SignalManager.symbol_edited.emit(self)
-var _bndbox
-var bndbox: Vector4 :
-	get: return _bndbox
-	set(value):
-		if _bndbox != value:
-			_bndbox = value
-			SignalManager.symbol_edited.emit(self)
-var _is_large
-var is_large: bool :
-	get: return _is_large
-	set(value):
-		if _is_large != value:
-			_is_large = value
-			SignalManager.symbol_edited.emit(self)
-var _degree
-var degree: float :
-	get: return _degree
-	set(value):
-		if _degree != value:
-			_degree = value
-			SignalManager.symbol_edited.emit(self)
-var _flip
-var flip: bool :
-	get: return _flip
-	set(value):
-		if _flip != value:
-			_flip = value
-			SignalManager.symbol_edited.emit(self)
+		type = value
+		if type.to_lower().contains(Config.TEXT_TYPE_NAME):
+			is_text = true
+		else:
+			is_text = false
+var cls: String
+var bndbox: Vector4
+var is_large: bool 
+var degree: float 
+var flip: bool 
 
 var source_xml: XMLData
 var color: Color
-var is_text: bool = false :
-	get: return is_text
-
-var _removed: bool = false
-var removed:
-	get: return _removed
-	set(value):
-		if value != _removed:
-			_removed = value
-			SignalManager.symbol_edited.emit(self)
-			if _removed:
-				is_selected = false
-				
-var _is_selected: bool = false
-var is_selected: 
-	get: return _is_selected
-	set(value):
-		if _is_selected != value: # prevent signal roundtrip
-			_is_selected = value
-			if _is_selected:
-				SignalManager.symbol_selected.emit(self)
-			else:
-				SignalManager.symbol_deselected.emit(self)
-
+var is_text: bool 
 var is_dirty = false
+var removed = false
 
 # --------------------------------------------------------------------
 # --- Methods    -----------------------------------------------------
 # --------------------------------------------------------------------
 
 # TODO: strictly define constructor (prevent missing property)
-func _init():
-	_bndbox = Vector4(0,0,100,100)
-	_is_large = false
-	_degree = 0
-	_flip = false
-	_type = "None"
-	_cls = "None"
+func _init(id: int):
+	self.id = id
+	type = "None"
+	cls = "None"
+	bndbox = Vector4(0,0,100,100)
+	is_large = false
+	degree = 0
+	flip = false
 	
-	
+
 func clone():
-	# manual copy op
-	var symbol = SymbolObject.new()
-	symbol._id = _id
-	symbol._type = _type
-	symbol._cls = _cls
-	symbol._bndbox = _bndbox
-	symbol._is_large = _is_large
-	symbol._degree = _degree
-	symbol._flip = _flip
-	symbol.source_xml = source_xml
-	symbol.color = color
-	symbol.is_text = is_text
-	symbol._removed = _removed
-	symbol._is_selected = _is_selected
-	symbol.is_dirty = is_dirty
-	return symbol
+	var symbol_object = SymbolObject.new(id)
+	symbol_object.id = id
+	symbol_object.type = type
+	symbol_object.cls = cls
+	symbol_object.bndbox = bndbox
+	symbol_object.is_large = is_large
+	symbol_object.degree = degree
+	symbol_object.flip = flip
+	symbol_object.source_xml = source_xml
+	symbol_object.color = color
+	symbol_object.is_text = is_text
+	symbol_object.is_dirty = is_dirty
+	symbol_object.removed = removed
+	return symbol_object
 	
 	
 func restore(other: SymbolObject):
@@ -129,11 +67,9 @@ func restore(other: SymbolObject):
 	source_xml = other.source_xml
 	color = other.color
 	is_text = other.is_text
-	removed = other.removed
-	#is_selected = other.is_selected
-	is_selected = false
 	is_dirty = other.is_dirty
-
+	removed = other.removed
+	
 
 func get_rect() -> Rect2:
 	var width = bndbox.z-bndbox.x

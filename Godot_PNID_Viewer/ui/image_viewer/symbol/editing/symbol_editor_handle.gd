@@ -55,7 +55,7 @@ func _draw():
 		draw_rect(Rect2(-collision_area.scale*0.5, collision_area.scale), color, false, line_width/zoom_level.x)
 		
 
-func _input(event):
+func process_input(event):
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
 		if event.is_pressed():
 			if on_cursor:

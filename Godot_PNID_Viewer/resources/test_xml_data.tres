@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="XMLData" load_steps=2 format=3 uid="uid://dyrhroulggrun"]
+
+[ext_resource type="Script" path="res://project_manager/xml_data.gd" id="1_wfyax"]
+
+[resource]
+script = ExtResource("1_wfyax")
+id = 0
+filepath = "G:\\Dev\\Godot\\Projects\\Godot_PNID_Viewer\\data\\2차년도\\26071-200-M6-052-00001.xml"

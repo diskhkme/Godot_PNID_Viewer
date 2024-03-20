@@ -34,13 +34,15 @@ func reset_xml(xml_data: XMLData):
 		xml_item.set_editable(i+1, true)
 		xml_item.set_selectable(i+1, false)	
 	
+	# Color
+	var colors = xml_data.get_colors()
 	var ind = 0
-	for color in xml_data.colors.keys():
+	for color in colors:
 		xml_item.set_cell_mode(ind+4, TreeItem.CELL_MODE_ICON)
 		xml_item.set_icon_modulate(ind+4, color)
 		xml_item.set_icon(ind+4, color_icon)
 		ind += 1
-	
+		
 	xml_item.set_checked(1, xml_data.is_visible)
 	xml_item.set_checked(2, xml_data.is_selectable)
 	xml_item.set_checked(3, xml_data.is_show_label)
@@ -78,6 +80,7 @@ func _process(delta):
 		var xml_data = tree_xml_dict[xml_item]
 		if xml_item.is_checked(1) != xml_data.is_visible:
 			xml_data.is_visible = xml_item.is_checked(1)
+			SignalManager.xml_visibility_changed.emit(xml_data)
 			if xml_item.is_checked(1) == false: # if not visible, not selectable
 				xml_item.set_checked(2,false)
 				xml_item.set_editable(2,false)
@@ -91,11 +94,13 @@ func _process(delta):
 			if !xml_item.is_checked(1): # not allow selectable if not visible
 				xml_item.set_checked(2,false)
 			xml_data.is_selectable = xml_item.is_checked(2)
+			SignalManager.xml_selectability_changed.emit(xml_data)
 			
 		if xml_item.is_checked(3) != xml_data.is_show_label:
 			if !xml_item.is_checked(1): # not allow selectable if not visible
 				xml_item.set_checked(3,false)
 			xml_data.is_show_label = xml_item.is_checked(3)
+			SignalManager.xml_label_visibility_changed.emit(xml_data)
 		
 
 func _on_tree_item_selected():

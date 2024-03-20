@@ -15,12 +15,6 @@ func set_current(active_project_xml_dict): # key: xml_data, value: symbol scene
 		
 
 func process_input(event):
-	if ProjectManager.active_project == null:
-		return
-	
-	if SignalManager.is_selected == true:
-		return
-	
 	if event is InputEventMouseButton and (event.button_index == MOUSE_BUTTON_LEFT or event.button_index == MOUSE_BUTTON_RIGHT):
 		if !event.is_pressed():
 			var candidates: Array[StaticSymbol] = []
@@ -28,19 +22,13 @@ func process_input(event):
 				if scene.xml_data.is_selectable:
 					candidates.append_array(scene.selected_candidate)
 			
+			for scene in active_xml_scenes: 
+				scene.clear_candidates() # direct call
+
 			# get_global_mouse_position() returns 2d world coord position if it is in subviewport
 			var mouse_pos = get_global_mouse_position()
-			var selected = decide_selected(mouse_pos, candidates)
-			if selected == null:
-				if last_selected != null:
-					last_selected.symbol_object.is_selected = false
-			else:
-				selected.symbol_object.is_selected = true
-				last_selected = selected
-				
-			for scene in active_xml_scenes: # direct call
-				scene.clear_candidates()
-			
+			return decide_selected(mouse_pos, candidates)
+
 			
 # Decide the symbol that has closest upper edge
 func decide_selected(mouse_pos: Vector2, selected_candidate: Array[StaticSymbol]):
@@ -64,7 +52,7 @@ func decide_selected(mouse_pos: Vector2, selected_candidate: Array[StaticSymbol]
 			min_dist = dist
 			min_object = candidate
 			
-	return min_object
+	return min_object.symbol_object
 	
 	
 func line_point_dist(p:Vector2, l1: Vector2, l2: Vector2):

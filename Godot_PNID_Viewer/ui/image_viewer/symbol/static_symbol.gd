@@ -39,7 +39,7 @@ func update_symbol():
 	var width = Config.DEFAULT_LINE_WIDTH
 	static_symbol_draw.global_position = symbol_center
 	static_symbol_draw.rotation = deg_to_rad(symbol_object.get_godot_degree())
-	static_symbol_draw.update_draw(size,color,width, symbol_object.removed)
+	static_symbol_draw.update_draw(size,color,width)
 	
 
 func _input(event):

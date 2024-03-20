@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://fih1la8ol5eg"]
 
-[ext_resource type="Script" path="res://image_viewer/symbol/editing/symbol_editor_controller.gd" id="1_c6i15"]
-[ext_resource type="PackedScene" uid="uid://cbkdst3f4uqnj" path="res://image_viewer/symbol/editing/symbol_editor_handle.tscn" id="2_qkxtm"]
+[ext_resource type="Script" path="res://ui/image_viewer/symbol/editing/symbol_editor_controller.gd" id="1_c6i15"]
+[ext_resource type="PackedScene" uid="uid://cbkdst3f4uqnj" path="res://ui/image_viewer/symbol/editing/symbol_editor_handle.tscn" id="2_qkxtm"]
 
 [node name="SymbolEditorController" type="Node2D"]
 script = ExtResource("1_c6i15")

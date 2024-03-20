@@ -11,12 +11,13 @@ var xml_items_dict = {} # xml_data : tree_item
 var symbol_items_dict = {} # symbol_object: tree_item
 var root
 var is_mouse_on = false
+var selected_from_tree: bool = false
 
 const COLUMN_COUNT = 8
 
 func _ready():
 	reset_tree()
-	SignalManager.symbol_selected.connect(_select_symbol)
+	SignalManager.symbol_selected_from_image.connect(_select_symbol)
 	SignalManager.symbol_deselected.connect(_deselect_symbol)
 	SignalManager.symbol_edited.connect(_edit_symbol)
 	SignalManager.symbol_added.connect(_add_symbol)
@@ -109,7 +110,7 @@ func fill_treeitem(symbol_child: TreeItem, symbol_object: SymbolObject):
 func _on_tree_item_selected():
 	var selected_item = tree.get_selected()
 	var selected_symbol = symbol_items_dict.keys().filter(func(a): return symbol_items_dict[a] == selected_item)
-	selected_symbol[0].is_selected = true
+	SignalManager.symbol_selected_from_tree.emit(selected_symbol[0])
 	
 
 func _input(event):
@@ -159,13 +160,13 @@ func _on_mouse_exited():
 
 			
 #-------------------------------------------------------------
-# Received Evnet Handle---------------------------------------
+# Received Event Handle---------------------------------------
 #-------------------------------------------------------------			
 func _select_symbol(symbol_object: SymbolObject):
 	var symbol_item = symbol_items_dict[symbol_object]
 	if not symbol_item.is_selected(0):
 		symbol_item.select(0) 
-		tree.scroll_to_item(symbol_item, true) 
+		tree.scroll_to_item(symbol_item, true)
 	
 	
 func _deselect_symbol(symbol_object: SymbolObject):
@@ -191,4 +192,3 @@ func _change_selectability(xml_data: XMLData):
 	for symbol_object in xml_data.symbol_objects:
 		for i in range(COLUMN_COUNT):
 			symbol_items_dict[symbol_object].set_selectable(i,xml_data.is_selectable)
-

@@ -35,7 +35,7 @@ func initialize(id, img_filename, img, num_xml, xml_filenames, xml_strs):
 	xml_datas.clear()
 	for i in range(num_xml):
 		var xml_data = XMLData.new()
-		xml_data.initialize_from_xml_str(xml_datas.size(), xml_filenames[i], xml_strs[i].to_utf8_buffer())
+		xml_data.initialize_from_string(xml_datas.size(), xml_filenames[i], xml_strs[i])
 		xml_datas.push_back(xml_data)
 			
 	return true
@@ -57,9 +57,13 @@ func add_xml_from_data(xml_data: XMLData):
 func add_xml_from_file(num_xml, xml_filenames, xml_strs):
 	for i in range(num_xml):
 		var xml_data = XMLData.new()
-		xml_data.initialize_from_xml_str(xml_datas.size(), xml_filenames[i], xml_strs[i].to_utf8_buffer())
+		xml_data.initialize_from_string(xml_datas.size(), xml_filenames[i], xml_strs[i])
 		xml_datas.push_back(xml_data)
 		SignalManager.xml_added.emit(xml_data)
+		
+# --------------------------------------------------------------------
+# ---Undo/Redo--------------------------------------------------------
+# --------------------------------------------------------------------
 		
 # in case of edit symbol, editing is already done by edit controller
 # TODO: consider change actual edit action happens here
@@ -85,21 +89,15 @@ func _on_symbol_edit_ended(symbol_object: SymbolObject):
 		snapshot_start = null
 		
 	
-	
 func _on_symbol_edited(symbol_object: SymbolObject):
-	if snapshot_start == null:
-		is_symbol_actually_edited = false
-		return
-	# in snapshot, clone symbol is saved so check by id and source xml
-	if snapshot_start.id == symbol_object.id and snapshot_start.source_xml == symbol_object.source_xml:
-		# if stacked symbol is actually edited
-		is_symbol_actually_edited = true
+	is_symbol_actually_edited = true
 		
 		
 func do_symbol_editing():
 	var objects = snapshot_array[current_action_id]
 	objects[0].restore(objects[2])
 	current_action_id += 1
+	SignalManager.symbol_edited.emit(objects[0])
 	print("do edit action ", objects[0].id)
 	
 		
@@ -107,6 +105,7 @@ func undo_symbol_editing():
 	current_action_id -= 1
 	var objects = snapshot_array[current_action_id]
 	objects[0].restore(objects[1])
+	SignalManager.symbol_edited.emit(objects[0])
 	print("undo edit action ", objects[0].id)
 	
 # in case of add symbol, actual adding happens here

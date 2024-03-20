@@ -2,23 +2,21 @@
 
 [ext_resource type="Script" path="res://ui/main_menu.gd" id="1_f2d2a"]
 
-[node name="MainMenu" type="HBoxContainer"]
-offset_right = 40.0
-offset_bottom = 40.0
+[node name="MainMenu" type="HBoxContainer" node_paths=PackedStringArray("new_project_dialog")]
 script = ExtResource("1_f2d2a")
+new_project_dialog = NodePath("")
 
 [node name="Left" type="HBoxContainer" parent="."]
 layout_mode = 2
-size_flags_horizontal = 2
+size_flags_horizontal = 3
 
 [node name="OpenFilesButton" type="Button" parent="Left"]
 layout_mode = 2
-text = "Open File(s)"
+text = "New Project"
 
 [node name="TabBar" type="TabBar" parent="Left"]
 layout_mode = 2
-tab_count = 1
-tab_0/title = "untitled(*)"
+size_flags_horizontal = 3
 
 [node name="Right" type="HBoxContainer" parent="."]
 layout_mode = 2
@@ -26,7 +24,10 @@ size_flags_horizontal = 8
 alignment = 2
 
 [node name="Button" type="Button" parent="Right"]
+visible = false
 layout_mode = 2
 text = "dumb"
 
 [connection signal="pressed" from="Left/OpenFilesButton" to="." method="_on_open_files_button_pressed"]
+[connection signal="tab_changed" from="Left/TabBar" to="." method="_on_tab_bar_tab_changed"]
+[connection signal="tab_close_pressed" from="Left/TabBar" to="." method="_on_tab_bar_tab_close_pressed"]

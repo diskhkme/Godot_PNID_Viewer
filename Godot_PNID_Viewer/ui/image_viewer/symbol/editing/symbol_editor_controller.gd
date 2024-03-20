@@ -13,10 +13,10 @@ var rot_start_vec: Vector2
 var xml_id: int
 var symbol_id: int
 var target_symbol: SymbolObject
+var is_actually_edited = false
 
 func _ready():
 	add_to_group("draw_group")
-	SignalManager.symbol_selected.connect(_initialize_editor)
 	
 	for handle in handles:
 		if handle.type == Handle.TYPE.ROTATE or handle.scale_type == Handle.TYPE.TRANSLATE:
@@ -30,6 +30,19 @@ func _ready():
 		else:
 			handle.set_initial_handle_size(Vector2.ONE * Config.EDITOR_HANDLE_SIZE)
 			
+
+func initialize(symbol_object: SymbolObject):
+	target_symbol = symbol_object
+	var symbol_position = target_symbol.get_center()
+	var symbol_size = target_symbol.get_size()
+	var symbol_angle = deg_to_rad(target_symbol.get_godot_degree())
+	center_node.global_position = symbol_position
+	center_node.scale = symbol_size
+	center_node.rotation = symbol_angle
+	
+	update_handle_positions()
+	is_actually_edited = false
+
 
 func on_redraw_requested():
 	update_handle_positions()
@@ -54,33 +67,24 @@ func _draw():
 	draw_line(bl_pos, tl_pos, color, (line_width/zoom_level.x))
 	
 	
-func _initialize_editor(symbol_object: SymbolObject):
-	target_symbol = symbol_object
-	var symbol_position = target_symbol.get_center()
-	var symbol_size = target_symbol.get_size()
-	var symbol_angle = deg_to_rad(target_symbol.get_godot_degree())
-	center_node.global_position = symbol_position
-	center_node.scale = symbol_size
-	center_node.rotation = symbol_angle
-	
-	update_handle_positions()
-	
-	
 func get_handle(handle_type: Handle.TYPE, scale_type: Handle.SCALE_TYPE):
 	var result = handles.filter(func(a): return a.type == handle_type and a.scale_type == scale_type)
 	return result[0]
 	
 
-func _input(event):
+func process_input(event) -> bool:
+	for handle in handles:
+		handle.process_input(event)
+				
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
 		if event.is_pressed():
-			# if mouse pressed on outside of handles, end editing
-			for handle in handles:
+			for handle in handles: # is editing click
 				if handle.on_cursor == true:
-					return
-					
-			if target_symbol:
-				target_symbol.is_selected = false
+					return true
+			# if mouse pressed on outside of handles, end editing					
+			return false
+			
+	return true
 				
 				
 func update_handle_positions():
@@ -149,6 +153,7 @@ func on_indicator_moved(target: Handle, mouse_pos: Vector2, mouse_pos_delta: Vec
 		
 	update_handle_positions()
 	update_symbol_box()
+	is_actually_edited = true
 
 
 func update_symbol_box():

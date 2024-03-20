@@ -1,11 +1,11 @@
 [gd_scene load_steps=2 format=3 uid="uid://cypy5mb0rfmk7"]
 
-[ext_resource type="Script" path="res://ui/project_viewer.gd" id="1_2c75l"]
+[ext_resource type="Script" path="res://ui/project_viewer/project_viewer.gd" id="1_h42f5"]
 
 [node name="ProjectViewer" type="PanelContainer"]
 offset_right = 40.0
 offset_bottom = 40.0
-script = ExtResource("1_2c75l")
+script = ExtResource("1_h42f5")
 
 [node name="Tree" type="Tree" parent="."]
 layout_mode = 2

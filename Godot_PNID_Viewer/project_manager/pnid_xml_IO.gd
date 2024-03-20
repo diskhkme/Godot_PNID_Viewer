@@ -29,39 +29,37 @@ static func parse_pnid_xml_from_byte_array(contents: PackedByteArray) -> Array[S
 	var parser = XMLParser.new()
 	parser.open_buffer(contents)
 	
-	var symbol_object = SymbolObject.new()
+	var id = 0
+	var symbol_object
 	while parser.read() != ERR_FILE_EOF:
 		if parser.get_node_type() == XMLParser.NODE_ELEMENT:
 			var node_name = parser.get_node_name()
 			
 			match node_name:
 				Config.OBJECT_TAG_NAME:
-					symbol_object = SymbolObject.new()
+					symbol_object = SymbolObject.new(id)
 				"type":
-					symbol_object._type = get_current_node_data(parser)
+					symbol_object.type = get_current_node_data(parser)
 				"class":
-					symbol_object._cls = get_current_node_data(parser)
+					symbol_object.cls = get_current_node_data(parser)
 				"bndbox":
-					symbol_object._bndbox = Vector4()
+					symbol_object.bndbox = Vector4()
 				"xmin":
-					symbol_object._bndbox.x = get_current_node_data(parser).to_float()
+					symbol_object.bndbox.x = get_current_node_data(parser).to_float()
 				"ymin":
-					symbol_object._bndbox.y = get_current_node_data(parser).to_float()
+					symbol_object.bndbox.y = get_current_node_data(parser).to_float()
 				"xmax":
-					symbol_object._bndbox.z = get_current_node_data(parser).to_float()
+					symbol_object.bndbox.z = get_current_node_data(parser).to_float()
 				"ymax":
-					symbol_object._bndbox.w = get_current_node_data(parser).to_float()
+					symbol_object.bndbox.w = get_current_node_data(parser).to_float()
 				"isLarge":
-					symbol_object._is_large = yes_no_to_bool(get_current_node_data(parser))
+					symbol_object.is_large = yes_no_to_bool(get_current_node_data(parser))
 				"degree":
-					symbol_object._degree = get_current_node_data(parser).to_float()
+					symbol_object.degree = get_current_node_data(parser).to_float()
 				"flip":
-					symbol_object._flip = yes_no_to_bool(get_current_node_data(parser))
-					
-					symbol_object._id = symbol_objects.size()
-					if symbol_object._type.to_lower().contains(Config.TEXT_TYPE_NAME):
-						symbol_object.is_text = true
+					symbol_object.flip = yes_no_to_bool(get_current_node_data(parser))
 					symbol_objects.push_back(symbol_object)
+					id += 1
 					
 	return symbol_objects
 

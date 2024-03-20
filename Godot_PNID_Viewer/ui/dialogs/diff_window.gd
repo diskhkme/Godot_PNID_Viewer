@@ -58,7 +58,7 @@ func _on_ok_button_pressed():
 	var new_name = diff_name.text
 	
 	var xml_data = XMLData.new()
-	xml_data.initialize_from_symbols(new_id, new_name, result)
+	xml_data.initialize_from_diff_symbols(new_id, new_name, result)
 	ProjectManager.active_project.add_xml_from_data(xml_data)
 	visible = false
 	progress_bar.visible = false
