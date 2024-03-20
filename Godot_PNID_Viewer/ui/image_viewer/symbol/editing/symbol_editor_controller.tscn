@@ -4,6 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://cbkdst3f4uqnj" path="res://ui/image_viewer/symbol/editing/symbol_editor_handle.tscn" id="2_qkxtm"]
 
 [node name="SymbolEditorController" type="Node2D"]
+z_index = 2
 script = ExtResource("1_c6i15")
 
 [node name="SymbolRect" type="Node2D" parent="."]

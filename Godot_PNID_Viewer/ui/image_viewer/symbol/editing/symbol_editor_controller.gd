@@ -1,7 +1,7 @@
 # Symbol editor controller
 # change transform of "Center" node, followed by handles
 
-
+class_name SymbolEditorController
 extends Node2D
 
 @onready var handles = [$TL_Handle, $TR_Handle, $BL_Handle, $BR_Handle, $Rot_Handle, $Translate_Handle]

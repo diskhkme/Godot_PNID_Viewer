@@ -2,7 +2,7 @@
 # display symbols with "draw" if not selected
 
 extends Node2D
-class_name SymbolScene
+class_name XMLScene
 
 const static_symbol: PackedScene = preload("res://ui/image_viewer/symbol/static_symbol.tscn")
 
