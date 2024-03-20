@@ -31,6 +31,9 @@ func _ready():
 	SignalManager.xml_added.connect(_add_xml_scene)
 	SignalManager.screenshot_requested.connect(_on_screenshot_requested)
 	
+	
+func get_camera():
+	return image_view_camera
 
 func process_input(event):
 	image_view_camera.process_input(event)

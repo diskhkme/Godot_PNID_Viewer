@@ -14,6 +14,7 @@ signal symbol_deselected(symbol_object: SymbolObject) # deselected == edit end
 
 signal symbol_edited(symbol_object: SymbolObject)
 signal symbol_added(symbol_object: SymbolObject)
+signal symbol_removed(symbol_object: SymbolObject)
 
 signal xml_visibility_changed(xml_data: XMLData)
 signal xml_selectability_changed(xml_data: XMLData)

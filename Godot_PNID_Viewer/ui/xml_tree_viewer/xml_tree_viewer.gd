@@ -21,6 +21,7 @@ func _ready():
 	SignalManager.symbol_deselected.connect(_deselect_symbol)
 	SignalManager.symbol_edited.connect(_edit_symbol)
 	SignalManager.symbol_added.connect(_add_symbol)
+	SignalManager.symbol_removed.connect(_remove_symbol)
 	
 	SignalManager.xml_visibility_changed.connect(_change_visibility)
 	SignalManager.xml_selectability_changed.connect(_change_selectability)
@@ -177,6 +178,12 @@ func _add_symbol(symbol_object: SymbolObject):
 	var xml_tree = xml_items_dict[symbol_object.source_xml]
 	var symbol_item = add_symbol_on_tree(xml_tree, symbol_object)
 	symbol_items_dict[symbol_object] = symbol_item
+	
+	
+func _remove_symbol(symbol_object: SymbolObject):
+	var symbol_item = symbol_items_dict[symbol_object]
+	tree.remove_child(symbol_item)
+	symbol_item.free()
 
 
 func _edit_symbol(symbol_object: SymbolObject):

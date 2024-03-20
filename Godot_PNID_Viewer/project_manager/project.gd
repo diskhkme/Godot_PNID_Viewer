@@ -19,13 +19,6 @@ var img_filename: String
 var img: Image
 var xml_datas: Array[XMLData]
 
-func _ready():
-	SignalManager.symbol_selected.connect(_on_symbol_edit_started)
-	SignalManager.symbol_edited.connect(_on_symbol_edited)
-	SignalManager.symbol_deselected.connect(_on_symbol_edit_ended)
-	SignalManager.symbol_added.connect(_on_symbol_added)
-
-
 func initialize(id, img_filename, img, num_xml, xml_filenames, xml_strs):
 	self.id = id
 	self.img_filename = img_filename
@@ -67,12 +60,12 @@ func add_xml_from_file(num_xml, xml_filenames, xml_strs):
 		
 # in case of edit symbol, editing is already done by edit controller
 # TODO: consider change actual edit action happens here
-func _on_symbol_edit_started(symbol_object: SymbolObject):
+func symbol_edit_started(symbol_object: SymbolObject):
 	snapshot_start = symbol_object.clone()
 	is_symbol_actually_edited = false
 	
 	
-func _on_symbol_edit_ended(symbol_object: SymbolObject):
+func symbol_edit_ended(symbol_object: SymbolObject):
 	if is_symbol_actually_edited:
 		snapshot_src = symbol_object
 		snapshot_end = symbol_object.clone()
@@ -89,7 +82,7 @@ func _on_symbol_edit_ended(symbol_object: SymbolObject):
 		snapshot_start = null
 		
 	
-func _on_symbol_edited(symbol_object: SymbolObject):
+func symbol_edited(symbol_object: SymbolObject):
 	is_symbol_actually_edited = true
 		
 		
@@ -109,7 +102,7 @@ func undo_symbol_editing():
 	print("undo edit action ", objects[0].id)
 	
 # in case of add symbol, actual adding happens here
-func _on_symbol_added(new_symbol: SymbolObject):
+func symbol_added(new_symbol: SymbolObject):
 	add_symbol_ref = new_symbol
 	undo_redo.create_action("Add symbol")
 	undo_redo.add_do_method(do_symbol_add)
@@ -119,14 +112,14 @@ func _on_symbol_added(new_symbol: SymbolObject):
 	
 func do_symbol_add():
 	print("do add action ", add_symbol_ref.id)
-	add_symbol_stack.push_back(add_symbol_ref)
 	xml_datas[0].symbol_objects.push_back(add_symbol_ref)
+	SignalManager.symbol_added.emit(add_symbol_ref)
 	add_symbol_ref = null
 	
 	
 func undo_symbol_add():
-	var symbol = add_symbol_stack.pop_back()
-	symbol.removed = true
+	var symbol = xml_datas[0].symbol_objects.pop_back()
+	SignalManager.symbol_removed.emit(add_symbol_ref)
 	print("undo add action ", symbol.id)
 
 

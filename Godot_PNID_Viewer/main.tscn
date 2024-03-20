@@ -129,7 +129,8 @@ visible = false
 layout_mode = 3
 anchors_preset = 0
 
-[node name="ImageViewContextMenu" parent="CanvasLayer/ContextMenus" instance=ExtResource("12_p38sp")]
+[node name="ImageViewContextMenu" parent="CanvasLayer/ContextMenus" node_paths=PackedStringArray("image_view") instance=ExtResource("12_p38sp")]
+image_view = NodePath("../../MainWindow/Middle/ImageViewer")
 
 [node name="ProjectViewContextMenu" parent="CanvasLayer/ContextMenus" node_paths=PackedStringArray("project_viewer", "save_file_dialog", "diff_dialog") instance=ExtResource("13_sobsl")]
 visible = false

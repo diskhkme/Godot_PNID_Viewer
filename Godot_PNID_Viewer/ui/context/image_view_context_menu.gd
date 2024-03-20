@@ -2,7 +2,7 @@
 
 extends Control
 
-@export var image_view_camera: ImageViewCamera
+@export var image_view: ImageViewer
 
 @onready var add_button = $PanelContainer/VBoxContainer/AddButton
 @onready var remove_button = $PanelContainer/VBoxContainer/RemoveButton
@@ -41,8 +41,8 @@ func close():
 	
 
 func _on_add_button_pressed():
-	var pos_in_image = image_view_camera.get_pixel_from_image_canvas(position)
-	var new_symbol = ProjectManager.active_project.xml_datas[0].add_new_symbol(pos_in_image) # TODO: how to set target xml?
+	var pos_in_image = image_view.get_camera().get_pixel_from_image_canvas(position)
+	var new_symbol = ProjectManager.active_project.xml_datas[0].add_symbol(pos_in_image) # TODO: how to set target xml?
 	close()
 
 
