@@ -113,7 +113,6 @@ func symbol_added(new_symbol: SymbolObject):
 func do_symbol_add():
 	print("do add action ", add_symbol_ref.id)
 	xml_datas[0].symbol_objects.push_back(add_symbol_ref)
-	SignalManager.symbol_added.emit(add_symbol_ref)
 	add_symbol_ref = null
 	
 	
