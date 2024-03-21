@@ -33,10 +33,6 @@ var _active_xml_nodes
 
 var selected_symbol
 
-func _ready():
-	_image_view_camera.zoom_changed.connect(redraw)
-
-
 func use_project(project: Project):
 	if not _node_table.has(project): # add new nodes
 		var node_ref = NodeRef.new()
@@ -81,7 +77,6 @@ func process_input(event):
 		var selected = _active_selection_filter.process_input(event) 
 		if selected != null:
 			symbol_selected.emit(selected)
-			_active_selection_filter.clear_candidates()
 			_process_symbol_selected(selected)
 			
 			
@@ -89,12 +84,14 @@ func _process_symbol_selected(selected):
 	_active_editor_control.initialize(selected)
 	_active_editor_control.visible = true
 	_active_xml_nodes[selected.source_xml].hide_symbol_node(selected)
+	_active_selection_filter.clear_candidates()
 	selected_symbol = selected
 	
 	
 func _process_symbol_deselected():
 	_active_editor_control.visible = false
 	_active_xml_nodes[selected_symbol.source_xml].show_symbol_node(selected_symbol)
+	_active_selection_filter.clear_candidates()
 	selected_symbol = null
 			
 
@@ -152,12 +149,6 @@ func apply_symbol_edit(symbol_object: SymbolObject):
 	_active_xml_nodes[symbol_object.source_xml].apply_symbol_edit(symbol_object)
 	
 	
-func redraw():
-	for xml_scene in _active_xml_nodes.values():
-		for static_symbol in xml_scene.get_children():
-			static_symbol.redraw()
-
-
 #func _update_xml_visibility(xml_data: XMLData):
 	#active_xml_scene[xml_data].visible = xml_data.is_visible
 

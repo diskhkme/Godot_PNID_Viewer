@@ -21,11 +21,12 @@ func process_input(event):
 			if event.button_index == MOUSE_BUTTON_WHEEL_UP:
 				var target_zoom = self.zoom * Config.CAMERA_ZOOM_TICK
 				self.zoom += target_zoom
-				zoom_changed.emit()
+				get_tree().call_group("draw_group", "redraw")
 			if event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
 				var target_zoom = self.zoom * Config.CAMERA_ZOOM_TICK
 				self.zoom -= target_zoom
-				zoom_changed.emit()
+				get_tree().call_group("draw_group", "redraw")
+
 
 	if event is InputEventMouseMotion and is_dragging:
 		self.global_translate((-event.relative)/self.zoom)

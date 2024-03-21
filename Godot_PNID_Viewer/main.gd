@@ -158,20 +158,20 @@ func _on_symbol_deselected(symbol_object: SymbolObject, edited: bool):
 	if edited:
 		ProjectManager.active_project.symbol_edited(symbol_object)
 		_image_viewer.apply_symbol_edit(symbol_object)
-		_image_viewer.redraw()
+		get_tree().call_group("draw_group", "redraw")
 	else:
 		ProjectManager.active_project.symbol_edit_canceled(symbol_object)
 	
 	
 func _on_undo_action():
 	ProjectManager.active_project.undo_redo.undo()
-	_image_viewer.redraw()
+	get_tree().call_group("draw_group", "redraw")
 	
 	
 	
 func _on_redo_action():
 	ProjectManager.active_project.undo_redo.redo()
-	_image_viewer.redraw()
+	get_tree().call_group("draw_group", "redraw")
 
 	
 

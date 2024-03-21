@@ -16,6 +16,7 @@ var symbol_object: SymbolObject
 var on_cursor: bool = false
 
 func _ready():
+	add_to_group("draw_group")
 	update_symbol()
 	static_label.update_label(symbol_object)
 	

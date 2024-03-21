@@ -59,15 +59,18 @@ func add_xmls(num_xml, xml_filenames, xml_strs):
 # in case of edit symbol, editing is already done by edit controller
 # TODO: consider change actual edit action happens here
 func symbol_edit_started(symbol_object: SymbolObject):
-	print("add stack")
+	print("add stack ", symbol_object.id)
 	var snapshot = Snapshot.new()
 	snapshot.ref = symbol_object
 	snapshot.before = symbol_object.clone()
-	snapshot_stack.push_back(snapshot)
+	if current_action_id >= snapshot_stack.size():
+		snapshot_stack.push_back(snapshot)
+	else:
+		snapshot_stack[current_action_id] = snapshot
 	
 	
 func symbol_edited(symbol_object: SymbolObject):
-	snapshot_stack.back().after = symbol_object.clone()
+	snapshot_stack[current_action_id].after = symbol_object.clone()
 	undo_redo.create_action("Edit symbol")
 	undo_redo.add_do_method(do_symbol_edit)
 	undo_redo.add_undo_method(undo_symbol_edit)
@@ -75,6 +78,7 @@ func symbol_edited(symbol_object: SymbolObject):
 	
 	
 func symbol_edit_canceled(symbol_object: SymbolObject):
+	print("canceled ", symbol_object.id)
 	snapshot_stack.pop_back()
 		
 		
