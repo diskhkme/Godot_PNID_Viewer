@@ -2,9 +2,8 @@
 
 [ext_resource type="Script" path="res://ui/main_menu.gd" id="1_f2d2a"]
 
-[node name="MainMenu" type="HBoxContainer" node_paths=PackedStringArray("new_project_dialog")]
+[node name="MainMenu" type="HBoxContainer"]
 script = ExtResource("1_f2d2a")
-new_project_dialog = NodePath("")
 
 [node name="Left" type="HBoxContainer" parent="."]
 layout_mode = 2
@@ -17,6 +16,7 @@ text = "New Project"
 [node name="TabBar" type="TabBar" parent="Left"]
 layout_mode = 2
 size_flags_horizontal = 3
+tab_close_display_policy = 2
 
 [node name="Right" type="HBoxContainer" parent="."]
 layout_mode = 2

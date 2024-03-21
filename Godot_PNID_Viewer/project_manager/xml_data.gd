@@ -14,7 +14,11 @@ func initialize_from_string(id:int, xml_filename:String, xml_str: PackedByteArra
 	self.id = id
 	self.filename = xml_filename
 	symbol_objects = PnidXmlIo.parse_pnid_xml_from_byte_array(xml_str)
-	symbol_objects.map(func(s): s.color = Config.SYMBOL_COLOR_PRESET[id])
+	if id < Config.SYMBOL_COLOR_PRESET.size():
+		symbol_objects.map(func(s): s.color = Config.SYMBOL_COLOR_PRESET[id])
+	else:
+		var rand_col = Color(randf(), randf(), randf(), 1)
+		symbol_objects.map(func(s): s.color = rand_col)
 	symbol_objects.map(func(s): s.source_xml = self)
 	var is_sane = check_sanity(symbol_objects) # TODO: what to do if check sanity failes?
 	

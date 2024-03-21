@@ -3,26 +3,22 @@ extends Node
 signal project_files_opened(args: Variant)
 signal xml_files_opened(args: Variant)
 
-var project_files_read_callback = JavaScriptBridge.create_callback(project_files_load_from_web)
-var xml_files_read_callback = JavaScriptBridge.create_callback(xml_files_load_from_web)
-
 # In web build, callback of getFile(implemented in "header include" of build setting) is
 # designated to webFileLoadCallback, which is actually a FileParser() implemented as GDScript
 # The returns of callback is [img_filename, img, xml_filenames, xml_buffers], which is also
 # implemented in getFile
 
-var buffer
-
-var console = JavaScriptBridge.get_interface("console")
+var files_read_callback = JavaScriptBridge.create_callback(project_files_load_from_web)
+var xml_files_read_callback = JavaScriptBridge.create_callback(xml_files_load_from_web)
 
 func _ready():
 	if OS.get_name() == "Web":
 		var window = JavaScriptBridge.get_interface("window")
-		window.getProjectFiles(project_files_read_callback)
+		window.getProjectFiles(files_read_callback)
 		window.getXMLFiles(xml_files_read_callback)
 		window.onload()
 		
-		
+
 func project_files_load_from_paths(paths):
 	print("Data load from path")
 	var xml_filepaths = Util.get_xml_paths(paths)
@@ -30,13 +26,13 @@ func project_files_load_from_paths(paths):
 	
 	var img_filename = img_filepath.get_file()
 	var xml_filenames = []
-	var xml_buffers = []
+	var xml_strs = []
 	var img
 	
 	for xml_filepath in xml_filepaths:
 		xml_filenames.push_back(xml_filepath.get_file())
-		var xml_buffer = FileAccess.get_file_as_string(xml_filepath).to_utf8_buffer()
-		xml_buffers.push_back(xml_buffer)
+		var xml_str = FileAccess.get_file_as_string(xml_filepath).to_utf8_buffer()
+		xml_strs.push_back(xml_str)
 		
 	img = Image.new()
 	var err = img.load(img_filepath)
@@ -44,8 +40,8 @@ func project_files_load_from_paths(paths):
 	if err != OK:
 		print("image loading error!")
 		
-	return [img_filename, img, xml_filenames.size(), xml_filenames, xml_buffers]
-
+	project_files_opened.emit([img_filename, img, xml_filenames.size(), xml_filenames, xml_strs])
+		
 
 func project_files_load_from_web(args):
 	# args = [image_filename, image(base64str), num_xml, xml_filenames, xml_strs]
@@ -86,7 +82,7 @@ func xml_files_load_from_paths(paths):
 		var xml_buffer = FileAccess.get_file_as_string(xml_filepath).to_utf8_buffer()
 		xml_buffers.push_back(xml_buffer)
 		
-	return [xml_filenames.size(), xml_filenames, xml_buffers]
+	xml_files_opened.emit([xml_filenames.size(), xml_filenames, xml_buffers])
 	
 
 func parse_symbol_type_to_dict(symbol_type_str: String):

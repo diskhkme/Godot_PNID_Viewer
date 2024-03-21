@@ -2,10 +2,8 @@
 
 [ext_resource type="Script" path="res://ui/toolbar.gd" id="1_5vxj8"]
 
-[node name="Toolbar" type="HBoxContainer" node_paths=PackedStringArray("add_xml_dialog", "save_img_dialog")]
+[node name="Toolbar" type="HBoxContainer"]
 script = ExtResource("1_5vxj8")
-add_xml_dialog = NodePath("")
-save_img_dialog = NodePath("")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
 layout_mode = 2

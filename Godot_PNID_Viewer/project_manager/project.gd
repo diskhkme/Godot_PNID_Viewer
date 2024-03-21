@@ -13,7 +13,7 @@ var current_action_id: int = 0
 var add_symbol_stack: Array
 var add_symbol_ref
 
-var loaded: bool = false
+var dirty: bool = false
 
 var img_filename: String
 var img: Image
@@ -41,18 +41,13 @@ func get_xml_id_from_filename(filename: String) -> int:
 			
 	return -1
 
-
-func add_xml_from_data(xml_data: XMLData):
-	xml_datas.push_back(xml_data)
-	SignalManager.xml_added.emit(xml_data)
 	
-	
-func add_xml_from_file(num_xml, xml_filenames, xml_strs):
+func add_xmls(num_xml, xml_filenames, xml_strs):
 	for i in range(num_xml):
 		var xml_data = XMLData.new()
 		xml_data.initialize_from_string(xml_datas.size(), xml_filenames[i], xml_strs[i])
 		xml_datas.push_back(xml_data)
-		SignalManager.xml_added.emit(xml_data)
+		
 		
 # --------------------------------------------------------------------
 # ---Undo/Redo--------------------------------------------------------

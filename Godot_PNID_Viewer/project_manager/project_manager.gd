@@ -18,14 +18,8 @@ func _ready():
 func add_project(args: Variant) -> Project:
 	var project = Project.new() as Project
 	add_child(project)
-	
-	var data
-	if OS.get_name() == "Web":
-		data = args
-	if OS.get_name() == "Windows":
-		data = DataLoader.project_files_load_from_paths(args)
 		
-	if project.initialize(open_projects.size(), data[0], data[1], data[2], data[3], data[4]) == true:
+	if project.initialize(open_projects.size(), args[0], args[1], args[2], args[3], args[4]) == true:
 		open_projects.append(project)
 	else:
 		print("project init failed")
@@ -34,11 +28,15 @@ func add_project(args: Variant) -> Project:
 	active_project = project # 새로 추가된 project를 active로 하는 것이 default
 	return project
 	
+	
+func close_project(project: Project):
+	open_projects.erase(project)
+	project.free()
+	
 
-func make_project_active(project: Project) -> void:
+func make_project_active(project: Project):
 	active_project = project
-	# end on-going process
-
+	
 
 func is_symbol_type_text(index: int):
 	if symbol_type_set.keys()[index] == Config.TEXT_TYPE_NAME:

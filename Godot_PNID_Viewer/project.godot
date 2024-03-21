@@ -20,10 +20,10 @@ config/icon="res://icon.svg"
 
 ProjectManager="*res://project_manager/project_manager.gd"
 Config="*res://config.gd"
-DataLoader="*res://project_manager/data_loader.gd"
 SymbolTypeClassDef="*res://symbol_type_class_def.gd"
 SignalManager="*res://project_manager/signal_manager.gd"
 DiffEngine="*res://project_manager/diff_engine.gd"
+DataLoader="*res://project_manager/data_loader.gd"
 
 [rendering]
 

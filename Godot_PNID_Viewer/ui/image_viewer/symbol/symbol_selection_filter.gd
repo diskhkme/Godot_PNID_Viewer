@@ -7,22 +7,22 @@ class_name SymbolSelectionFilter
 
 signal clear_selected_candidate
 
-var active_xml_scenes: Array
+var target_xml_scenes: Array
 var last_selected
 
-func set_current(active_project_xml_dict): # key: xml_data, value: symbol scene
-	active_xml_scenes = active_project_xml_dict.values()
+func set_target_xml_scene(xml_scenes): # key: xml_data, value: symbol scene
+	target_xml_scenes = xml_scenes
 		
 
 func process_input(event):
 	if event is InputEventMouseButton and (event.button_index == MOUSE_BUTTON_LEFT or event.button_index == MOUSE_BUTTON_RIGHT):
 		if !event.is_pressed():
 			var candidates: Array[StaticSymbol] = []
-			for scene in active_xml_scenes:
+			for scene in target_xml_scenes:
 				if scene.xml_data.is_selectable:
 					candidates.append_array(scene.selected_candidate)
 			
-			for scene in active_xml_scenes: 
+			for scene in target_xml_scenes: 
 				scene.clear_candidates() # direct call
 
 			# get_global_mouse_position() returns 2d world coord position if it is in subviewport

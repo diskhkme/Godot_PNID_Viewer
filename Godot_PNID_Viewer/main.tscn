@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://en0mt7v4ddrg"]
+[gd_scene load_steps=12 format=3 uid="uid://en0mt7v4ddrg"]
 
 [ext_resource type="Script" path="res://main.gd" id="1_h1xnr"]
 [ext_resource type="Theme" uid="uid://dseywhd5dettr" path="res://resources/project_default.tres" id="2_6rl77"]
@@ -11,7 +11,6 @@
 [ext_resource type="PackedScene" uid="uid://fxwcfnsk0rgt" path="res://ui/dialogs/diff_window.tscn" id="11_3hrp5"]
 [ext_resource type="PackedScene" uid="uid://drge4asvwjmcu" path="res://ui/context/image_view_context_menu.tscn" id="12_p38sp"]
 [ext_resource type="PackedScene" uid="uid://chyc6mjjmyek7" path="res://ui/context/project_view_context_menu.tscn" id="13_sobsl"]
-[ext_resource type="PackedScene" uid="uid://b7lpevg8fi6hw" path="res://ui/dialogs/export_image_window.tscn" id="13_y62s5"]
 
 [node name="Main" type="Node"]
 script = ExtResource("1_h1xnr")
@@ -26,14 +25,11 @@ grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("2_6rl77")
 
-[node name="MainMenu" parent="CanvasLayer/MainWindow" node_paths=PackedStringArray("new_project_dialog") instance=ExtResource("3_u87eg")]
+[node name="MainMenu" parent="CanvasLayer/MainWindow" instance=ExtResource("3_u87eg")]
 layout_mode = 2
-new_project_dialog = NodePath("../../Dialogs/NewProjectDialog")
 
-[node name="Toolbar" parent="CanvasLayer/MainWindow" node_paths=PackedStringArray("add_xml_dialog", "save_img_dialog") instance=ExtResource("4_ioe6v")]
+[node name="Toolbar" parent="CanvasLayer/MainWindow" instance=ExtResource("4_ioe6v")]
 layout_mode = 2
-add_xml_dialog = NodePath("../../Dialogs/AddXMLDialog")
-save_img_dialog = NodePath("../../Dialogs/SaveImageDialog")
 
 [node name="Middle" type="HSplitContainer" parent="CanvasLayer/MainWindow"]
 layout_mode = 2
@@ -119,10 +115,6 @@ use_native_dialog = true
 visible = false
 
 [node name="DiffWindow" parent="CanvasLayer/Dialogs" instance=ExtResource("11_3hrp5")]
-visible = false
-
-[node name="ExportImageWindow" parent="CanvasLayer/Dialogs" instance=ExtResource("13_y62s5")]
-title = "Export Image"
 visible = false
 
 [node name="ContextMenus" type="Control" parent="CanvasLayer"]
