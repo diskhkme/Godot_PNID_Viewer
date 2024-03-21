@@ -4,18 +4,11 @@ var size
 var color
 var line_width
 
-func _ready():
-	add_to_group("draw_group")
-	
-	
-func on_redraw_requested():
-	queue_redraw()
-
-
 func update_draw(size:Vector2, color:Color, line_width:float):
 	self.size = size
 	self.color = color
 	self.line_width = line_width
+	queue_redraw()
 	
 
 func _draw(): # draw with size (position and rotation is applied to node2d)

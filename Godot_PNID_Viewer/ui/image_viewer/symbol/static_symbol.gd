@@ -16,12 +16,13 @@ var symbol_object: SymbolObject
 var on_cursor: bool = false
 
 func _ready():
-	SignalManager.symbol_selected.connect(_hide_symbol)
-	SignalManager.symbol_deselected.connect(_show_symbol) 
-	SignalManager.symbol_edited.connect(_update_symbol) 
-	SignalManager.xml_label_visibility_changed.connect(_update_label_visibility)
 	update_symbol()
 	static_label.update_label(symbol_object)
+	
+	
+func redraw():
+	update_symbol()
+	static_symbol_draw.queue_redraw()
 	
 	
 func update_symbol():
@@ -43,12 +44,6 @@ func update_symbol():
 	
 
 func _input(event):
-	if SignalManager.is_selected:
-		return
-		
-	if symbol_object.removed:
-		return
-	
 	if event is InputEventMouseButton and (event.button_index == MOUSE_BUTTON_LEFT or event.button_index == MOUSE_BUTTON_RIGHT):
 		if event.is_pressed() and on_cursor:
 			report_static_selected.emit(self)
@@ -62,26 +57,12 @@ func _on_area_2d_mouse_exited():
 	on_cursor = false
 
 
-# --- selected(received)
-func _update_label_visibility(xml_data: XMLData):
-	# because of diff, label visibility is overrided for each symbol
-	if xml_data.symbol_objects.has(symbol_object):
-		static_label.visible = xml_data.is_show_label
+## --- selected(received)
+#func _update_label_visibility(xml_data: XMLData):
+	## because of diff, label visibility is overrided for each symbol
+	#if xml_data.symbol_objects.has(symbol_object):
+		#static_label.visible = xml_data.is_show_label
 
 
-func _hide_symbol(symbol_object: SymbolObject):
-	if self.symbol_object == symbol_object:
-		static_symbol_draw.visible = false
-	else:
-		static_symbol_draw.visible = true
-		
 
-func _show_symbol(symbol_object: SymbolObject):
-	static_symbol_draw.visible = true
-
-
-# --- edited(received)
-func _update_symbol(symbol_object: SymbolObject):
-	if self.symbol_object == symbol_object:
-		update_symbol()
 	

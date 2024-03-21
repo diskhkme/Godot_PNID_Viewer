@@ -13,10 +13,10 @@ func _on_export_image_button_pressed():
 
 		
 func _on_undo_button_pressed():
-	ProjectManager.active_project.undo_redo.undo()
+	undo_action.emit()
 
 
 func _on_redo_button_pressed():
-	ProjectManager.active_project.undo_redo.redo()
+	redo_action.emit()
 
 

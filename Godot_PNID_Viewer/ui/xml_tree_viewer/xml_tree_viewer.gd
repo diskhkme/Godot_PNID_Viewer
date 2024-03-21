@@ -17,14 +17,14 @@ const COLUMN_COUNT = 8
 
 func _ready():
 	reset_tree()
-	SignalManager.symbol_selected_from_image.connect(_select_symbol)
-	SignalManager.symbol_deselected.connect(_deselect_symbol)
-	SignalManager.symbol_edited.connect(_edit_symbol)
-	SignalManager.symbol_added.connect(_add_symbol)
-	SignalManager.symbol_removed.connect(_remove_symbol)
+	#SignalManager.symbol_selected_from_image.connect(_select_symbol)
+	#SignalManager.symbol_deselected.connect(_deselect_symbol)
+	#SignalManager.symbol_edited.connect(_edit_symbol)
+	#SignalManager.symbol_added.connect(_add_symbol)
+	#SignalManager.symbol_removed.connect(_remove_symbol)
 	
-	SignalManager.xml_visibility_changed.connect(_change_visibility)
-	SignalManager.xml_selectability_changed.connect(_change_selectability)
+	#SignalManager.xml_visibility_changed.connect(_change_visibility)
+	#SignalManager.xml_selectability_changed.connect(_change_selectability)
 
 #-------------------------------------------------------------
 # Tree Initialization-----------------------------------------
@@ -105,6 +105,17 @@ func fill_treeitem(symbol_child: TreeItem, symbol_object: SymbolObject):
 	if symbol_object.removed:
 		symbol_child.visible = false
 		
+		
+func select_symbol(symbol_object: SymbolObject):
+	var symbol_item = symbol_items_dict[symbol_object]
+	if not symbol_item.is_selected(0):
+		symbol_item.select(0) 
+		tree.scroll_to_item(symbol_item, true)
+	
+	
+func deselect_symbol():
+	tree.deselect_all()
+		
 #-------------------------------------------------------------
 # Self Event Handle  -----------------------------------------
 #-------------------------------------------------------------
@@ -163,17 +174,6 @@ func _on_mouse_exited():
 #-------------------------------------------------------------
 # Received Event Handle---------------------------------------
 #-------------------------------------------------------------			
-func _select_symbol(symbol_object: SymbolObject):
-	var symbol_item = symbol_items_dict[symbol_object]
-	if not symbol_item.is_selected(0):
-		symbol_item.select(0) 
-		tree.scroll_to_item(symbol_item, true)
-	
-	
-func _deselect_symbol(symbol_object: SymbolObject):
-	tree.deselect_all()
-
-	
 func _add_symbol(symbol_object: SymbolObject):
 	var xml_tree = xml_items_dict[symbol_object.source_xml]
 	var symbol_item = add_symbol_on_tree(xml_tree, symbol_object)

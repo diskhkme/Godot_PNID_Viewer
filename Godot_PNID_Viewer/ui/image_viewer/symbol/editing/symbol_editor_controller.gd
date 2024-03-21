@@ -72,7 +72,7 @@ func get_handle(handle_type: Handle.TYPE, scale_type: Handle.SCALE_TYPE):
 	return result[0]
 	
 
-func process_input(event) -> bool:
+func process_input(event) -> bool: # return false if edit end
 	for handle in handles:
 		handle.process_input(event)
 				

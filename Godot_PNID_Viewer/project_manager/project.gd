@@ -4,11 +4,14 @@ class_name Project
 var id: int
 var undo_redo: UndoRedo
 
-var snapshot_array: Array # array of [symbol_object, snapshot_start]
-var is_symbol_actually_edited: bool = false
-var snapshot_start: SymbolObject
-var snapshot_end: SymbolObject
-var snapshot_src: SymbolObject
+class Snapshot:
+	var ref: SymbolObject
+	var before: SymbolObject
+	var after: SymbolObject
+	
+var snapshot_stack: Array # array of [symbol_object, snapshot_start]
+var target_symbol: SymbolObject
+
 var current_action_id: int = 0
 var add_symbol_stack: Array
 var add_symbol_ref
@@ -56,45 +59,37 @@ func add_xmls(num_xml, xml_filenames, xml_strs):
 # in case of edit symbol, editing is already done by edit controller
 # TODO: consider change actual edit action happens here
 func symbol_edit_started(symbol_object: SymbolObject):
-	snapshot_start = symbol_object.clone()
-	is_symbol_actually_edited = false
+	print("add stack")
+	var snapshot = Snapshot.new()
+	snapshot.ref = symbol_object
+	snapshot.before = symbol_object.clone()
+	snapshot_stack.push_back(snapshot)
 	
-	
-func symbol_edit_ended(symbol_object: SymbolObject):
-	if is_symbol_actually_edited:
-		snapshot_src = symbol_object
-		snapshot_end = symbol_object.clone()
-		if current_action_id >= snapshot_array.size():
-			snapshot_array.push_back([snapshot_src, snapshot_start, snapshot_end])
-		else:
-			snapshot_array[current_action_id] = [snapshot_src, snapshot_start, snapshot_end]
-		
-		undo_redo.create_action("Edit symbol")
-		undo_redo.add_do_method(do_symbol_editing)
-		undo_redo.add_undo_method(undo_symbol_editing)
-		undo_redo.commit_action()
-		
-		snapshot_start = null
-		
 	
 func symbol_edited(symbol_object: SymbolObject):
-	is_symbol_actually_edited = true
+	snapshot_stack.back().after = symbol_object.clone()
+	undo_redo.create_action("Edit symbol")
+	undo_redo.add_do_method(do_symbol_edit)
+	undo_redo.add_undo_method(undo_symbol_edit)
+	undo_redo.commit_action()
+	
+	
+func symbol_edit_canceled(symbol_object: SymbolObject):
+	snapshot_stack.pop_back()
 		
 		
-func do_symbol_editing():
-	var objects = snapshot_array[current_action_id]
-	objects[0].restore(objects[2])
+func do_symbol_edit():
+	var snapshot = snapshot_stack[current_action_id]
+	snapshot.ref.restore(snapshot.after)
 	current_action_id += 1
-	SignalManager.symbol_edited.emit(objects[0])
-	print("do edit action ", objects[0].id)
+	print("do edit action ", snapshot.ref.id)
 	
 		
-func undo_symbol_editing():
+func undo_symbol_edit():
 	current_action_id -= 1
-	var objects = snapshot_array[current_action_id]
-	objects[0].restore(objects[1])
-	SignalManager.symbol_edited.emit(objects[0])
-	print("undo edit action ", objects[0].id)
+	var snapshot = snapshot_stack[current_action_id]
+	snapshot.ref.restore(snapshot.before)
+	print("undo edit action ", snapshot.ref.id)
 	
 # in case of add symbol, actual adding happens here
 func symbol_added(new_symbol: SymbolObject):

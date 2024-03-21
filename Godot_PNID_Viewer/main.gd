@@ -9,7 +9,7 @@ extends Node
 # middle section
 @onready var _image_viewer: Control = $CanvasLayer/MainWindow/Middle/ImageViewer
 @onready var _project_viewer: Control = $CanvasLayer/MainWindow/Middle/RightSide/ProjectViewer
-@onready var _xml_viewer: Control = $CanvasLayer/MainWindow/Middle/RightSide/XMLTreeViewer
+@onready var _xml_tree_viewer: Control = $CanvasLayer/MainWindow/Middle/RightSide/XMLTreeViewer
 # bottom section
 #@onready var status_bar: Control = $CanvasLayer/MainWindow/StatusBar_TODO
 
@@ -41,13 +41,15 @@ func _ready():
 	
 	_toolbar.add_xml.connect(_on_add_xml)
 	_toolbar.export_image.connect(_on_export_img)
-	#_toolbar.undo_action.connect() # TODO
-	#_toolbar.redo_action.connect()
+	_toolbar.undo_action.connect(_on_undo_action) # TODO
+	_toolbar.redo_action.connect(_on_redo_action)
 	
 	_image_viewer.screenshot_taken.connect(_on_screenshot_taken)
+	_image_viewer.symbol_selected.connect(_on_symbol_selected)
+	#_image_viewer.symbol_editing.connect(_on_symbol_editing)
+	_image_viewer.symbol_deselected.connect(_on_symbol_deselected)
 	
-		
-	_xml_viewer.request_type_change_window.connect(_show_type_change_window)
+	#_xml_tree_viewer.request_type_change_window.connect(_show_type_change_window)
 	
 	
 	
@@ -93,7 +95,7 @@ func _make_project_active(project: Project):
 	_main_menu.add_project_tab(project) # make tab first to prevent duplicated call
 	_image_viewer.use_project(project)
 	_project_viewer.use_project(project)
-	_xml_viewer.use_project(project)
+	_xml_tree_viewer.use_project(project)
 	
 	
 func _on_project_close(project: Project):
@@ -122,7 +124,7 @@ func _on_xml_files_opened(args):
 	ProjectManager.active_project.add_xmls(num_xml, xml_filenames, xml_str)
 	_image_viewer.update_xml(ProjectManager.active_project)
 	_project_viewer.use_project(ProjectManager.active_project)
-	_xml_viewer.use_project(ProjectManager.active_project)
+	_xml_tree_viewer.use_project(ProjectManager.active_project)
 	
 	
 func _on_export_img():
@@ -145,6 +147,32 @@ func _on_screenshot_taken(img: Image, path: String):
 
 	img.free()
 	
+	
+func _on_symbol_selected(symbol_object: SymbolObject):
+	_xml_tree_viewer.select_symbol(symbol_object)
+	ProjectManager.active_project.symbol_edit_started(symbol_object)
+	
+	
+func _on_symbol_deselected(symbol_object: SymbolObject, edited: bool):
+	_xml_tree_viewer.deselect_symbol()
+	if edited:
+		ProjectManager.active_project.symbol_edited(symbol_object)
+		_image_viewer.apply_symbol_edit(symbol_object)
+		_image_viewer.redraw()
+	else:
+		ProjectManager.active_project.symbol_edit_canceled(symbol_object)
+	
+	
+func _on_undo_action():
+	ProjectManager.active_project.undo_redo.undo()
+	_image_viewer.redraw()
+	
+	
+	
+func _on_redo_action():
+	ProjectManager.active_project.undo_redo.redo()
+	_image_viewer.redraw()
+
 	
 
 func _show_type_change_window(symbol_object:SymbolObject):

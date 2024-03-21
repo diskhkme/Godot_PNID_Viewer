@@ -5,8 +5,6 @@
 extends Control
 class_name SymbolSelectionFilter
 
-signal clear_selected_candidate
-
 var target_xml_scenes: Array
 var last_selected
 
@@ -22,12 +20,16 @@ func process_input(event):
 				if scene.xml_data.is_selectable:
 					candidates.append_array(scene.selected_candidate)
 			
-			for scene in target_xml_scenes: 
-				scene.clear_candidates() # direct call
+			clear_candidates()
 
 			# get_global_mouse_position() returns 2d world coord position if it is in subviewport
 			var mouse_pos = get_global_mouse_position()
 			return decide_selected(mouse_pos, candidates)
+			
+
+func clear_candidates():
+	for scene in target_xml_scenes: 
+		scene.clear_candidates() # direct call
 
 			
 # Decide the symbol that has closest upper edge
