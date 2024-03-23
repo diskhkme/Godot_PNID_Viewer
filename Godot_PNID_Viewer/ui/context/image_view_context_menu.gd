@@ -2,6 +2,9 @@
 
 extends Control
 
+signal add_symbol_pressed(new_symbol: SymbolObject)
+signal remove_symbol_pressed()
+
 @export var image_view: ImageViewer
 
 @onready var add_button = $PanelContainer/VBoxContainer/AddButton
@@ -41,14 +44,18 @@ func close():
 	
 
 func _on_add_button_pressed():
-	var pos_in_image = image_view.get_camera().get_pixel_from_image_canvas(position)
-	var new_symbol = ProjectManager.active_project.xml_datas[0].add_symbol(pos_in_image) # TODO: how to set target xml?
+	var pos = image_view.get_camera().get_pixel_from_image_canvas(position)
+	#var new_symbol = ProjectManager.active_project.xml_datas[0].add_symbol(pos_in_image) # TODO: how to set target xml?
+	var new_symbol = SymbolObject.new()
+	new_symbol.bndbox += Vector4(pos.x, pos.y, pos.x, pos.y)
+	add_symbol_pressed.emit(new_symbol)
 	close()
 
 
 func _on_remove_button_pressed():
-	var symbol = SignalManager.selected_symbol
-	symbol.removed = true
+	#var symbol = SignalManager.selected_symbol
+	#symbol.removed = true
+	remove_symbol_pressed.emit()
 	close()
 
 

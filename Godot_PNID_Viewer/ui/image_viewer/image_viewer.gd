@@ -27,6 +27,7 @@ class NodeRef:
 
 var _node_table = {}
 
+# just shortcuts about active project
 var _active_selection_filter
 var _active_editor_control
 var _active_xml_nodes
@@ -101,6 +102,7 @@ func _update_node_tree(project):
 			_image_viewport.remove_child(_node_table[p].project_node)
 		
 	_image_viewport.add_child(_node_table[project].project_node)
+	update_xml(project)
 	
 	
 func close_project(project: Project):
@@ -109,6 +111,7 @@ func close_project(project: Project):
 	
 	
 func update_xml(project: Project): # ex, xml added
+	# TODO: consider xml clsed case (and add xml close interface)
 	for xml_data in project.xml_datas:
 		if not _node_table[project].xml_nodes.has(xml_data):
 			_add_child_xml_scene(_node_table[project].project_node, xml_data)
@@ -145,8 +148,15 @@ func _add_child_editor_control(parent: Node2D):
 	return editor_control
 	
 	
-func apply_symbol_edit(symbol_object: SymbolObject):
-	_active_xml_nodes[symbol_object.source_xml].apply_symbol_edit(symbol_object)
+func apply_symbol_change(symbol_object: SymbolObject):
+	var xml_scene = _active_xml_nodes[symbol_object.source_xml]
+	if xml_scene.symbol_nodes.has(symbol_object): 
+		if symbol_object.source_xml.symbol_objects.has(symbol_object): # symbol edited
+			xml_scene.apply_symbol_edit(symbol_object)
+		else: # symbol removed
+			xml_scene.remove_symbol_node(symbol_object)
+	else: # symbol added
+		xml_scene.add_symbol_node(symbol_object)
 	
 	
 #func _update_xml_visibility(xml_data: XMLData):

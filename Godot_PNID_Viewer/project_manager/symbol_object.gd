@@ -29,8 +29,7 @@ var removed = false
 # --------------------------------------------------------------------
 
 # TODO: strictly define constructor (prevent missing property)
-func _init(id: int):
-	self.id = id
+func _init():
 	type = "None"
 	cls = "None"
 	bndbox = Vector4(0,0,100,100)
@@ -40,7 +39,7 @@ func _init(id: int):
 	
 
 func clone():
-	var symbol_object = SymbolObject.new(id)
+	var symbol_object = SymbolObject.new()
 	symbol_object.id = id
 	symbol_object.type = type
 	symbol_object.cls = cls

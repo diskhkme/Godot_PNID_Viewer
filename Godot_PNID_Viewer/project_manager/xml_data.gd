@@ -45,7 +45,8 @@ func check_sanity(symbol_objects):
 
 
 func add_symbol(position: Vector2):
-	var new_symbol = SymbolObject.new(symbol_objects.size())
+	var new_symbol = SymbolObject.new()
+	new_symbol.id = symbol_objects.size()
 	new_symbol.source_xml = self
 	new_symbol.bndbox += Vector4(position.x, position.y, position.x, position.y) # translate min/max
 	new_symbol.color = Config.SYMBOL_COLOR_PRESET[id]

@@ -4,17 +4,20 @@ class_name Project
 var id: int
 var undo_redo: UndoRedo
 
+# TODO: consider move undoredo module to separate file
 class Snapshot:
 	var ref: SymbolObject
 	var before: SymbolObject
 	var after: SymbolObject
 	
 var snapshot_stack: Array # array of [symbol_object, snapshot_start]
-var target_symbol: SymbolObject
+var current_symbol: SymbolObject
 
 var current_action_id: int = 0
+
 var add_symbol_stack: Array
 var add_symbol_ref
+var add_action_id: int = 0
 
 var dirty: bool = false
 
@@ -55,7 +58,10 @@ func add_xmls(num_xml, xml_filenames, xml_strs):
 # --------------------------------------------------------------------
 # ---Undo/Redo--------------------------------------------------------
 # --------------------------------------------------------------------
-		
+
+func get_current_symbol():
+	return current_symbol
+	
 # in case of edit symbol, editing is already done by edit controller
 # TODO: consider change actual edit action happens here
 func symbol_edit_started(symbol_object: SymbolObject):
@@ -86,6 +92,7 @@ func do_symbol_edit():
 	var snapshot = snapshot_stack[current_action_id]
 	snapshot.ref.restore(snapshot.after)
 	current_action_id += 1
+	current_symbol = snapshot.ref
 	print("do edit action ", snapshot.ref.id)
 	
 		
@@ -93,10 +100,12 @@ func undo_symbol_edit():
 	current_action_id -= 1
 	var snapshot = snapshot_stack[current_action_id]
 	snapshot.ref.restore(snapshot.before)
+	current_symbol = snapshot.ref
 	print("undo edit action ", snapshot.ref.id)
 	
 # in case of add symbol, actual adding happens here
-func symbol_added(new_symbol: SymbolObject):
+func symbol_add(new_symbol: SymbolObject):
+	add_symbol_stack.push_back(new_symbol)
 	add_symbol_ref = new_symbol
 	undo_redo.create_action("Add symbol")
 	undo_redo.add_do_method(do_symbol_add)
@@ -105,14 +114,17 @@ func symbol_added(new_symbol: SymbolObject):
 	
 	
 func do_symbol_add():
-	print("do add action ", add_symbol_ref.id)
-	xml_datas[0].symbol_objects.push_back(add_symbol_ref)
+	print("do add action ", add_symbol_stack[add_action_id].id)
+	add_symbol_stack[add_action_id].source_xml.symbol_objects.push_back(add_symbol_stack[add_action_id])
+	current_symbol = add_symbol_stack[add_action_id]
+	add_action_id += 1
 	add_symbol_ref = null
 	
 	
 func undo_symbol_add():
-	var symbol = xml_datas[0].symbol_objects.pop_back()
-	SignalManager.symbol_removed.emit(add_symbol_ref)
-	print("undo add action ", symbol.id)
+	add_action_id -= 1
+	add_symbol_stack[add_action_id].source_xml.symbol_objects.erase(add_symbol_stack[add_action_id])
+	current_symbol = add_symbol_stack[add_action_id]
+	print("undo add action ", add_symbol_stack[add_action_id].id)
 
 

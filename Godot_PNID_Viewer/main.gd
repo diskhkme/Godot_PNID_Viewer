@@ -49,6 +49,10 @@ func _ready():
 	#_image_viewer.symbol_editing.connect(_on_symbol_editing)
 	_image_viewer.symbol_deselected.connect(_on_symbol_deselected)
 	
+	_image_viewer_context_menu.add_symbol_pressed.connect(_on_add_symbol)
+	_image_viewer_context_menu.remove_symbol_pressed.connect(_on_remove_symbol)
+	
+	
 	#_xml_tree_viewer.request_type_change_window.connect(_show_type_change_window)
 	
 	
@@ -122,9 +126,7 @@ func _on_xml_files_opened(args):
 	var xml_filenames = args[1]
 	var xml_str = args[2]
 	ProjectManager.active_project.add_xmls(num_xml, xml_filenames, xml_str)
-	_image_viewer.update_xml(ProjectManager.active_project)
-	_project_viewer.use_project(ProjectManager.active_project)
-	_xml_tree_viewer.use_project(ProjectManager.active_project)
+	update_guis()
 	
 	
 func _on_export_img():
@@ -157,31 +159,52 @@ func _on_symbol_deselected(symbol_object: SymbolObject, edited: bool):
 	_xml_tree_viewer.deselect_symbol()
 	if edited:
 		ProjectManager.active_project.symbol_edited(symbol_object)
-		_image_viewer.apply_symbol_edit(symbol_object)
+		_image_viewer.apply_symbol_edit(symbol_object, false)
 		get_tree().call_group("draw_group", "redraw")
 	else:
 		ProjectManager.active_project.symbol_edit_canceled(symbol_object)
+		
+		
+func _on_add_symbol(symbol_object: SymbolObject):
+	#if selected xml exist, add to that xml
+	if _project_viewer.selected_xml != null:
+		symbol_object.source_xml = _project_viewer.selected_xml
+	else:
+		symbol_object.source_xml = ProjectManager.active_project.xml_datas[0]
+	#else, add to first xml
+	ProjectManager.active_project.symbol_add(symbol_object)
+	_image_viewer.apply_symbol_change(symbol_object)
+	get_tree().call_group("draw_group", "redraw")
 	
+	
+func _on_remove_symbol():
+	# get selected symbol
+	
+	# delete action
+	pass
 	
 func _on_undo_action():
 	ProjectManager.active_project.undo_redo.undo()
-	get_tree().call_group("draw_group", "redraw")
-	
-	
+	_image_viewer.apply_symbol_change(ProjectManager.active_project.get_current_symbol())
+	# TODO: apply change to xml tree viewer
+			
 	
 func _on_redo_action():
 	ProjectManager.active_project.undo_redo.redo()
-	get_tree().call_group("draw_group", "redraw")
+	_image_viewer.apply_symbol_change(ProjectManager.active_project.get_current_symbol())
+	# TODO: apply change to xml tree viewer
+	
+	
+func update_guis():
+	_image_viewer.use_project(ProjectManager.active_project)
+	_project_viewer.use_project(ProjectManager.active_project)
+	_xml_tree_viewer.use_project(ProjectManager.active_project)
 
 	
+
+
+
 
 func _show_type_change_window(symbol_object:SymbolObject):
 	_type_change_dialog.show_type_change_window(symbol_object)
-
-
-
-	
-
-	
-	
 

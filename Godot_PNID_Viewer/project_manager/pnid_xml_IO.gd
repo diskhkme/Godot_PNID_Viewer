@@ -37,7 +37,8 @@ static func parse_pnid_xml_from_byte_array(contents: PackedByteArray) -> Array[S
 			
 			match node_name:
 				Config.OBJECT_TAG_NAME:
-					symbol_object = SymbolObject.new(id)
+					symbol_object = SymbolObject.new()
+					symbol_object.id = id
 				"type":
 					symbol_object.type = get_current_node_data(parser)
 				"class":

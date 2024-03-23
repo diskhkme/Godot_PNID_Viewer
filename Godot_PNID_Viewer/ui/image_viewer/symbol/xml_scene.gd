@@ -55,4 +55,5 @@ func add_symbol_node(symbol_object: SymbolObject):
 	
 	
 func remove_symbol_node(symbol_object: SymbolObject):
-	symbol_nodes[symbol_object].free()
+	symbol_nodes[symbol_object].free() # delete node
+	symbol_nodes.erase(symbol_object) # delete in dict

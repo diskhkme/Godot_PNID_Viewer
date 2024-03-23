@@ -9,7 +9,7 @@ const COLUMN_NUM = 6
 
 var _tree_item_dict = {} # key: xml_item, value: xml_data
 var _root: TreeItem
-var _selected_xml: XMLData
+var selected_xml: XMLData
 
 func _ready():
 	SignalManager.symbol_edited.connect(_update_dirty)
@@ -111,9 +111,9 @@ func _process(delta):
 
 func _on_tree_item_selected():
 	var selected_item = _tree.get_selected()
-	_selected_xml = _tree_item_dict[selected_item]
+	selected_xml = _tree_item_dict[selected_item]
 
 
 func _on_tree_nothing_selected():
-	_selected_xml = null
+	selected_xml = null
 	_tree.deselect_all()
