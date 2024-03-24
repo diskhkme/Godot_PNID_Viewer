@@ -137,8 +137,14 @@ func symbol_add(pos: Vector2, target_xml: XMLData):
 	new_symbol.bndbox += Vector4(pos.x, pos.y, pos.x, pos.y)
 	new_symbol.color = target_xml.get_colors()[0]	
 	new_symbol.id = target_xml.symbol_objects.size()
+	new_symbol.dirty = true
 	
-	add_symbol_stack.push_back(new_symbol)
+	if add_action_id >= add_symbol_stack.size():
+		add_symbol_stack.push_back(new_symbol)
+	else:
+		add_symbol_stack[add_action_id] = new_symbol
+	
+	
 	undo_redo.create_action("Add symbol")
 	undo_redo.add_do_method(do_symbol_add)
 	undo_redo.add_undo_method(undo_symbol_add)
@@ -163,7 +169,11 @@ func undo_symbol_add():
 	
 	
 func symbol_remove(symbol_object: SymbolObject):
-	remove_symbol_stack.push_back(symbol_object)
+	if remove_action_id >= remove_symbol_stack.size():
+		remove_symbol_stack.push_back(symbol_object)
+	else:
+		remove_symbol_stack[remove_action_id] = symbol_object
+
 	undo_redo.create_action("Remove symbol")
 	undo_redo.add_do_method(do_symbol_remove)
 	undo_redo.add_undo_method(undo_symbol_remove)

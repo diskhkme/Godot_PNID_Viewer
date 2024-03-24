@@ -117,6 +117,10 @@ func select_symbol(symbol_object: SymbolObject):
 	
 func deselect_symbol():
 	tree.deselect_all()
+	
+	
+func scroll_to_xml(xml_data: XMLData):
+	tree.scroll_to_item(xml_items_dict[xml_data], true)
 		
 #-------------------------------------------------------------
 # Self Event Handle  -----------------------------------------

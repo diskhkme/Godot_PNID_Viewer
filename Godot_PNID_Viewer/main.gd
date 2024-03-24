@@ -52,6 +52,8 @@ func _ready():
 	_image_viewer_context_menu.add_symbol_pressed.connect(_on_add_symbol)
 	_image_viewer_context_menu.remove_symbol_pressed.connect(_on_remove_symbol)
 	
+	_project_viewer.xml_selected.connect(_on_xml_selected)
+	
 	_xml_tree_viewer.symbol_selected.connect(_on_symbol_selected)
 	
 	
@@ -211,6 +213,10 @@ func update_guis():
 	_image_viewer.use_project(ProjectManager.active_project)
 	_project_viewer.use_project(ProjectManager.active_project)
 	_xml_tree_viewer.use_project(ProjectManager.active_project)
+	
+	
+func _on_xml_selected(xml_data: XMLData):
+	_xml_tree_viewer.scroll_to_xml(xml_data)
 
 
 

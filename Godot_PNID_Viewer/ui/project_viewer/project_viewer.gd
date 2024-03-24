@@ -1,6 +1,9 @@
 extends PanelContainer
 class_name ProjectViewer
 
+signal xml_selected(xml_data: XMLData)
+signal xml_deselected
+
 @onready var _tree = $Tree
 
 @export var ColorIcon = preload("res://assets/icons/rectangle_tool.png")
@@ -98,6 +101,7 @@ func _process(delta):
 func _on_tree_item_selected():
 	var selected_item = _tree.get_selected()
 	selected_xml = _tree_item_dict[selected_item]
+	xml_selected.emit(selected_xml)
 
 
 func _on_tree_nothing_selected():
