@@ -46,7 +46,7 @@ func _ready():
 	
 	_image_viewer.screenshot_taken.connect(_on_screenshot_taken)
 	_image_viewer.symbol_selected.connect(_on_symbol_selected)
-	#_image_viewer.symbol_editing.connect(_on_symbol_editing)
+	_image_viewer.symbol_editing.connect(_on_symbol_editing)
 	_image_viewer.symbol_deselected.connect(_on_symbol_deselected)
 	
 	_image_viewer_context_menu.add_symbol_pressed.connect(_on_add_symbol)
@@ -69,7 +69,7 @@ func _input(event):
 		
 		# TODO: Exclusive context popup
 		if _image_viewer.get_global_rect().has_point(event.position):
-			_image_viewer_context_menu.process_input(event)
+			_image_viewer_context_menu.process_input(event, _image_viewer.selected_symbol != null)
 		elif _project_viewer.get_global_rect().has_point(event.position):
 			_project_viewer_context_menu.process_input(event)
 			
@@ -87,6 +87,7 @@ func _on_new_project(): # web & windows
 	
 func _on_project_files_opened(args):
 	var project: Project = ProjectManager.add_project(args)
+	project.symbol_action.connect(_on_symbol_action)
 	_make_project_active(project)
 
 
@@ -159,48 +160,50 @@ func _on_symbol_deselected(symbol_object: SymbolObject, edited: bool):
 	_xml_tree_viewer.deselect_symbol()
 	if edited:
 		ProjectManager.active_project.symbol_edited(symbol_object)
-		_image_viewer.apply_symbol_edit(symbol_object, false)
-		get_tree().call_group("draw_group", "redraw")
+		_image_viewer.apply_symbol_change(symbol_object)
+		
 	else:
 		ProjectManager.active_project.symbol_edit_canceled(symbol_object)
+
+
+func _on_symbol_editing(symbol_object: SymbolObject):
+	_xml_tree_viewer.apply_symbol_change(symbol_object)
 		
 		
-func _on_add_symbol(symbol_object: SymbolObject):
-	#if selected xml exist, add to that xml
-	if _project_viewer.selected_xml != null:
-		symbol_object.source_xml = _project_viewer.selected_xml
-	else:
-		symbol_object.source_xml = ProjectManager.active_project.xml_datas[0]
-	#else, add to first xml
-	ProjectManager.active_project.symbol_add(symbol_object)
-	_image_viewer.apply_symbol_change(symbol_object)
-	get_tree().call_group("draw_group", "redraw")
+func _on_add_symbol(pos: Vector2):
+	var target_xml
+	if _project_viewer.selected_xml != null: #if selected xml exist, add to that xml
+		target_xml = _project_viewer.selected_xml
+	else: #else, add to first xml
+		target_xml = ProjectManager.active_project.xml_datas[0]
+		
+	ProjectManager.active_project.symbol_add(pos, target_xml)
 	
 	
 func _on_remove_symbol():
-	# get selected symbol
-	
-	# delete action
+	var target_symbol = _image_viewer.selected_symbol
+	_image_viewer.cancel_selected()
+	ProjectManager.active_project.symbol_remove(target_symbol)
 	pass
 	
 func _on_undo_action():
 	ProjectManager.active_project.undo_redo.undo()
-	_image_viewer.apply_symbol_change(ProjectManager.active_project.get_current_symbol())
-	# TODO: apply change to xml tree viewer
 			
 	
 func _on_redo_action():
 	ProjectManager.active_project.undo_redo.redo()
-	_image_viewer.apply_symbol_change(ProjectManager.active_project.get_current_symbol())
-	# TODO: apply change to xml tree viewer
+	
+	
+func _on_symbol_action(target_symbol: SymbolObject):
+	_image_viewer.apply_symbol_change(target_symbol)
+	_xml_tree_viewer.apply_symbol_change(target_symbol)	
+	get_tree().call_group("draw_group", "redraw")
 	
 	
 func update_guis():
 	_image_viewer.use_project(ProjectManager.active_project)
 	_project_viewer.use_project(ProjectManager.active_project)
 	_xml_tree_viewer.use_project(ProjectManager.active_project)
-
-	
 
 
 

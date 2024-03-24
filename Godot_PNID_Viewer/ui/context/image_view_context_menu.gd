@@ -2,7 +2,7 @@
 
 extends Control
 
-signal add_symbol_pressed(new_symbol: SymbolObject)
+signal add_symbol_pressed(pos: Vector2)
 signal remove_symbol_pressed()
 
 @export var image_view: ImageViewer
@@ -13,14 +13,14 @@ signal remove_symbol_pressed()
 var start_mouse_pos
 var is_in_context_menu
 
-func process_input(event):
+func process_input(event, is_symbol_selected):
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_RIGHT:
 		if event.is_pressed():
 			start_mouse_pos = event.position
 		if event.is_released() and visible == false:
 			var dist = (event.position - start_mouse_pos).length_squared()
 			if dist < pow(Config.CONTEXT_MENU_THRESHOLD,2):
-				popup(event.position, SignalManager.is_selected) 
+				popup(event.position, is_symbol_selected) 
 
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
 		if !is_in_context_menu:
@@ -46,9 +46,7 @@ func close():
 func _on_add_button_pressed():
 	var pos = image_view.get_camera().get_pixel_from_image_canvas(position)
 	#var new_symbol = ProjectManager.active_project.xml_datas[0].add_symbol(pos_in_image) # TODO: how to set target xml?
-	var new_symbol = SymbolObject.new()
-	new_symbol.bndbox += Vector4(pos.x, pos.y, pos.x, pos.y)
-	add_symbol_pressed.emit(new_symbol)
+	add_symbol_pressed.emit(pos)
 	close()
 
 

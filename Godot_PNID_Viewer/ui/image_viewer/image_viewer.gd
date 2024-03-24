@@ -5,7 +5,7 @@ extends PanelContainer
 class_name ImageViewer
 
 signal symbol_selected(symbol_object: SymbolObject)
-signal symbol_editing()
+signal symbol_editing(symbol_object: SymbolObject)
 signal symbol_deselected(edited: bool) # true if edited, false if canceled
 signal screenshot_taken(img: Image)
 
@@ -61,6 +61,12 @@ func use_project(project: Project):
 func get_camera():
 	return _image_view_camera
 	
+	
+func cancel_selected(): # force hiding when symbol is removed
+	ProjectManager.active_project.symbol_edit_canceled(selected_symbol)
+	selected_symbol = null
+	_active_editor_control.visible = false
+
 
 func process_input(event):
 	_image_view_camera.process_input(event)
@@ -73,7 +79,7 @@ func process_input(event):
 				symbol_deselected.emit(selected_symbol, false)
 			_process_symbol_deselected()
 		else:
-			symbol_editing.emit()
+			symbol_editing.emit(selected_symbol)
 	else:
 		var selected = _active_selection_filter.process_input(event) 
 		if selected != null:

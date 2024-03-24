@@ -174,21 +174,19 @@ func _on_mouse_exited():
 #-------------------------------------------------------------
 # Received Event Handle---------------------------------------
 #-------------------------------------------------------------			
-func _add_symbol(symbol_object: SymbolObject):
+func apply_symbol_change(symbol_object: SymbolObject):
 	var xml_tree = xml_items_dict[symbol_object.source_xml]
-	var symbol_item = add_symbol_on_tree(xml_tree, symbol_object)
-	symbol_items_dict[symbol_object] = symbol_item
-	
-	
-func _remove_symbol(symbol_object: SymbolObject):
-	var symbol_item = symbol_items_dict[symbol_object]
-	tree.remove_child(symbol_item)
-	symbol_item.free()
-
-
-func _edit_symbol(symbol_object: SymbolObject):
-	var symbol_item = symbol_items_dict[symbol_object]
-	fill_treeitem(symbol_item, symbol_object)
+	if symbol_items_dict.has(symbol_object):
+		var symbol_item = symbol_items_dict[symbol_object]
+		if symbol_object.source_xml.symbol_objects.has(symbol_object): # edited case
+			fill_treeitem(symbol_item, symbol_object)
+		else: # remove case
+			xml_tree.remove_child(symbol_item)
+			symbol_item.free()
+			symbol_items_dict.erase(symbol_object)
+	else: # add case
+		var symbol_item = add_symbol_on_tree(xml_tree, symbol_object)
+		symbol_items_dict[symbol_object] = symbol_item
 
 
 func _change_visibility(xml_data: XMLData):

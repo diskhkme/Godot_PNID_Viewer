@@ -58,3 +58,12 @@ func get_colors():
 	var colors = {}
 	symbol_objects.map(func(a): colors[a.color] = null)
 	return colors.keys()
+	
+	
+func get_index_of_id(id: int):
+	var next = symbol_objects.filter(func(a): return a.id > id)
+	if next.size() == 0: # last
+		return symbol_objects.size()
+	else:
+		var index = symbol_objects.find(next[0])
+		return index
