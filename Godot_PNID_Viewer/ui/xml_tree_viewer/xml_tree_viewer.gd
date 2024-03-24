@@ -84,7 +84,10 @@ func add_xml_on_tree(xml_data: XMLData) -> TreeItem:
 	
 	
 func fill_treeitem(symbol_child: TreeItem, symbol_object: SymbolObject):
-	symbol_child.set_text(0, str(symbol_object.id))
+	if symbol_object.dirty:
+		symbol_child.set_text(0, "(*)" + str(symbol_object.id))
+	else:
+		symbol_child.set_text(0, str(symbol_object.id))
 	symbol_child.set_text(1, symbol_object.type)
 	symbol_child.set_text(2, symbol_object.cls)
 	symbol_child.set_text(3, str(floor(symbol_object.bndbox.x)))
@@ -92,9 +95,6 @@ func fill_treeitem(symbol_child: TreeItem, symbol_object: SymbolObject):
 	symbol_child.set_text(5, str(floor(symbol_object.bndbox.z)))
 	symbol_child.set_text(6, str(floor(symbol_object.bndbox.w)))
 	symbol_child.set_text(7, str(symbol_object.degree))
-	
-	if symbol_object.removed:
-		symbol_child.visible = false
 		
 	
 func add_symbol_on_tree(parent: TreeItem, symbol_object: SymbolObject) -> TreeItem:

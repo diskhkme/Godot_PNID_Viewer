@@ -53,6 +53,14 @@ func add_symbol(position: Vector2):
 	SignalManager.symbol_added.emit(new_symbol)
 	return new_symbol
 	
+	
+func update_dirty():
+	var dirty_symbols = symbol_objects.filter(func(a): return a.dirty == true)
+	if dirty_symbols.size() > 0:
+		dirty = true
+	else:
+		dirty = false
+	
 
 func get_colors():
 	var colors = {}

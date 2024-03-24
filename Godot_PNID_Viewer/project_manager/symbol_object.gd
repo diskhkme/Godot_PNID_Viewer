@@ -21,8 +21,8 @@ var flip: bool
 var source_xml: XMLData
 var color: Color
 var is_text: bool 
-var is_dirty = false
-var removed = false
+var dirty = false
+#var removed = false
 
 # --------------------------------------------------------------------
 # --- Methods    -----------------------------------------------------
@@ -36,6 +36,7 @@ func _init():
 	is_large = false
 	degree = 0
 	flip = false
+	dirty = false
 	
 
 func clone():
@@ -50,8 +51,7 @@ func clone():
 	symbol_object.source_xml = source_xml
 	symbol_object.color = color
 	symbol_object.is_text = is_text
-	symbol_object.is_dirty = is_dirty
-	symbol_object.removed = removed
+	symbol_object.dirty = dirty
 	return symbol_object
 	
 	
@@ -66,8 +66,7 @@ func restore(other: SymbolObject):
 	source_xml = other.source_xml
 	color = other.color
 	is_text = other.is_text
-	is_dirty = other.is_dirty
-	removed = other.removed
+	dirty = other.dirty
 	
 
 func get_rect() -> Rect2:

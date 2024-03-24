@@ -25,7 +25,6 @@ var remove_symbol_stack: Array
 var remove_symbol_ref
 var remove_action_id: int = 0
 
-
 var dirty: bool = false
 
 var img_filename: String
@@ -69,6 +68,24 @@ func add_xmls(num_xml, xml_filenames, xml_strs):
 func get_current_symbol():
 	return current_symbol
 	
+	
+func do_symbol_action():
+	var has_dirty = false
+	for xml_data in xml_datas:
+		var dirty_symbols = xml_data.symbol_objects.filter(func(a): return a.dirty == true)
+		if dirty_symbols.size() > 0:
+			xml_data.dirty = true
+			has_dirty = true
+		else:
+			xml_data.dirty = false
+			
+	if has_dirty:
+		self.dirty = true
+	else:
+		self.dirty = false
+	
+	symbol_action.emit(current_symbol)
+	
 # in case of edit symbol, editing is already done by edit controller
 # TODO: consider change actual edit action happens here
 func symbol_edit_started(symbol_object: SymbolObject):
@@ -83,6 +100,7 @@ func symbol_edit_started(symbol_object: SymbolObject):
 	
 	
 func symbol_edited(symbol_object: SymbolObject):
+	symbol_object.dirty = true
 	snapshot_stack[current_action_id].after = symbol_object.clone()
 	undo_redo.create_action("Edit symbol")
 	undo_redo.add_do_method(do_symbol_edit)
@@ -100,7 +118,7 @@ func do_symbol_edit():
 	snapshot.ref.restore(snapshot.after)
 	current_symbol = snapshot.ref
 	current_action_id += 1
-	symbol_action.emit(current_symbol)
+	do_symbol_action()
 	print("do edit action ", snapshot.ref.id)
 	
 		
@@ -109,7 +127,7 @@ func undo_symbol_edit():
 	var snapshot = snapshot_stack[current_action_id]
 	snapshot.ref.restore(snapshot.before)
 	current_symbol = snapshot.ref
-	symbol_action.emit(current_symbol)
+	do_symbol_action()
 	print("undo edit action ", snapshot.ref.id)
 	
 # in case of add symbol, actual adding happens here
@@ -132,7 +150,7 @@ func do_symbol_add():
 	var index = current_symbol.source_xml.get_index_of_id(current_symbol.id)
 	current_symbol.source_xml.symbol_objects.insert(index, current_symbol)
 	add_action_id += 1
-	symbol_action.emit(current_symbol)
+	do_symbol_action()
 	print("do add action ", current_symbol.id)
 	
 	
@@ -140,7 +158,7 @@ func undo_symbol_add():
 	add_action_id -= 1
 	current_symbol = add_symbol_stack[add_action_id]
 	current_symbol.source_xml.symbol_objects.erase(current_symbol)
-	symbol_action.emit(current_symbol)
+	do_symbol_action()
 	print("undo add action ", current_symbol.id)
 	
 	
@@ -156,7 +174,7 @@ func do_symbol_remove():
 	current_symbol = remove_symbol_stack[remove_action_id]
 	current_symbol.source_xml.symbol_objects.erase(current_symbol)
 	remove_action_id += 1
-	symbol_action.emit(current_symbol)
+	do_symbol_action()
 	print("do remove action ", current_symbol.id)
 	
 	
@@ -165,7 +183,7 @@ func undo_symbol_remove():
 	current_symbol = remove_symbol_stack[remove_action_id]
 	var index = current_symbol.source_xml.get_index_of_id(current_symbol.id)
 	current_symbol.source_xml.symbol_objects.insert(index, current_symbol)
-	symbol_action.emit(current_symbol)
+	do_symbol_action()
 	print("do add action ", current_symbol.id)
 
 

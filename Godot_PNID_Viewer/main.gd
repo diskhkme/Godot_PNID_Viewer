@@ -189,7 +189,7 @@ func _on_remove_symbol():
 	var target_symbol = _image_viewer.selected_symbol
 	_image_viewer.cancel_selected()
 	ProjectManager.active_project.symbol_remove(target_symbol)
-	pass
+
 	
 func _on_undo_action():
 	ProjectManager.active_project.undo_redo.undo()
@@ -202,6 +202,8 @@ func _on_redo_action():
 func _on_symbol_action(target_symbol: SymbolObject):
 	_image_viewer.apply_symbol_change(target_symbol)
 	_xml_tree_viewer.apply_symbol_change(target_symbol)	
+	_project_viewer.update_dirty()
+	_main_menu.update_dirty()
 	get_tree().call_group("draw_group", "redraw")
 	
 	

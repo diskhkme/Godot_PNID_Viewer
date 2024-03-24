@@ -26,6 +26,14 @@ func add_project_tab(project: Project):
 	tab_project_array.push_back(project)
 	tab_bar.add_tab(project.img_filename)
 	tab_bar.current_tab = tab_bar.tab_count-1
+	
+	
+func update_dirty():
+	for i in range(tab_project_array.size()):
+		if tab_project_array[i].dirty:
+			tab_bar.set_tab_title(i, "(*)" + tab_project_array[i].img_filename)
+		else:
+			tab_bar.set_tab_title(i, tab_project_array[i].img_filename)	
 
 
 func _on_tab_bar_tab_changed(tab_id: int):

@@ -11,10 +11,6 @@ var _tree_item_dict = {} # key: xml_item, value: xml_data
 var _root: TreeItem
 var selected_xml: XMLData
 
-func _ready():
-	SignalManager.symbol_edited.connect(_update_dirty)
-	
-	
 func use_project(project: Project) -> void:
 	_tree_item_dict.clear()
 	_tree.clear()
@@ -61,23 +57,13 @@ func reset_xml(xml_data: XMLData):
 	xml_item.set_checked(3, xml_data.is_show_label)
 	_tree_item_dict[xml_item] = xml_data
 	
-	
-
-	
-
-
-	
-	
+		
 func update_dirty():
 	for xml_item in _tree_item_dict:
-		if _tree_item_dict[xml_item].dirty == true:
-			xml_item.set_text(0,_tree_item_dict[xml_item].filename + " (*)")
+		if _tree_item_dict[xml_item].dirty:
+			xml_item.set_text(0,"(*)"+_tree_item_dict[xml_item].filename)
 		else:
 			xml_item.set_text(0,_tree_item_dict[xml_item].filename)
-
-
-func _update_dirty(symbol_object: SymbolObject):
-	update_dirty()
 		
 
 # TODO: how to receive treeitem checkbox changed event?
