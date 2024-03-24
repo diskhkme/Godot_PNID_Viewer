@@ -32,14 +32,14 @@ func process_input(event):
 		self.global_translate((-event.relative)/self.zoom)
 
 
-func _focus_symbol(symbol_object: SymbolObject):
-	if is_symbol_visible(symbol_object):
+func focus_symbol(symbol_object: SymbolObject):
+	if _is_symbol_visible(symbol_object):
 		return
 		
 	global_position = symbol_object.get_center()
 
 
-func is_symbol_visible(target_symbol: SymbolObject):
+func _is_symbol_visible(target_symbol: SymbolObject):
 	var camera_pos = global_position
 	var symbol_center = target_symbol.get_center()
 	var cam_center_to_symbol = symbol_center - camera_pos

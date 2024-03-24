@@ -4,27 +4,29 @@
 extends Control
 
 signal request_type_change_window(symbol_object: SymbolObject)
+signal symbol_selected(symbol_object: SymbolObject, from_tree: bool)
+signal symbol_deselected(symbol_object)
 
 @onready var tree = $Tree
 
 var xml_items_dict = {} # xml_data : tree_item
 var symbol_items_dict = {} # symbol_object: tree_item
 var root
-var is_mouse_on = false
 var selected_from_tree: bool = false
+var last_selected
 
 const COLUMN_COUNT = 8
 
 func _ready():
 	reset_tree()
-	#SignalManager.symbol_selected_from_image.connect(_select_symbol)
-	#SignalManager.symbol_deselected.connect(_deselect_symbol)
-	#SignalManager.symbol_edited.connect(_edit_symbol)
-	#SignalManager.symbol_added.connect(_add_symbol)
-	#SignalManager.symbol_removed.connect(_remove_symbol)
-	
-	#SignalManager.xml_visibility_changed.connect(_change_visibility)
-	#SignalManager.xml_selectability_changed.connect(_change_selectability)
+
+
+func _input(event):
+	# bring type class editing window by double clicking
+	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
+		if event.double_click: 
+			var selected_symbol = symbol_items_dict.values().filter(func(a): return a == tree.get_selected())
+			request_type_change_window.emit(selected_symbol)
 
 #-------------------------------------------------------------
 # Tree Initialization-----------------------------------------
@@ -81,17 +83,6 @@ func add_xml_on_tree(xml_data: XMLData) -> TreeItem:
 	return xml_item
 	
 	
-func add_symbol_on_tree(parent: TreeItem, symbol_object: SymbolObject) -> TreeItem:
-	var symbol_item: TreeItem = tree.create_item(parent)
-	fill_treeitem(symbol_item,symbol_object)
-	symbol_item.set_custom_color(0, symbol_object.color)
-	if symbol_object.is_text:
-		# TODO: text editing does not signal symbol edited
-		symbol_item.set_editable(2, true)
-		
-	return symbol_item
-	
-	
 func fill_treeitem(symbol_child: TreeItem, symbol_object: SymbolObject):
 	symbol_child.set_text(0, str(symbol_object.id))
 	symbol_child.set_text(1, symbol_object.type)
@@ -104,6 +95,17 @@ func fill_treeitem(symbol_child: TreeItem, symbol_object: SymbolObject):
 	
 	if symbol_object.removed:
 		symbol_child.visible = false
+		
+	
+func add_symbol_on_tree(parent: TreeItem, symbol_object: SymbolObject) -> TreeItem:
+	var symbol_item: TreeItem = tree.create_item(parent)
+	fill_treeitem(symbol_item,symbol_object)
+	symbol_item.set_custom_color(0, symbol_object.color)
+	if symbol_object.is_text:
+		# TODO: text editing does not signal symbol edited
+		symbol_item.set_editable(2, true)
+		
+	return symbol_item
 		
 		
 func select_symbol(symbol_object: SymbolObject):
@@ -122,21 +124,13 @@ func deselect_symbol():
 func _on_tree_item_selected():
 	var selected_item = tree.get_selected()
 	var selected_symbol = symbol_items_dict.keys().filter(func(a): return symbol_items_dict[a] == selected_item)
-	SignalManager.symbol_selected_from_tree.emit(selected_symbol[0])
+	if selected_symbol[0] != last_selected:
+		symbol_deselected.emit(last_selected, true)
+		symbol_selected.emit(selected_symbol[0], true)
+		
+	last_selected = selected_symbol[0]
 	
 
-func _input(event):
-	# limit area to treeviewer
-	if !is_mouse_on:
-		return
-				
-	# bring type class editing window by double clicking
-	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
-		if event.double_click: 
-			var selected_symbol = symbol_items_dict.values().filter(func(a): return a == tree.get_selected())
-			request_type_change_window.emit(selected_symbol)
-			
-			
 func _on_tree_column_title_clicked(column, mouse_button_index):
 	if mouse_button_index == MOUSE_BUTTON_LEFT:
 		for prev_symbol_item in symbol_items_dict.values():
@@ -162,14 +156,6 @@ func sort_function(column):
 		6: return func(a,b): return a.bndbox.w < b.bndbox.w
 		7: return func(a,b): return a.degree < b.degree
 			
-
-func _on_mouse_entered():
-	is_mouse_on = true
-
-
-func _on_mouse_exited():
-	is_mouse_on = false
-
 			
 #-------------------------------------------------------------
 # Received Event Handle---------------------------------------

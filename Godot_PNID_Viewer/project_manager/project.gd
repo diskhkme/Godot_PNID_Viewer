@@ -72,12 +72,12 @@ func get_current_symbol():
 # in case of edit symbol, editing is already done by edit controller
 # TODO: consider change actual edit action happens here
 func symbol_edit_started(symbol_object: SymbolObject):
-	print("add stack ", symbol_object.id)
 	var snapshot = Snapshot.new()
 	snapshot.ref = symbol_object
 	snapshot.before = symbol_object.clone()
 	if current_action_id >= snapshot_stack.size():
 		snapshot_stack.push_back(snapshot)
+		print("add stack ", symbol_object.id)
 	else:
 		snapshot_stack[current_action_id] = snapshot
 	

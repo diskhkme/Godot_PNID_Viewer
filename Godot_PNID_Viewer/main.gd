@@ -52,6 +52,8 @@ func _ready():
 	_image_viewer_context_menu.add_symbol_pressed.connect(_on_add_symbol)
 	_image_viewer_context_menu.remove_symbol_pressed.connect(_on_remove_symbol)
 	
+	_xml_tree_viewer.symbol_selected.connect(_on_symbol_selected)
+	
 	
 	#_xml_tree_viewer.request_type_change_window.connect(_show_type_change_window)
 	
@@ -151,8 +153,11 @@ func _on_screenshot_taken(img: Image, path: String):
 	img.free()
 	
 	
-func _on_symbol_selected(symbol_object: SymbolObject):
-	_xml_tree_viewer.select_symbol(symbol_object)
+func _on_symbol_selected(symbol_object: SymbolObject, from_tree: bool):
+	if not from_tree:
+		_xml_tree_viewer.select_symbol(symbol_object)
+	else:
+		_image_viewer.select_symbol(symbol_object)
 	ProjectManager.active_project.symbol_edit_started(symbol_object)
 	
 	

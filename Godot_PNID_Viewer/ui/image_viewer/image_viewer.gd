@@ -4,7 +4,7 @@
 extends PanelContainer
 class_name ImageViewer
 
-signal symbol_selected(symbol_object: SymbolObject)
+signal symbol_selected(symbol_object: SymbolObject, from_tree: bool)
 signal symbol_editing(symbol_object: SymbolObject)
 signal symbol_deselected(edited: bool) # true if edited, false if canceled
 signal screenshot_taken(img: Image)
@@ -66,6 +66,11 @@ func cancel_selected(): # force hiding when symbol is removed
 	ProjectManager.active_project.symbol_edit_canceled(selected_symbol)
 	selected_symbol = null
 	_active_editor_control.visible = false
+	
+	
+func select_symbol(symbol_object: SymbolObject):
+	_process_symbol_selected(symbol_object)
+	_image_view_camera.focus_symbol(symbol_object)
 
 
 func process_input(event):
@@ -83,7 +88,7 @@ func process_input(event):
 	else:
 		var selected = _active_selection_filter.process_input(event) 
 		if selected != null:
-			symbol_selected.emit(selected)
+			symbol_selected.emit(selected, false)
 			_process_symbol_selected(selected)
 			
 			
@@ -92,6 +97,7 @@ func _process_symbol_selected(selected):
 	_active_editor_control.visible = true
 	_active_xml_nodes[selected.source_xml].hide_symbol_node(selected)
 	_active_selection_filter.clear_candidates()
+	_image_view_camera.focus_symbol(selected)
 	selected_symbol = selected
 	
 	
