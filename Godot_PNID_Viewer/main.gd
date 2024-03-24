@@ -77,6 +77,11 @@ func _input(event):
 		elif _project_viewer.get_global_rect().has_point(event.position):
 			_project_viewer_context_menu.process_input(event)
 			
+	if event is InputEventKey and event.is_pressed():
+		if event.ctrl_pressed and event.keycode == KEY_Z:
+			_on_undo_action()
+		if event.ctrl_pressed and event.keycode == KEY_Y:
+			_on_redo_action()
 			
 
 func _on_new_project(): # web & windows

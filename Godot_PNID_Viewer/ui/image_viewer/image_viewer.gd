@@ -90,7 +90,7 @@ func process_input(event):
 		if selected != null:
 			symbol_selected.emit(selected, false)
 			_process_symbol_selected(selected)
-			
+
 			
 func _process_symbol_selected(selected):
 	_active_editor_control.initialize(selected)
