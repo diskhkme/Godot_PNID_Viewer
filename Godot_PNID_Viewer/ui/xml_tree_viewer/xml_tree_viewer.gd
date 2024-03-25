@@ -142,6 +142,8 @@ func _on_tree_column_title_clicked(column, mouse_button_index):
 			for symbol_object in symbol_objects:
 				var symbol_item = add_symbol_on_tree(xml_item, symbol_object)
 				symbol_items_dict[symbol_object] = symbol_item
+				
+			update_xml_visibility(xml_data)
 
 
 func sort_function(column):
@@ -175,7 +177,18 @@ func apply_symbol_change(symbol_object: SymbolObject):
 
 
 func update_xml_visibility(xml_data: XMLData):
-	xml_items_dict[xml_data].collapsed = not xml_data.is_visible
+	symbol_items_dict.keys().map(func(s): 
+		if s.source_xml == xml_data:
+			if s.is_text:
+				if xml_data.is_text_visible:
+					symbol_items_dict[s].visible = true
+				else:
+					symbol_items_dict[s].visible = false
+			else:
+				if xml_data.is_symbol_visible:
+					symbol_items_dict[s].visible = true
+				else:
+					symbol_items_dict[s].visible = false)
 			
 			
 func update_xml_selectability(xml_data: XMLData):

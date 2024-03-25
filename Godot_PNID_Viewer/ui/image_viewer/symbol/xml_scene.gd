@@ -13,7 +13,7 @@ var xml_data
 
 func populate_symbol_bboxes(xml_data: XMLData) -> void:
 	self.xml_data = xml_data
-	for symbol_object in xml_data.symbol_objects:	
+	for symbol_object in xml_data.symbol_objects:
 		_add_child_static_symbol(symbol_object)
 
 
@@ -27,7 +27,21 @@ func _add_child_static_symbol(symbol_object: SymbolObject):
 	symbol.report_static_selected.connect(on_static_symbol_select_reported)
 	self.add_child(symbol)
 	symbol_nodes[symbol_object] = symbol
-	
+
+
+func update_visibility():
+	symbol_nodes.keys().map(func(s): 
+		if s.is_text:
+			if xml_data.is_text_visible:
+				symbol_nodes[s].visible = true
+			else:
+				symbol_nodes[s].visible = false
+		else:
+			if xml_data.is_symbol_visible:
+				symbol_nodes[s].visible = true
+			else:
+				symbol_nodes[s].visible = false)
+
 	
 func clear_candidates():
 	selected_candidate.clear()
@@ -55,8 +69,8 @@ func add_symbol_node(symbol_object: SymbolObject):
 	
 	
 func remove_symbol_node(symbol_object: SymbolObject):
-	symbol_nodes[symbol_object].free() # delete node
-	symbol_nodes.erase(symbol_object) # delete in dict
+		symbol_nodes[symbol_object].free() # delete node
+		symbol_nodes.erase(symbol_object) # delete in dict
 
 
 func set_label_visibility(enabled: bool):

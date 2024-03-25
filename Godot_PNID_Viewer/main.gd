@@ -242,8 +242,11 @@ func _on_save_as_xml():
 		JavaScriptBridge.download_buffer(xml_dump.to_utf8_buffer(), "export.xml")
 
 
-func _on_xml_visibility_changed(xml_data: XMLData, enabled: bool):
-	xml_data.is_visible = enabled
+func _on_xml_visibility_changed(xml_data: XMLData, is_text: bool, enabled: bool):
+	if is_text:
+		xml_data.is_text_visible = enabled
+	else:
+		xml_data.is_symbol_visible = enabled
 	_image_viewer.update_xml_visibility(xml_data)
 	_xml_tree_viewer.update_xml_visibility(xml_data)
 	

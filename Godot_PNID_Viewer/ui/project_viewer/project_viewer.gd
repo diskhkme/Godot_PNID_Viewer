@@ -3,7 +3,7 @@ class_name ProjectViewer
 
 signal xml_selected(xml_data: XMLData)
 signal xml_deselected
-signal xml_visibility_changed(xml_data: XMLData, enabled: bool)
+signal xml_visibility_changed(xml_data: XMLData, is_text: bool, enabled: bool)
 signal xml_selectability_changed(xml_data: XMLData, enabled: bool)
 signal xml_label_visibility_changed(xml_data: XMLData, enabled: bool)
 
@@ -11,7 +11,7 @@ signal xml_label_visibility_changed(xml_data: XMLData, enabled: bool)
 
 @export var ColorIcon = preload("res://assets/icons/rectangle_tool.png")
 
-const COLUMN_COUNT = 5
+const COLUMN_COUNT = 6
 
 var _tree_item_dict = {} # key: xml_item, value: xml_data
 var _root: TreeItem
@@ -35,10 +35,11 @@ func reset_root(img_filename: String):
 	_root = _tree.create_item()
 	_root.set_text(0, img_filename)
 	# TODO: Show symbol & text separately
-	_root.set_text(1, "Show")
-	_root.set_text(2, "Select")
-	_root.set_text(3, "Label")
-	_root.set_text(4, "Color")
+	_root.set_text(1, "Symbol")
+	_root.set_text(2, "Text")
+	_root.set_text(3, "Select")
+	_root.set_text(4, "Label")
+	_root.set_text(5, "Color")
 	for i in range(1,COLUMN_COUNT):
 		_tree.set_column_expand(i, false)
 		_tree.set_column_custom_minimum_width(i,50)
@@ -47,19 +48,21 @@ func reset_root(img_filename: String):
 func reset_xml(xml_data: XMLData):
 	var xml_item: TreeItem = _tree.create_item(_root)
 	xml_item.set_text(0,xml_data.filename)
-	for i in range(3):
-		xml_item.set_cell_mode(i+1, TreeItem.CELL_MODE_CHECK)
-		xml_item.set_editable(i+1, true)
-		xml_item.set_selectable(i+1, false)	
+	for i in range(1,5):
+		xml_item.set_cell_mode(i, TreeItem.CELL_MODE_CHECK)
+		xml_item.set_editable(i, true)
+		xml_item.set_selectable(i, false)
+		xml_item.set_text_alignment(i, HORIZONTAL_ALIGNMENT_CENTER)
 	
 	if xml_data is XMLData:
-		xml_item.set_cell_mode(4, TreeItem.CELL_MODE_ICON)
-		xml_item.set_icon_modulate(4, xml_data.color)
-		xml_item.set_icon(4, ColorIcon)
+		xml_item.set_cell_mode(5, TreeItem.CELL_MODE_ICON)
+		xml_item.set_icon_modulate(5, xml_data.color)
+		xml_item.set_icon(5, ColorIcon)
 		
-	xml_item.set_checked(1, xml_data.is_visible)
-	xml_item.set_checked(2, xml_data.is_selectable)
-	xml_item.set_checked(3, xml_data.is_show_label)
+	xml_item.set_checked(1, xml_data.is_symbol_visible)
+	xml_item.set_checked(2, xml_data.is_text_visible)
+	xml_item.set_checked(3, xml_data.is_selectable)
+	xml_item.set_checked(4, xml_data.is_show_label)
 	_tree_item_dict[xml_item] = xml_data
 	
 	if xml_data is DiffData:
@@ -87,26 +90,25 @@ func update_dirty():
 func _process(delta): 
 	for xml_item in _tree_item_dict:
 		var xml_data = _tree_item_dict[xml_item]
-		if xml_item.is_checked(1) != xml_data.is_visible:
-			xml_visibility_changed.emit(xml_data, xml_item.is_checked(1))
-			if xml_item.is_checked(1) == false: # if not visible, not selectable
-				xml_item.set_checked(2,false)
-				xml_item.set_editable(2,false)
-				xml_item.set_checked(3,false)
-				xml_item.set_editable(3,false)
-			else:
-				xml_item.set_editable(2,true)
-				xml_item.set_editable(3,true)
+		if xml_item.is_checked(1) != xml_data.is_symbol_visible:
+			xml_visibility_changed.emit(xml_data, false, xml_item.is_checked(1))
+		if xml_item.is_checked(2) != xml_data.is_text_visible:
+			xml_visibility_changed.emit(xml_data, true, xml_item.is_checked(2))
 			
-		if xml_item.is_checked(2) != xml_data.is_selectable:
-			if !xml_item.is_checked(1): # not allow selectable if not visible
-				xml_item.set_checked(2,false)
-			xml_selectability_changed.emit(xml_data, xml_item.is_checked(2))
+		if not xml_item.is_checked(1) and not xml_item.is_checked(2):
+			xml_item.set_checked(3,false)
+			xml_item.set_editable(3,false)
+			xml_item.set_checked(4,false)
+			xml_item.set_editable(4,false)
+		else:
+			xml_item.set_editable(3,true)
+			xml_item.set_editable(4,true)
 			
-		if xml_item.is_checked(3) != xml_data.is_show_label:
-			if !xml_item.is_checked(1): # not allow selectable if not visible
-				xml_item.set_checked(3,false)
-			xml_label_visibility_changed.emit(xml_data, xml_item.is_checked(3))
+		if xml_item.is_checked(3) != xml_data.is_selectable:
+			xml_selectability_changed.emit(xml_data, xml_item.is_checked(3))
+			
+		if xml_item.is_checked(4) != xml_data.is_show_label:
+			xml_label_visibility_changed.emit(xml_data, xml_item.is_checked(4))
 		
 
 func _on_tree_item_selected():

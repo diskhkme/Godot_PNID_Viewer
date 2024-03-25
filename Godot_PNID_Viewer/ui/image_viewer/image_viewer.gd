@@ -25,7 +25,7 @@ class NodeRef:
 	var selection_filter
 	var editor_control
 	var image_scene
-	var xml_nodes = {} # key: xml_data, value: xml scene, for active project
+	var xml_nodes = {} # key: xml_data, value: [xml symbol scene, xml text scene], for active project
 
 var _node_table = {}
 
@@ -75,6 +75,8 @@ func cancel_selected(): # force hiding when symbol is removed
 	
 	
 func select_symbol(symbol_object: SymbolObject):
+	if selected_symbol != symbol_object:
+		_process_symbol_deselected()
 	_process_symbol_selected(symbol_object)
 	_image_view_camera.focus_symbol(symbol_object)
 
@@ -108,6 +110,8 @@ func _process_symbol_selected(selected):
 	
 	
 func _process_symbol_deselected():
+	if selected_symbol == null:
+		return
 	_active_editor_control.visible = false
 	_active_xml_nodes[selected_symbol.source_xml].show_symbol_node(selected_symbol)
 	_active_selection_filter.clear_candidates()
@@ -177,7 +181,7 @@ func apply_symbol_change(symbol_object: SymbolObject):
 	
 	
 func update_xml_visibility(xml_data: XMLData):
-	_node_table[ProjectManager.active_project].xml_nodes[xml_data].visible = xml_data.is_visible
+	_node_table[ProjectManager.active_project].xml_nodes[xml_data].update_visibility()
 	
 	
 func update_label_visibility(xml_data: XMLData):

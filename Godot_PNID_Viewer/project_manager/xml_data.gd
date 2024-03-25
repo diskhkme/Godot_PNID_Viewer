@@ -6,10 +6,10 @@ var symbol_objects: Array[SymbolObject]
 var dirty: bool # true if any symbol_object is modified
 var color: Color
 
-var is_visible: bool = true 
+var is_symbol_visible: bool = true 
+var is_text_visible: bool = true 
 var is_selectable: bool = true
 var is_show_label: bool = false
-
 
 func _init(id:int, xml_filename:String, xml_str: PackedByteArray):
 	self.id = id
