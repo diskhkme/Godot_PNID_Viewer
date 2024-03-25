@@ -48,11 +48,15 @@ func _ready():
 	_image_viewer.symbol_selected.connect(_on_symbol_selected)
 	_image_viewer.symbol_editing.connect(_on_symbol_editing)
 	_image_viewer.symbol_deselected.connect(_on_symbol_deselected)
-	
 	_image_viewer_context_menu.add_symbol_pressed.connect(_on_add_symbol)
 	_image_viewer_context_menu.remove_symbol_pressed.connect(_on_remove_symbol)
 	
 	_project_viewer.xml_selected.connect(_on_xml_selected)
+	_project_viewer.xml_visibility_changed.connect(_on_xml_visibility_changed)
+	_project_viewer.xml_selectability_changed.connect(_on_xml_selectability_changed)
+	_project_viewer.xml_label_visibility_changed.connect(_on_xml_label_visibility_changed)
+	_project_viewer_context_menu.xml_save_as_pressed.connect(_on_save_as_xml)
+	
 	
 	_xml_tree_viewer.symbol_selected.connect(_on_symbol_selected)
 	
@@ -222,7 +226,33 @@ func update_guis():
 	
 func _on_xml_selected(xml_data: XMLData):
 	_xml_tree_viewer.scroll_to_xml(xml_data)
+	
+	
+func _on_save_as_xml():
+	if OS.get_name() == "Windows":
+		if not _save_as_dialog.file_selected.is_connected(_project_viewer.save_xml):
+			_save_as_dialog.file_selected.connect(_project_viewer.save_xml)
+		_save_as_dialog.popup_centered()
+	elif OS.get_name() == "Web":
+		var xml_dump = PnidXmlIo.dump_pnid_xml(_project_viewer.selected_xml.symbol_objects)
+		JavaScriptBridge.download_buffer(xml_dump.to_utf8_buffer(), "export.xml")
 
+
+func _on_xml_visibility_changed(xml_data: XMLData, enabled: bool):
+	xml_data.is_visible = enabled
+	_image_viewer.update_xml_visibility(xml_data)
+	_xml_tree_viewer.update_xml_visibility(xml_data)
+	
+
+func _on_xml_selectability_changed(xml_data: XMLData, enabled: bool):
+	xml_data.is_selectable = enabled
+	# for imageviewer, selection filter itself checks selectability of xml_data
+	_xml_tree_viewer.update_xml_selectability(xml_data)
+
+
+func _on_xml_label_visibility_changed(xml_data: XMLData, enabled: bool):
+	xml_data.is_show_label = enabled
+	_image_viewer.update_label_visibility(xml_data)
 
 
 

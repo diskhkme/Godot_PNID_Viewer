@@ -3,12 +3,15 @@ class_name ProjectViewer
 
 signal xml_selected(xml_data: XMLData)
 signal xml_deselected
+signal xml_visibility_changed(xml_data: XMLData, enabled: bool)
+signal xml_selectability_changed(xml_data: XMLData, enabled: bool)
+signal xml_label_visibility_changed(xml_data: XMLData, enabled: bool)
 
 @onready var _tree = $Tree
 
 @export var ColorIcon = preload("res://assets/icons/rectangle_tool.png")
 
-const COLUMN_NUM = 6
+const COLUMN_COUNT = 5
 
 var _tree_item_dict = {} # key: xml_item, value: xml_data
 var _root: TreeItem
@@ -28,7 +31,7 @@ func _reset_tree(project: Project):
 	
 	
 func reset_root(img_filename: String):
-	_tree.set_columns(COLUMN_NUM)
+	_tree.set_columns(COLUMN_COUNT)
 	_root = _tree.create_item()
 	_root.set_text(0, img_filename)
 	# TODO: Show symbol & text separately
@@ -36,6 +39,9 @@ func reset_root(img_filename: String):
 	_root.set_text(2, "Select")
 	_root.set_text(3, "Label")
 	_root.set_text(4, "Color")
+	for i in range(1,COLUMN_COUNT):
+		_tree.set_column_expand(i, false)
+		_tree.set_column_custom_minimum_width(i,50)
 	
 	
 func reset_xml(xml_data: XMLData):
@@ -74,8 +80,7 @@ func _process(delta):
 	for xml_item in _tree_item_dict:
 		var xml_data = _tree_item_dict[xml_item]
 		if xml_item.is_checked(1) != xml_data.is_visible:
-			xml_data.is_visible = xml_item.is_checked(1)
-			SignalManager.xml_visibility_changed.emit(xml_data)
+			xml_visibility_changed.emit(xml_data, xml_item.is_checked(1))
 			if xml_item.is_checked(1) == false: # if not visible, not selectable
 				xml_item.set_checked(2,false)
 				xml_item.set_editable(2,false)
@@ -88,14 +93,12 @@ func _process(delta):
 		if xml_item.is_checked(2) != xml_data.is_selectable:
 			if !xml_item.is_checked(1): # not allow selectable if not visible
 				xml_item.set_checked(2,false)
-			xml_data.is_selectable = xml_item.is_checked(2)
-			SignalManager.xml_selectability_changed.emit(xml_data)
+			xml_selectability_changed.emit(xml_data, xml_item.is_checked(2))
 			
 		if xml_item.is_checked(3) != xml_data.is_show_label:
 			if !xml_item.is_checked(1): # not allow selectable if not visible
 				xml_item.set_checked(3,false)
-			xml_data.is_show_label = xml_item.is_checked(3)
-			SignalManager.xml_label_visibility_changed.emit(xml_data)
+			xml_label_visibility_changed.emit(xml_data, xml_item.is_checked(3))
 		
 
 func _on_tree_item_selected():
@@ -107,3 +110,13 @@ func _on_tree_item_selected():
 func _on_tree_nothing_selected():
 	selected_xml = null
 	_tree.deselect_all()
+	
+	
+func save_xml(path: String):
+	if !path.contains(".xml"):
+		path += ".xml"
+		
+	var xml_dump = PnidXmlIo.dump_pnid_xml(selected_xml.symbol_objects)
+	if OS.get_name() == "Windows":
+		var file = FileAccess.open(path, FileAccess.WRITE)
+		file.store_string(xml_dump)

@@ -42,8 +42,8 @@ func use_project(project: Project):
 			var symbol_item = add_symbol_on_tree(xml_item, symbol_object)
 			symbol_items_dict[symbol_object] = symbol_item
 		
-		_change_visibility(xml_data)
-		_change_selectability(xml_data)	
+		update_xml_visibility(xml_data)
+		update_xml_selectability(xml_data)	
 
 
 func reset_tree():
@@ -179,11 +179,11 @@ func apply_symbol_change(symbol_object: SymbolObject):
 		symbol_items_dict[symbol_object] = symbol_item
 
 
-func _change_visibility(xml_data: XMLData):
+func update_xml_visibility(xml_data: XMLData):
 	xml_items_dict[xml_data].collapsed = not xml_data.is_visible
 			
 			
-func _change_selectability(xml_data: XMLData):
+func update_xml_selectability(xml_data: XMLData):
 	for symbol_object in xml_data.symbol_objects:
 		for i in range(COLUMN_COUNT):
 			symbol_items_dict[symbol_object].set_selectable(i,xml_data.is_selectable)

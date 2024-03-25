@@ -124,12 +124,10 @@ anchors_preset = 0
 [node name="ImageViewContextMenu" parent="CanvasLayer/ContextMenus" node_paths=PackedStringArray("image_view") instance=ExtResource("12_p38sp")]
 image_view = NodePath("../../MainWindow/Middle/ImageViewer")
 
-[node name="ProjectViewContextMenu" parent="CanvasLayer/ContextMenus" node_paths=PackedStringArray("project_viewer", "save_file_dialog", "diff_dialog") instance=ExtResource("13_sobsl")]
+[node name="ProjectViewContextMenu" parent="CanvasLayer/ContextMenus" node_paths=PackedStringArray("project_viewer") instance=ExtResource("13_sobsl")]
 visible = false
 layout_mode = 1
 project_viewer = NodePath("../../MainWindow/Middle/RightSide/ProjectViewer")
-save_file_dialog = NodePath("../../Dialogs/SaveAsFilesDialog")
-diff_dialog = NodePath("../../Dialogs/DiffWindow")
 
 [connection signal="mouse_entered" from="CanvasLayer/MainWindow/Middle/RightSide/XMLTreeViewer" to="CanvasLayer/MainWindow/Middle/RightSide/XMLTreeViewer" method="_on_mouse_entered"]
 [connection signal="mouse_exited" from="CanvasLayer/MainWindow/Middle/RightSide/XMLTreeViewer" to="CanvasLayer/MainWindow/Middle/RightSide/XMLTreeViewer" method="_on_mouse_exited"]

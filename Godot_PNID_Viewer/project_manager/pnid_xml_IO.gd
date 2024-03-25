@@ -70,9 +70,6 @@ static func dump_pnid_xml(symbol_objects: Array[SymbolObject]) -> String:
 	
 	xml_str += "<annotation>\r\n"
 	for symbol_object in symbol_objects:
-		if symbol_object.removed:
-			continue
-		
 		xml_str += "  <symbol_object>\r\n"
 		xml_str += "    <type>%s</type>\r\n" % symbol_object.type
 		xml_str += "    <class>%s</class>\r\n" % symbol_object.cls

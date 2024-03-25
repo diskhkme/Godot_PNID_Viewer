@@ -58,12 +58,6 @@ func _on_area_2d_mouse_exited():
 	on_cursor = false
 
 
-## --- selected(received)
-#func _update_label_visibility(xml_data: XMLData):
-	## because of diff, label visibility is overrided for each symbol
-	#if xml_data.symbol_objects.has(symbol_object):
-		#static_label.visible = xml_data.is_show_label
+func set_label_visibility(enabled: bool):
+	static_label.visible = enabled
 
-
-
-	

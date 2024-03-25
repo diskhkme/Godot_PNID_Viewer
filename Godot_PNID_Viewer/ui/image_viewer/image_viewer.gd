@@ -57,7 +57,6 @@ func use_project(project: Project):
 	_active_xml_nodes = _node_table[project].xml_nodes
 	
 		
-	
 func get_camera():
 	return _image_view_camera
 	
@@ -128,10 +127,6 @@ func update_xml(project: Project): # ex, xml added
 		if not _node_table[project].xml_nodes.has(xml_data):
 			_add_child_xml_scene(_node_table[project].project_node, xml_data)
 	
-	
-#func _add_new_symbol_to_xml_scene(symbol_object: SymbolObject):
-	#active_xml_scene[symbol_object.source_xml].add_child_static_symbol(symbol_object)
-		
 		
 func _add_child_xml_scene(parent: Node2D, xml_data: XMLData):
 	var xml_scene_instance = XMLScene.instantiate() as XMLScene
@@ -171,24 +166,14 @@ func apply_symbol_change(symbol_object: SymbolObject):
 		xml_scene.add_symbol_node(symbol_object)
 	
 	
-#func _update_xml_visibility(xml_data: XMLData):
-	#active_xml_scene[xml_data].visible = xml_data.is_visible
+func update_xml_visibility(xml_data: XMLData):
+	_node_table[ProjectManager.active_project].xml_nodes[xml_data].visible = xml_data.is_visible
+	
+	
+func update_label_visibility(xml_data: XMLData):
+	_node_table[ProjectManager.active_project].xml_nodes[xml_data].set_label_visibility(xml_data.is_show_label)
+	
 
 func generate_screenshot(path: String):
 	var screenshot = await _image_export.take_screenshot()
 	screenshot_taken.emit(screenshot, path)
-	
-	
-#func _on_symbol_selected(symbol_object):
-	#selected = symbol_object
-	#_active_selection_filter.visible = false
-	#_active_editor_control.visible = true
-	#_active_editor_control.initialize(symbol_object)
-	#is_editing = true
-	#
-	#
-#func _on_symbol_deselected(symbol_object):
-	#_active_selection_filter.visible = true
-	#_active_editor_control.visible = false
-	#is_editing = false
-	
