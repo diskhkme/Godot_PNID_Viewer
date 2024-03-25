@@ -1,6 +1,7 @@
 extends Node
-
 # TODO: rotated bbox iou calculation
+
+signal report_progress(progress: float)
 
 enum DIRECTION {TWO, ONE,}
 
@@ -54,7 +55,7 @@ func filter_by_iou_string_degree(first, second, iou_th, compare_string, compare_
 	for i in range(first.size()):
 
 		var progress = num_current/float(num_total)
-		SignalManager.report_progress.emit(progress)
+		report_progress.emit(progress)
 		
 		var f = first[i]
 		var candidate = second.filter(func(s): return check_iou_cond(f, s, iou_th))

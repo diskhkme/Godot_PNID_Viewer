@@ -1,6 +1,8 @@
 extends Window
 class_name DiffDialog
 
+signal diff_calc_completed(symbol_objects, diff_name, source_xml, target_xml)
+
 @onready var first_xml = $MarginContainer/VBoxContainer/HBoxContainer/FirstXML
 @onready var second_xml = $MarginContainer/VBoxContainer/HBoxContainer/SecondXML
 
@@ -16,10 +18,10 @@ class_name DiffDialog
 var filename_id_dict = {}
 
 func _ready():
-	SignalManager.report_progress.connect(_on_progress_reported)
+	DiffEngine.report_progress.connect(_on_progress_reported)
 	
 
-func gather_calculate_options():
+func _gather_calculate_options():
 	var direction = DiffEngine.DIRECTION.TWO if compare_direction.selected == 0 else DiffEngine.DIRECTION.ONE
 	var iou_th = iou_threshold.value
 	var is_symbol_include = include_symbol.button_pressed
@@ -30,10 +32,10 @@ func gather_calculate_options():
 	return [direction, iou_th, is_symbol_include, is_text_include, is_string_compare, is_degree_compare]
 	
 	
-func get_symbols(selected_xml):
-	var selected_xml_id = ProjectManager.active_project.get_xml_id_from_filename(selected_xml.get_item_text(selected_xml.get_selected_id()))
-	var symbols = ProjectManager.active_project.xml_datas[selected_xml_id].symbol_objects
-	return symbols
+func _get_xml_data(selected_xml_item):
+	var selected_xml_id = ProjectManager.active_project.get_xml_id_from_filename(selected_xml_item.get_item_text(selected_xml_item.get_selected_id()))
+	var xml_data = ProjectManager.active_project.xml_datas[selected_xml_id]
+	return xml_data
 	
 	
 func initialize_with_selected(selected_xml_data: XMLData):
@@ -49,20 +51,14 @@ func _on_close_requested():
 
 func _on_ok_button_pressed():
 	progress_bar.visible = true
-	var first_symbols = get_symbols(first_xml)
-	var second_symbols = get_symbols(second_xml)
-	var options = gather_calculate_options()
+	var first_xml_data = _get_xml_data(first_xml)
+	var second_xml_data = _get_xml_data(second_xml)
+	var options = _gather_calculate_options()
 		
-	var result = await DiffEngine.calculate_diff(first_symbols, second_symbols, options)
-	var new_id = ProjectManager.active_project.xml_datas.size()
-	var new_name = diff_name.text
-	
-	var xml_data = XMLData.new()
-	xml_data.initialize_from_diff_symbols(new_id, new_name, result)
-	ProjectManager.active_project.add_xml_from_data(xml_data)
+	var result = await DiffEngine.calculate_diff(first_xml_data.symbol_objects, second_xml_data.symbol_objects, options)
 	visible = false
 	progress_bar.visible = false
-	pass # Replace with function body.
+	diff_calc_completed.emit(result, diff_name.text, first_xml_data, second_xml_data)
 	
 	
 func _on_progress_reported(progress: float):

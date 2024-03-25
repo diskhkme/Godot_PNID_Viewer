@@ -12,7 +12,7 @@ func update_label(symbol_object: SymbolObject):
 	var symbol_size = symbol_object.get_size()
 	
 	# panel set
-	cls_panel.self_modulate = Color(symbol_object.color, Config.SYMBOL_LABEL_PANEL_ALPHA)
+	cls_panel.self_modulate = Color(symbol_object.source_xml.color, Config.SYMBOL_LABEL_PANEL_ALPHA)
 	cls_label.text = ""
 	cls_label.text += "T:" if symbol_object.is_text else "S:"
 	cls_label.text += symbol_object.cls.left(Config.SYMBOL_LABEL_MAX_LENGTH)

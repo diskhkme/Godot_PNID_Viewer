@@ -125,7 +125,10 @@ func update_xml(project: Project): # ex, xml added
 	# TODO: consider xml clsed case (and add xml close interface)
 	for xml_data in project.xml_datas:
 		if not _node_table[project].xml_nodes.has(xml_data):
-			_add_child_xml_scene(_node_table[project].project_node, xml_data)
+			var new_xml_node = _add_child_xml_scene(_node_table[project].project_node, xml_data)
+			_node_table[project].xml_nodes[xml_data] = new_xml_node
+			
+	_node_table[project].selection_filter.set_target_xml_scene(_node_table[project].xml_nodes.values())
 	
 		
 func _add_child_xml_scene(parent: Node2D, xml_data: XMLData):

@@ -100,7 +100,7 @@ func fill_treeitem(symbol_child: TreeItem, symbol_object: SymbolObject):
 func add_symbol_on_tree(parent: TreeItem, symbol_object: SymbolObject) -> TreeItem:
 	var symbol_item: TreeItem = tree.create_item(parent)
 	fill_treeitem(symbol_item,symbol_object)
-	symbol_item.set_custom_color(0, symbol_object.color)
+	symbol_item.set_custom_color(0, symbol_object.origin_xml.color)
 	if symbol_object.is_text:
 		# TODO: text editing does not signal symbol edited
 		symbol_item.set_editable(2, true)

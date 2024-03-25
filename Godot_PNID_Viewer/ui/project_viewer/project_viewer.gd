@@ -52,19 +52,27 @@ func reset_xml(xml_data: XMLData):
 		xml_item.set_editable(i+1, true)
 		xml_item.set_selectable(i+1, false)	
 	
-	# Color
-	var colors = xml_data.get_colors()
-	var ind = 0
-	for color in colors:
-		xml_item.set_cell_mode(ind+4, TreeItem.CELL_MODE_ICON)
-		xml_item.set_icon_modulate(ind+4, color)
-		xml_item.set_icon(ind+4, ColorIcon)
-		ind += 1
+	if xml_data is XMLData:
+		xml_item.set_cell_mode(4, TreeItem.CELL_MODE_ICON)
+		xml_item.set_icon_modulate(4, xml_data.color)
+		xml_item.set_icon(4, ColorIcon)
 		
 	xml_item.set_checked(1, xml_data.is_visible)
 	xml_item.set_checked(2, xml_data.is_selectable)
 	xml_item.set_checked(3, xml_data.is_show_label)
 	_tree_item_dict[xml_item] = xml_data
+	
+	if xml_data is DiffData:
+		var source_xml_item: TreeItem = _tree.create_item(xml_item)
+		source_xml_item.set_text(0, xml_data.source_xml.filename)
+		source_xml_item.set_cell_mode(4, TreeItem.CELL_MODE_ICON)
+		source_xml_item.set_icon_modulate(4, xml_data.source_xml.color)
+		source_xml_item.set_icon(4, ColorIcon)
+		var target_xml_item: TreeItem = _tree.create_item(xml_item)
+		target_xml_item.set_text(0, xml_data.target_xml.filename)
+		target_xml_item.set_cell_mode(4, TreeItem.CELL_MODE_ICON)
+		target_xml_item.set_icon_modulate(4, xml_data.target_xml.color)
+		target_xml_item.set_icon(4, ColorIcon)
 	
 		
 func update_dirty():
@@ -103,6 +111,8 @@ func _process(delta):
 
 func _on_tree_item_selected():
 	var selected_item = _tree.get_selected()
+	if not _tree_item_dict.has(selected_item):
+		return
 	selected_xml = _tree_item_dict[selected_item]
 	xml_selected.emit(selected_xml)
 

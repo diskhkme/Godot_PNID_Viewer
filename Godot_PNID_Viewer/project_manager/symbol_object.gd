@@ -19,7 +19,7 @@ var degree: float
 var flip: bool 
 
 var source_xml: XMLData
-var color: Color
+var origin_xml: XMLData
 var is_text: bool 
 var dirty = false
 #var removed = false
@@ -49,7 +49,7 @@ func clone():
 	symbol_object.degree = degree
 	symbol_object.flip = flip
 	symbol_object.source_xml = source_xml
-	symbol_object.color = color
+	symbol_object.origin_xml = origin_xml
 	symbol_object.is_text = is_text
 	symbol_object.dirty = dirty
 	return symbol_object
@@ -64,7 +64,7 @@ func restore(other: SymbolObject):
 	degree = other.degree
 	flip = other.flip
 	source_xml = other.source_xml
-	color = other.color
+	origin_xml = other.origin_xml
 	is_text = other.is_text
 	dirty = other.dirty
 	

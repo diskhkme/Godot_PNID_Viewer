@@ -39,8 +39,7 @@ func initialize(id, img_filename, img, num_xml, xml_filenames, xml_strs):
 	undo_redo = UndoRedo.new()
 	xml_datas.clear()
 	for i in range(num_xml):
-		var xml_data = XMLData.new()
-		xml_data.initialize_from_string(xml_datas.size(), xml_filenames[i], xml_strs[i])
+		var xml_data = XMLData.new(xml_datas.size(), xml_filenames[i], xml_strs[i])
 		xml_datas.push_back(xml_data)
 			
 	return true
@@ -56,10 +55,17 @@ func get_xml_id_from_filename(filename: String) -> int:
 	
 func add_xmls(num_xml, xml_filenames, xml_strs):
 	for i in range(num_xml):
-		var xml_data = XMLData.new()
-		xml_data.initialize_from_string(xml_datas.size(), xml_filenames[i], xml_strs[i])
+		var xml_data = XMLData.new(xml_datas.size(), xml_filenames[i], xml_strs[i])
 		xml_datas.push_back(xml_data)
 		
+
+func add_diff_xml(symbol_objects, diff_name, source_xml, target_xml):
+	var xml_id = xml_datas.size()
+	var new_name = diff_name
+	
+	var xml_data = DiffData.new(xml_id, new_name, symbol_objects, source_xml, target_xml)
+	xml_datas.push_back(xml_data)
+
 		
 # --------------------------------------------------------------------
 # ---Undo/Redo--------------------------------------------------------

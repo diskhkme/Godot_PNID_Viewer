@@ -4,32 +4,27 @@ var id: int
 var filename: String
 var symbol_objects: Array[SymbolObject]
 var dirty: bool # true if any symbol_object is modified
+var color: Color
 
 var is_visible: bool = true 
 var is_selectable: bool = true
 var is_show_label: bool = false
 
 
-func initialize_from_string(id:int, xml_filename:String, xml_str: PackedByteArray):
+func _init(id:int, xml_filename:String, xml_str: PackedByteArray):
 	self.id = id
 	self.filename = xml_filename
 	symbol_objects = PnidXmlIo.parse_pnid_xml_from_byte_array(xml_str)
 	if id < Config.SYMBOL_COLOR_PRESET.size():
-		symbol_objects.map(func(s): s.color = Config.SYMBOL_COLOR_PRESET[id])
+		color = Config.SYMBOL_COLOR_PRESET[id]
 	else:
 		var rand_col = Color(randf(), randf(), randf(), 1)
-		symbol_objects.map(func(s): s.color = rand_col)
+		color = rand_col
 	symbol_objects.map(func(s): s.source_xml = self)
+	symbol_objects.map(func(s): s.origin_xml = self)
 	var is_sane = check_sanity(symbol_objects) # TODO: what to do if check sanity failes?
 	
 	
-func initialize_from_diff_symbols(id: int, filename:String, symbol_objects: Array[SymbolObject]):
-	self.id = id
-	self.filename = filename
-	self.symbol_objects = symbol_objects
-	var is_sane = check_sanity(symbol_objects) # TODO: what to do if check sanity failes?
-	
-
 # TODO: add more constraints
 func check_sanity(symbol_objects):
 	for symbol_object in symbol_objects:
@@ -62,12 +57,6 @@ func update_dirty():
 		dirty = false
 	
 
-func get_colors():
-	var colors = {}
-	symbol_objects.map(func(a): colors[a.color] = null)
-	return colors.keys()
-	
-	
 func get_index_of_id(id: int):
 	var next = symbol_objects.filter(func(a): return a.id > id)
 	if next.size() == 0: # last

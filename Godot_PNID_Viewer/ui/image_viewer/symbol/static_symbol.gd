@@ -37,7 +37,7 @@ func update_symbol():
 	
 	# draw set (rect draw)
 	var size = symbol_size
-	var color = symbol_object.color
+	var color = symbol_object.origin_xml.color
 	var width = Config.DEFAULT_LINE_WIDTH
 	static_symbol_draw.global_position = symbol_center
 	static_symbol_draw.rotation = deg_to_rad(symbol_object.get_godot_degree())

@@ -56,10 +56,11 @@ func _ready():
 	_project_viewer.xml_selectability_changed.connect(_on_xml_selectability_changed)
 	_project_viewer.xml_label_visibility_changed.connect(_on_xml_label_visibility_changed)
 	_project_viewer_context_menu.xml_save_as_pressed.connect(_on_save_as_xml)
-	
+	_project_viewer_context_menu.diff_pressed.connect(_on_diff_xml)
 	
 	_xml_tree_viewer.symbol_selected.connect(_on_symbol_selected)
 	
+	_diff_window.diff_calc_completed.connect(_on_diff_calc_completed)
 	
 	#_xml_tree_viewer.request_type_change_window.connect(_show_type_change_window)
 	
@@ -254,6 +255,15 @@ func _on_xml_label_visibility_changed(xml_data: XMLData, enabled: bool):
 	xml_data.is_show_label = enabled
 	_image_viewer.update_label_visibility(xml_data)
 
+
+func _on_diff_xml():
+	_diff_window.popup_centered()
+	_diff_window.initialize_with_selected(_project_viewer.selected_xml)
+	
+	
+func _on_diff_calc_completed(symbol_objects, diff_name, source_xml, target_xml):
+	ProjectManager.active_project.add_diff_xml(symbol_objects, diff_name, source_xml, target_xml)
+	update_guis()
 
 
 func _show_type_change_window(symbol_object:SymbolObject):
