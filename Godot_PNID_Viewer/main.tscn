@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://en0mt7v4ddrg"]
+[gd_scene load_steps=13 format=3 uid="uid://en0mt7v4ddrg"]
 
 [ext_resource type="Script" path="res://main.gd" id="1_h1xnr"]
 [ext_resource type="Theme" uid="uid://dseywhd5dettr" path="res://resources/project_default.tres" id="2_6rl77"]
@@ -8,6 +8,7 @@
 [ext_resource type="PackedScene" uid="uid://mmirfa2yhj50" path="res://ui/xml_tree_viewer/xml_tree_viewer.tscn" id="5_4qjjb"]
 [ext_resource type="PackedScene" uid="uid://dkh7n1euog8gl" path="res://ui/image_viewer/image_viewer.tscn" id="5_ikjut"]
 [ext_resource type="PackedScene" uid="uid://bdsyjmvhhrl76" path="res://ui/dialogs/type_change_window.tscn" id="6_xn5xa"]
+[ext_resource type="PackedScene" uid="uid://bub4qah0tbwdj" path="res://ui/status_bar.tscn" id="8_87pkj"]
 [ext_resource type="PackedScene" uid="uid://fxwcfnsk0rgt" path="res://ui/dialogs/diff_window.tscn" id="11_3hrp5"]
 [ext_resource type="PackedScene" uid="uid://drge4asvwjmcu" path="res://ui/context/image_view_context_menu.tscn" id="12_p38sp"]
 [ext_resource type="PackedScene" uid="uid://chyc6mjjmyek7" path="res://ui/context/project_view_context_menu.tscn" id="13_sobsl"]
@@ -51,32 +52,9 @@ layout_mode = 2
 [node name="XMLTreeViewer" parent="CanvasLayer/MainWindow/Middle/RightSide" instance=ExtResource("5_4qjjb")]
 layout_mode = 2
 
-[node name="StatusBar_TODO" type="PanelContainer" parent="CanvasLayer/MainWindow"]
+[node name="StatusBar" parent="CanvasLayer/MainWindow" instance=ExtResource("8_87pkj")]
 layout_mode = 2
-size_flags_vertical = 3
-
-[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/MainWindow/StatusBar_TODO"]
-layout_mode = 2
-
-[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/MainWindow/StatusBar_TODO/MarginContainer"]
-layout_mode = 2
-
-[node name="Left" type="HBoxContainer" parent="CanvasLayer/MainWindow/StatusBar_TODO/MarginContainer/HBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 2
-
-[node name="Label" type="Label" parent="CanvasLayer/MainWindow/StatusBar_TODO/MarginContainer/HBoxContainer/Left"]
-layout_mode = 2
-text = "Position: - "
-
-[node name="Right" type="HBoxContainer" parent="CanvasLayer/MainWindow/StatusBar_TODO/MarginContainer/HBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 8
-alignment = 2
-
-[node name="Label" type="Label" parent="CanvasLayer/MainWindow/StatusBar_TODO/MarginContainer/HBoxContainer/Right"]
-layout_mode = 2
-text = "Symbol: "
+size_flags_vertical = 8
 
 [node name="Dialogs" type="Node" parent="CanvasLayer"]
 

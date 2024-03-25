@@ -44,7 +44,7 @@ func initialize(symbol_object: SymbolObject):
 	is_actually_edited = false
 
 
-func on_redraw_requested():
+func redraw():
 	update_handle_positions()
 	queue_redraw()
 	

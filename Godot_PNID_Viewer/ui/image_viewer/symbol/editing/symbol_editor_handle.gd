@@ -31,7 +31,8 @@ func set_initial_handle_size(size: Vector2):
 	reference_size = size
 	collision_area.scale = size
 	
-func on_redraw_requested():
+	
+func redraw():
 	update_collision_area_size()
 	queue_redraw()
 	

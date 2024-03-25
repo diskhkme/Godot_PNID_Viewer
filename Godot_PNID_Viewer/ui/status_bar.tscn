@@ -1,0 +1,43 @@
+[gd_scene load_steps=2 format=3 uid="uid://bub4qah0tbwdj"]
+
+[ext_resource type="Script" path="res://ui/status_bar.gd" id="1_u8lh4"]
+
+[node name="StatusBar" type="PanelContainer"]
+size_flags_vertical = 3
+script = ExtResource("1_u8lh4")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+
+[node name="Left" type="HBoxContainer" parent="MarginContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 2
+
+[node name="VSeparator3" type="VSeparator" parent="MarginContainer/HBoxContainer/Left"]
+layout_mode = 2
+
+[node name="CameraPositionLabel" type="Label" parent="MarginContainer/HBoxContainer/Left"]
+layout_mode = 2
+text = "Position: - "
+
+[node name="VSeparator" type="VSeparator" parent="MarginContainer/HBoxContainer/Left"]
+layout_mode = 2
+
+[node name="CameraZoomLabel" type="Label" parent="MarginContainer/HBoxContainer/Left"]
+layout_mode = 2
+text = "Zoom: - "
+
+[node name="VSeparator2" type="VSeparator" parent="MarginContainer/HBoxContainer/Left"]
+layout_mode = 2
+
+[node name="Right" type="HBoxContainer" parent="MarginContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 8
+alignment = 2
+
+[node name="Label" type="Label" parent="MarginContainer/HBoxContainer/Right"]
+layout_mode = 2
+text = "Symbol: "

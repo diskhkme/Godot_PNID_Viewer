@@ -1,7 +1,8 @@
 extends Camera2D
 class_name ImageViewCamera
 
-signal zoom_changed()
+signal zoom_changed(zoom: float)
+signal moved(pos: Vector2)
 
 var is_dragging: bool = false
 
@@ -21,15 +22,16 @@ func process_input(event):
 			if event.button_index == MOUSE_BUTTON_WHEEL_UP:
 				var target_zoom = self.zoom * Config.CAMERA_ZOOM_TICK
 				self.zoom += target_zoom
-				get_tree().call_group("draw_group", "redraw")
+				zoom_changed.emit(self.zoom.x)
 			if event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
 				var target_zoom = self.zoom * Config.CAMERA_ZOOM_TICK
 				self.zoom -= target_zoom
-				get_tree().call_group("draw_group", "redraw")
+				zoom_changed.emit(self.zoom.x)
 
 
 	if event is InputEventMouseMotion and is_dragging:
 		self.global_translate((-event.relative)/self.zoom)
+		moved.emit(self.global_position)
 
 
 func focus_symbol(symbol_object: SymbolObject):

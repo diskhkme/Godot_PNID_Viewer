@@ -11,7 +11,7 @@ extends Node
 @onready var _project_viewer: Control = $CanvasLayer/MainWindow/Middle/RightSide/ProjectViewer
 @onready var _xml_tree_viewer: Control = $CanvasLayer/MainWindow/Middle/RightSide/XMLTreeViewer
 # bottom section
-#@onready var status_bar: Control = $CanvasLayer/MainWindow/StatusBar_TODO
+@onready var status_bar: Control = $CanvasLayer/MainWindow/StatusBar
 
 # dialogs
 @onready var _new_project_dialog = $CanvasLayer/Dialogs/NewProjectDialog
@@ -48,6 +48,8 @@ func _ready():
 	_image_viewer.symbol_selected.connect(_on_symbol_selected)
 	_image_viewer.symbol_editing.connect(_on_symbol_editing)
 	_image_viewer.symbol_deselected.connect(_on_symbol_deselected)
+	_image_viewer.zoom_changed.connect(_on_zoom_changed)
+	_image_viewer.camera_moved.connect(_on_camera_moved)
 	_image_viewer_context_menu.add_symbol_pressed.connect(_on_add_symbol)
 	_image_viewer_context_menu.remove_symbol_pressed.connect(_on_remove_symbol)
 	
@@ -270,3 +272,12 @@ func _on_diff_calc_completed(symbol_objects, diff_name, source_xml, target_xml):
 func _show_type_change_window(symbol_object:SymbolObject):
 	_type_change_dialog.show_type_change_window(symbol_object)
 
+
+func _on_zoom_changed(zoom: float):
+	get_tree().call_group("draw_group", "redraw")
+	status_bar.update_camera_zoom(zoom)
+	
+	
+func _on_camera_moved(pos: Vector2):
+	status_bar.update_camera_position(pos)
+	

@@ -8,6 +8,8 @@ signal symbol_selected(symbol_object: SymbolObject, from_tree: bool)
 signal symbol_editing(symbol_object: SymbolObject)
 signal symbol_deselected(edited: bool) # true if edited, false if canceled
 signal screenshot_taken(img: Image)
+signal zoom_changed(zoom: float)
+signal camera_moved(pos: Vector2)
 
 const ImageScene = preload("res://ui/image_viewer/image_scene.tscn")
 const XMLScene = preload("res://ui/image_viewer/symbol/xml_scene.tscn")
@@ -33,6 +35,11 @@ var _active_editor_control
 var _active_xml_nodes
 
 var selected_symbol
+
+func _ready():
+	_image_view_camera.zoom_changed.connect(_on_zoom_changed)
+	_image_view_camera.moved.connect(_on_camera_moved)
+	
 
 func use_project(project: Project):
 	if not _node_table.has(project): # add new nodes
@@ -180,3 +187,11 @@ func update_label_visibility(xml_data: XMLData):
 func generate_screenshot(path: String):
 	var screenshot = await _image_export.take_screenshot()
 	screenshot_taken.emit(screenshot, path)
+	
+	
+func _on_zoom_changed(zoom: float):
+	zoom_changed.emit(zoom)
+	
+	
+func _on_camera_moved(pos: Vector2):
+	camera_moved.emit(pos)
