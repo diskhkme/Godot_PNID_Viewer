@@ -23,11 +23,11 @@ static func get_current_node_data(parser: XMLParser) -> String:
 	return ""
 		
 		
-static func parse_pnid_xml_from_byte_array(contents: PackedByteArray) -> Array[SymbolObject]:
+static func parse_pnid_xml_from_string(contents: String) -> Array[SymbolObject]:
 	var symbol_objects: Array[SymbolObject] = []
 	
 	var parser = XMLParser.new()
-	parser.open_buffer(contents)
+	parser.open_buffer(contents.to_utf8_buffer())
 	
 	var id = 0
 	var symbol_object

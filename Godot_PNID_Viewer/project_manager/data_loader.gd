@@ -31,7 +31,7 @@ func project_files_load_from_paths(paths):
 	
 	for xml_filepath in xml_filepaths:
 		xml_filenames.push_back(xml_filepath.get_file())
-		var xml_str = FileAccess.get_file_as_string(xml_filepath).to_utf8_buffer()
+		var xml_str = FileAccess.get_file_as_string(xml_filepath)
 		xml_strs.push_back(xml_str)
 		
 	img = Image.new()
@@ -79,7 +79,7 @@ func xml_files_load_from_paths(paths):
 	
 	for xml_filepath in xml_filepaths:
 		xml_filenames.push_back(xml_filepath.get_file())
-		var xml_buffer = FileAccess.get_file_as_string(xml_filepath).to_utf8_buffer()
+		var xml_buffer = FileAccess.get_file_as_string(xml_filepath)
 		xml_buffers.push_back(xml_buffer)
 		
 	xml_files_opened.emit([xml_filenames.size(), xml_filenames, xml_buffers])

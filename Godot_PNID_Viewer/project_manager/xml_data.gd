@@ -11,10 +11,10 @@ var is_text_visible: bool = true
 var is_selectable: bool = true
 var is_show_label: bool = false
 
-func _init(id:int, xml_filename:String, xml_str: PackedByteArray):
+func initialize(id:int, xml_filename:String, xml_str: String):
 	self.id = id
 	self.filename = xml_filename
-	symbol_objects = PnidXmlIo.parse_pnid_xml_from_byte_array(xml_str)
+	symbol_objects = PnidXmlIo.parse_pnid_xml_from_string(xml_str)
 	if id < Config.SYMBOL_COLOR_PRESET.size():
 		color = Config.SYMBOL_COLOR_PRESET[id]
 	else:

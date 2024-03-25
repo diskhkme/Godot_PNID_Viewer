@@ -4,7 +4,7 @@ class_name DiffData
 var source_xml: XMLData
 var target_xml: XMLData
 
-func _init(id: int, filename:String, symbol_objects: Array[SymbolObject], source_xml, target_xml):
+func initialize_diff(id: int, filename:String, symbol_objects: Array[SymbolObject], source_xml, target_xml):
 	self.id = id
 	self.filename = filename
 	self.symbol_objects = symbol_objects
