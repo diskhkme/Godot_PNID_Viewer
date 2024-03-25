@@ -23,37 +23,19 @@ var reference_size: Vector2
 
 var last_mouse_position
 
-func _ready():
-	add_to_group("draw_group")
-	
-	
 func set_initial_handle_size(size: Vector2):
 	reference_size = size
 	collision_area.scale = size
 	
-	
-func redraw():
-	update_collision_area_size()
-	queue_redraw()
-	
-	
-func update_collision_area_size():
-	if type == TYPE.TRANSLATE: # translate area should not change
-		return
-		
-	var zoom_level = get_viewport().get_camera_2d().zoom
-	collision_area.scale = reference_size/zoom_level
-	
 
 func _draw():
-	var zoom_level = get_viewport().get_camera_2d().zoom
 	var color = Config.EDITOR_HANDLE_COLOR
 	var line_width = Config.EDITOR_RECT_LINE_WIDTH
 	
 	if type == TYPE.SCALING:
 		draw_circle(Vector2.ZERO, (collision_area.scale.x*0.5), color)
 	elif type == TYPE.ROTATE:
-		draw_rect(Rect2(-collision_area.scale*0.5, collision_area.scale), color, false, line_width/zoom_level.x)
+		draw_rect(Rect2(-collision_area.scale*0.5, collision_area.scale), color, false, line_width)
 		
 
 func process_input(event):

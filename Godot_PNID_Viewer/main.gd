@@ -219,7 +219,6 @@ func _on_symbol_action(target_symbol: SymbolObject):
 	_xml_tree_viewer.apply_symbol_change(target_symbol)	
 	_project_viewer.update_dirty()
 	_main_menu.update_dirty()
-	get_tree().call_group("draw_group", "redraw")
 	if _project_viewer.selected_xml != null:
 		_status_bar.update_xml_status(_project_viewer.selected_xml)
 	
@@ -280,7 +279,6 @@ func _show_type_change_window(symbol_object:SymbolObject):
 
 
 func _on_zoom_changed(zoom: float):
-	get_tree().call_group("draw_group", "redraw")
 	_status_bar.update_camera_zoom(zoom)
 	
 	

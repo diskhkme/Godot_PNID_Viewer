@@ -16,8 +16,6 @@ var target_symbol: SymbolObject
 var is_actually_edited = false
 
 func _ready():
-	add_to_group("draw_group")
-	
 	for handle in handles:
 		if handle.type == Handle.TYPE.ROTATE or handle.scale_type == Handle.TYPE.TRANSLATE:
 			# for rotation and translation, should save initial state when started
@@ -44,13 +42,7 @@ func initialize(symbol_object: SymbolObject):
 	is_actually_edited = false
 
 
-func redraw():
-	update_handle_positions()
-	queue_redraw()
-	
-
 func _draw():
-	var zoom_level = get_viewport().get_camera_2d().zoom
 	var color = Config.EDITOR_RECT_COLOR
 	var line_width = Config.EDITOR_RECT_LINE_WIDTH
 
@@ -61,10 +53,10 @@ func _draw():
 	var bl_pos = center_node.global_position + (-right_vec*center_node.scale.x - up_vec*center_node.scale.y)*0.5
 	var br_pos = center_node.global_position + (right_vec*center_node.scale.x - up_vec*center_node.scale.y)*0.5
 
-	draw_line(tl_pos, tr_pos, color, (line_width/zoom_level.x))
-	draw_line(tr_pos, br_pos, color, (line_width/zoom_level.x))
-	draw_line(br_pos, bl_pos, color, (line_width/zoom_level.x))
-	draw_line(bl_pos, tl_pos, color, (line_width/zoom_level.x))
+	draw_line(tl_pos, tr_pos, color, line_width)
+	draw_line(tr_pos, br_pos, color, line_width)
+	draw_line(br_pos, bl_pos, color, line_width)
+	draw_line(bl_pos, tl_pos, color, line_width)
 	
 	
 func get_handle(handle_type: Handle.TYPE, scale_type: Handle.SCALE_TYPE):
@@ -89,10 +81,9 @@ func process_input(event) -> bool: # return false if edit end
 				
 func update_handle_positions():
 	# rot anchor adjust depending on the zoom level
-	var zoom_level = get_viewport().get_camera_2d().zoom
 	var right_vec = Vector2.RIGHT.rotated(center_node.rotation)
 	var up_vec = Vector2.UP.rotated(center_node.rotation)
-	var up_offset = Config.EDITOR_ROTATION_HANDLE_OFFSET/zoom_level.x
+	var up_offset = Config.EDITOR_ROTATION_HANDLE_OFFSET
 	
 	var tl_pos = center_node.global_position + (-right_vec*center_node.scale.x + up_vec*center_node.scale.y)*0.5
 	var tr_pos = center_node.global_position + (right_vec*center_node.scale.x + up_vec*center_node.scale.y)*0.5
@@ -108,14 +99,15 @@ func update_handle_positions():
 			handle.global_position = center_node.global_position + up_vec * (center_node.scale.y/2 + up_offset)
 		else:
 			if handle.scale_type == Handle.SCALE_TYPE.TOP_LEFT:
-				handle.global_position = tl_pos + (up_vec - right_vec).normalized()*Config.EDITOR_HANDLE_PADDING/zoom_level.x
+				handle.global_position = tl_pos + (up_vec - right_vec).normalized()*Config.EDITOR_HANDLE_PADDING
 			elif handle.scale_type == Handle.SCALE_TYPE.TOP_RIGHT:
-				handle.global_position = tr_pos + (up_vec + right_vec).normalized()*Config.EDITOR_HANDLE_PADDING/zoom_level.x
+				handle.global_position = tr_pos + (up_vec + right_vec).normalized()*Config.EDITOR_HANDLE_PADDING
 			elif handle.scale_type == Handle.SCALE_TYPE.BOTTOM_LEFT:
-				handle.global_position = bl_pos + (-up_vec - right_vec).normalized()*Config.EDITOR_HANDLE_PADDING/zoom_level.x
+				handle.global_position = bl_pos + (-up_vec - right_vec).normalized()*Config.EDITOR_HANDLE_PADDING
 			elif handle.scale_type == Handle.SCALE_TYPE.BOTTOM_RIGHT:
-				handle.global_position = br_pos + (-up_vec + right_vec).normalized()*Config.EDITOR_HANDLE_PADDING/zoom_level.x
+				handle.global_position = br_pos + (-up_vec + right_vec).normalized()*Config.EDITOR_HANDLE_PADDING
 				
+	await RenderingServer.frame_post_draw # (note) prevent too much redraw according to the handle movement
 	queue_redraw()
 
 	

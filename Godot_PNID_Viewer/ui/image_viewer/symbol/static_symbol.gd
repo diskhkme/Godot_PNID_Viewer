@@ -7,8 +7,6 @@ class_name StaticSymbol
 # signal to symbol scene for filtering selection
 signal report_static_selected(obj: StaticSymbol)
 
-@onready var area = $Area2D
-@onready var collision = $Area2D/CollisionShape2D
 @onready var static_symbol_draw = $StaticSymbolDraw
 @onready var static_label = $StaticSymbolDraw/StaticLabel
 
@@ -16,24 +14,13 @@ var symbol_object: SymbolObject
 var on_cursor: bool = false
 
 func _ready():
-	add_to_group("draw_group")
 	update_symbol()
 	static_label.update_label(symbol_object)
-	
-	
-func redraw():
-	update_symbol()
-	static_symbol_draw.queue_redraw()
-	
+
 	
 func update_symbol():
 	var symbol_center = symbol_object.get_center()
 	var symbol_size = symbol_object.get_size()
-	
-	# area set (for click picking)
-	area.global_position = symbol_center
-	area.scale = symbol_size
-	area.rotation = deg_to_rad(symbol_object.get_godot_degree())
 	
 	# draw set (rect draw)
 	var size = symbol_size
@@ -51,16 +38,9 @@ func update_symbol():
 
 func _input(event):
 	if event is InputEventMouseButton and (event.button_index == MOUSE_BUTTON_LEFT or event.button_index == MOUSE_BUTTON_RIGHT):
-		if event.is_pressed() and on_cursor and not symbol_object.removed:
-			report_static_selected.emit(self)
-			
-			
-func _on_area_2d_mouse_entered():
-	on_cursor = true
-
-
-func _on_area_2d_mouse_exited():
-	on_cursor = false
+		if event.is_pressed() and not symbol_object.removed:
+			if symbol_object.has_point(get_global_mouse_position()):
+				report_static_selected.emit(self)
 
 
 func set_label_visibility(enabled: bool):

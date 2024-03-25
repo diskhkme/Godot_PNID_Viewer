@@ -133,5 +133,14 @@ func set_degree_from_godot(angle: float):
 		
 	degree = -new_degree
 	
+	
+func has_point(point: Vector2):
+	var symbol_based_vec = point-get_center()
+	var canoninal_point = symbol_based_vec.rotated(deg_to_rad(degree)) # minus degree, actually
+	if get_rect().has_point(canoninal_point + get_center()):
+		return true
+	else:
+		return false	
+	
 
 	

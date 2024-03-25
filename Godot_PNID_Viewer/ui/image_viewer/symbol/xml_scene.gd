@@ -13,8 +13,10 @@ var _xml_data
 
 func populate_symbol_bboxes(xml_data: XMLData) -> void:
 	_xml_data = xml_data
+	Util.log_start("populate_xml %s" % xml_data.filename)
 	for symbol_object in xml_data.symbol_objects:
 		_add_child_static_symbol(symbol_object)
+	Util.log_end("populate_xml %s" % xml_data.filename)
 
 
 func set_watched_filter(selection_filter: SymbolSelectionFilter):
@@ -33,6 +35,7 @@ func get_xml_data():
 	return _xml_data
 	
 
+# THE slow part
 func _add_child_static_symbol(symbol_object: SymbolObject):
 	var symbol = StaticSymbol.instantiate() as StaticSymbol
 	symbol.name = str(symbol_object.id)

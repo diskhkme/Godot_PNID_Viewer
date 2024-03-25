@@ -58,7 +58,9 @@ func use_project(project: Project):
 		node_ref.selection_filter.set_target_xml_scene(node_ref.xml_nodes.values())
 		_node_table[project] = node_ref
 	
+	Util.log_start("update_node_tree")
 	_update_node_tree(project)
+	Util.log_end("update_node_tree")
 	_active_selection_filter = _node_table[project].selection_filter
 	_active_editor_control = _node_table[project].editor_control
 	_active_xml_nodes = _node_table[project].xml_nodes
@@ -121,8 +123,13 @@ func _update_node_tree(project):
 		if _node_table[p].project_node.get_parent() != null:
 			_image_viewport.remove_child(_node_table[p].project_node)
 		
+	Util.log_start("add_project_node")
 	_image_viewport.add_child(_node_table[project].project_node)
+	Util.log_end("add_project_node")
+	
+	Util.log_start("update_xml")
 	update_xml(project)
+	Util.log_end("update_xml")
 	
 	
 func close_project(project: Project):
@@ -134,7 +141,9 @@ func update_xml(project: Project): # ex, xml added
 	# TODO: consider xml clsed case (and add xml close interface)
 	for xml_data in project.xml_datas:
 		if not _node_table[project].xml_nodes.has(xml_data):
+			Util.log_start("child_scene %s" % xml_data.filename)
 			var new_xml_node = _add_child_xml_scene(_node_table[project].project_node, xml_data)
+			Util.log_end("child_scene %s" % xml_data.filename)
 			_node_table[project].xml_nodes[xml_data] = new_xml_node
 			
 	_node_table[project].selection_filter.set_target_xml_scene(_node_table[project].xml_nodes.values())
@@ -144,7 +153,9 @@ func _add_child_xml_scene(parent: Node2D, xml_data: XMLData):
 	var xml_scene_instance = XMLScene.instantiate() as XMLScene
 	xml_scene_instance.populate_symbol_bboxes(xml_data)
 	xml_scene_instance.name = xml_data.filename
+	Util.log_start("child_scene add tree %s" % xml_data.filename)
 	parent.add_child(xml_scene_instance)
+	Util.log_end("child_scene add tree %s" % xml_data.filename)
 	return xml_scene_instance
 	
 		
