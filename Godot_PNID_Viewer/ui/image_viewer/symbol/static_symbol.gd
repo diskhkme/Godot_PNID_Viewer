@@ -36,7 +36,7 @@ func update_symbol():
 		static_symbol_draw.visible = true
 	
 
-func _input(event):
+func process_input(event):
 	if event is InputEventMouseButton and (event.button_index == MOUSE_BUTTON_LEFT or event.button_index == MOUSE_BUTTON_RIGHT):
 		if event.is_pressed() and not symbol_object.removed:
 			if symbol_object.has_point(get_global_mouse_position()):

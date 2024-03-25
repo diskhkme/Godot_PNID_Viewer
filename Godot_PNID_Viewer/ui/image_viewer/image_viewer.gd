@@ -95,6 +95,7 @@ func process_input(event):
 			symbol_editing.emit(selected_symbol)
 	else:
 		var selected = _active_selection_filter.process_input(event) 
+		_active_xml_nodes.values().map(func(s): s.process_input(event))
 		if selected != null:
 			symbol_selected.emit(selected, false)
 			_process_symbol_selected(selected)

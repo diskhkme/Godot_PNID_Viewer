@@ -23,6 +23,9 @@ var reference_size: Vector2
 
 var last_mouse_position
 
+func _ready():
+	set_physics_process(false)
+
 func set_initial_handle_size(size: Vector2):
 	reference_size = size
 	collision_area.scale = size
@@ -33,9 +36,9 @@ func _draw():
 	var line_width = Config.EDITOR_RECT_LINE_WIDTH
 	
 	if type == TYPE.SCALING:
-		draw_circle(Vector2.ZERO, (collision_area.scale.x*0.5), color)
+		draw_circle(Vector2.ZERO, (reference_size.x*0.5), color)
 	elif type == TYPE.ROTATE:
-		draw_rect(Rect2(-collision_area.scale*0.5, collision_area.scale), color, false, line_width)
+		draw_rect(Rect2(-reference_size*0.5, reference_size), color, false, line_width)
 		
 
 func process_input(event):
@@ -47,6 +50,7 @@ func process_input(event):
 				indicator_move_started.emit(self, get_global_mouse_position())
 		else:
 			is_dragging = false
+			on_cursor = false
 			indicator_move_ended.emit(self,get_global_mouse_position())
 		
 	if event is InputEventMouseMotion and is_dragging:
@@ -55,7 +59,18 @@ func process_input(event):
 			self.translate(event.relative)
 		indicator_moved.emit(self,get_global_mouse_position(),delta)
 		last_mouse_position = get_global_mouse_position()
-		
+
+
+func disable_collision():
+	collision_area.free()
+	collision_area.disable_mode = CollisionObject2D.DISABLE_MODE_REMOVE
+	collision_rect.disabled = true
+	
+	
+func enable_collision():
+	collision_area.disable_mode = CollisionObject2D.DISABLE_MODE_REMOVE
+	collision_rect.disabled = false
+
 
 func _on_area_2d_mouse_entered():
 	on_cursor = true

@@ -22,6 +22,7 @@ func _ready():
 			handle.indicator_move_started.connect(on_indicator_move_started)
 	
 		handle.indicator_moved.connect(on_indicator_moved)
+		handle.indicator_move_ended.connect(on_indicator_move_ended)
 
 		if handle.type == Handle.TYPE.TRANSLATE:
 			handle.set_initial_handle_size(Vector2.ONE)
@@ -115,6 +116,9 @@ func on_indicator_move_started(target: Handle, start_pos: Vector2):
 	if target.type == Handle.TYPE.ROTATE:
 		rot_start_angle = center_node.rotation
 		rot_start_vec = (start_pos - center_node.global_position).normalized()
+		
+	for handle in handles:
+		handle.disable_collision()
 	
 	
 func on_indicator_moved(target: Handle, mouse_pos: Vector2, mouse_pos_delta: Vector2):
@@ -146,6 +150,10 @@ func on_indicator_moved(target: Handle, mouse_pos: Vector2, mouse_pos_delta: Vec
 	update_handle_positions()
 	update_symbol_box()
 	is_actually_edited = true
+
+func on_indicator_move_ended(target: Handle, start_pos: Vector2):
+	for handle in handles:
+		handle.enable_collision()
 
 
 func update_symbol_box():

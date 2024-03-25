@@ -168,9 +168,6 @@ func sort_function(column):
 # Received Event Handle---------------------------------------
 #-------------------------------------------------------------			
 func apply_symbol_change(symbol_object: SymbolObject):
-	if _symbol_items_dict.has(symbol_object):
-		tree.scroll_to_item(_symbol_items_dict[symbol_object], true)
-	
 	var xml_tree = _xml_items_dict[symbol_object.source_xml]
 	if _symbol_items_dict.has(symbol_object):
 		var symbol_item = _symbol_items_dict[symbol_object]
@@ -183,6 +180,7 @@ func apply_symbol_change(symbol_object: SymbolObject):
 	else: # add case
 		var symbol_item = add_symbol_on_tree(xml_tree, symbol_object)
 		_symbol_items_dict[symbol_object] = symbol_item
+		tree.scroll_to_item(_symbol_items_dict[symbol_object], true)
 
 
 func update_xml_visibility(xml_data: XMLData):

@@ -19,6 +19,10 @@ func populate_symbol_bboxes(xml_data: XMLData) -> void:
 	Util.log_end("populate_xml %s" % xml_data.filename)
 
 
+func process_input(event):
+	_symbol_nodes.values().map(func(s): s.process_input(event))
+
+
 func set_watched_filter(selection_filter: SymbolSelectionFilter):
 	_selection_filter = selection_filter
 	
