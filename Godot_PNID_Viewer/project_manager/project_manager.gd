@@ -1,4 +1,3 @@
-# 파일 집합으로 로드하는 프로젝트 전체를 관리하는 클래스 (singleton)
 extends Node
 
 var symbol_type_set = {} 
@@ -8,11 +7,6 @@ var active_project: Project
 
 func _ready():
 	symbol_type_set = DataLoader.parse_symbol_type_to_dict(SymbolTypeClassDef.TXT)
-	
-	#SignalManager.symbol_selected.connect(_on_symbol_edit_started)
-	#SignalManager.symbol_edited.connect(_on_symbol_edited)
-	#SignalManager.symbol_deselected.connect(_on_symbol_edit_ended)
-	#SignalManager.symbol_added.connect(_on_symbol_added)
 	
 
 func add_project(args: Variant) -> Project:
@@ -45,20 +39,3 @@ func is_symbol_type_text(index: int):
 	return false
 	
 	
-#func _on_symbol_edit_started(symbol_object):
-	#active_project.symbol_edit_started(symbol_object)
-	#
-	#
-#func _on_symbol_edited(symbol_object):
-	#active_project.symbol_edited(symbol_object)
-	#
-		#
-#func _on_symbol_edit_ended(symbol_object):
-	#active_project.symbol_edit_ended(symbol_object)
-	#
-	#
-#func _on_symbol_added(symbol_object):
-	#active_project.symbol_added(symbol_object)
-
-
-

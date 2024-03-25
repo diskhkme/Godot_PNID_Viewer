@@ -45,7 +45,6 @@ func add_symbol(position: Vector2):
 	new_symbol.source_xml = self
 	new_symbol.bndbox += Vector4(position.x, position.y, position.x, position.y) # translate min/max
 	new_symbol.color = Config.SYMBOL_COLOR_PRESET[id]
-	SignalManager.symbol_added.emit(new_symbol)
 	return new_symbol
 	
 	

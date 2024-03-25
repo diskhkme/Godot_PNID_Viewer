@@ -51,8 +51,6 @@ func _on_add_button_pressed():
 
 
 func _on_remove_button_pressed():
-	#var symbol = SignalManager.selected_symbol
-	#symbol.removed = true
 	remove_symbol_pressed.emit()
 	close()
 

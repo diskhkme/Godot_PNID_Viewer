@@ -1,5 +1,4 @@
-extends Node
-
+class_name Config
 # 
 const MAX_UNDOREDO_SNAPSHOT = 3
 

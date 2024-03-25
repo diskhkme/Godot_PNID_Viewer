@@ -1,4 +1,4 @@
-extends Node
+class_name SymbolTypeClassDef
 
 const TXT = "equipment_symbol|bag
 equipment_symbol|bag_filling_machine
