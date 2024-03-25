@@ -5,7 +5,7 @@ extends Control
 
 signal request_type_change_window(symbol_object: SymbolObject)
 signal symbol_selected(symbol_object: SymbolObject, from_tree: bool)
-signal symbol_deselected(symbol_object)
+signal symbol_deselected(symbol_object: SymbolObject, edited: bool)
 
 @onready var tree = $Tree
 
@@ -13,7 +13,6 @@ var xml_items_dict = {} # xml_data : tree_item
 var symbol_items_dict = {} # symbol_object: tree_item
 var root
 var selected_from_tree: bool = false
-var last_selected
 
 const COLUMN_COUNT = 8
 
@@ -128,11 +127,7 @@ func scroll_to_xml(xml_data: XMLData):
 func _on_tree_item_selected():
 	var selected_item = tree.get_selected()
 	var selected_symbol = symbol_items_dict.keys().filter(func(a): return symbol_items_dict[a] == selected_item)
-	if selected_symbol[0] != last_selected:
-		symbol_deselected.emit(last_selected, true)
-		symbol_selected.emit(selected_symbol[0], true)
-		
-	last_selected = selected_symbol[0]
+	symbol_selected.emit(selected_symbol[0], true)
 	
 
 func _on_tree_column_title_clicked(column, mouse_button_index):

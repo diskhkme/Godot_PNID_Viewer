@@ -59,6 +59,7 @@ func _ready():
 	_project_viewer_context_menu.diff_pressed.connect(_on_diff_xml)
 	
 	_xml_tree_viewer.symbol_selected.connect(_on_symbol_selected)
+	_xml_tree_viewer.symbol_deselected.connect(_on_symbol_deselected)
 	
 	_diff_window.diff_calc_completed.connect(_on_diff_calc_completed)
 	

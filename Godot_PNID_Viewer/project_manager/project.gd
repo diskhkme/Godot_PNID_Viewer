@@ -140,8 +140,8 @@ func undo_symbol_edit():
 func symbol_add(pos: Vector2, target_xml: XMLData):
 	var new_symbol = SymbolObject.new()
 	new_symbol.source_xml = target_xml
+	new_symbol.origin_xml = target_xml
 	new_symbol.bndbox += Vector4(pos.x, pos.y, pos.x, pos.y)
-	new_symbol.color = target_xml.get_colors()[0]	
 	new_symbol.id = target_xml.symbol_objects.size()
 	new_symbol.dirty = true
 	
