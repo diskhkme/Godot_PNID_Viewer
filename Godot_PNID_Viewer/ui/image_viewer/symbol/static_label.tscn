@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://bwbdpb164qkuo"]
+[gd_scene load_steps=3 format=3 uid="uid://bwbdpb164qkuo"]
 
 [ext_resource type="Script" path="res://ui/image_viewer/symbol/static_label.gd" id="1_2njsg"]
+[ext_resource type="Theme" uid="uid://dseywhd5dettr" path="res://resources/project_default.tres" id="1_28s5f"]
 
 [node name="StaticLabel" type="Control"]
 layout_mode = 3
@@ -9,6 +10,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = ExtResource("1_28s5f")
 script = ExtResource("1_2njsg")
 
 [node name="ClsPanel" type="PanelContainer" parent="."]

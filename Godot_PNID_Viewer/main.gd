@@ -165,8 +165,6 @@ func _on_screenshot_taken(img: Image, path: String):
 		var data = img.save_png_to_buffer()
 		JavaScriptBridge.download_buffer(data, "Screenshot.png", "image/png")
 
-	img.free()
-	
 	
 func _on_symbol_selected(symbol_object: SymbolObject, from_tree: bool):
 	if not from_tree:
