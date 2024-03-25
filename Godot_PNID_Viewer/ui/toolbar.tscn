@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://kadsves1l116"]
+[gd_scene load_steps=3 format=3 uid="uid://kadsves1l116"]
 
 [ext_resource type="Script" path="res://ui/toolbar.gd" id="1_5vxj8"]
+[ext_resource type="Texture2D" uid="uid://gj7byb38yf6u" path="res://assets/icons/fullscreen.png" id="2_a71xb"]
 
 [node name="Toolbar" type="HBoxContainer"]
 script = ExtResource("1_5vxj8")
@@ -31,11 +32,19 @@ layout_mode = 2
 size_flags_horizontal = 8
 alignment = 2
 
-[node name="Button5" type="Button" parent="HBoxContainer3"]
+[node name="VSeparator" type="VSeparator" parent="HBoxContainer3"]
 layout_mode = 2
-text = "Dummy"
+
+[node name="FullScreenButton" type="TextureButton" parent="HBoxContainer3"]
+layout_mode = 2
+texture_normal = ExtResource("2_a71xb")
+stretch_mode = 3
+
+[node name="VSeparator2" type="VSeparator" parent="HBoxContainer3"]
+layout_mode = 2
 
 [connection signal="pressed" from="HBoxContainer/AddXMLButton" to="." method="_on_add_xml_button_pressed"]
 [connection signal="pressed" from="HBoxContainer/UndoButton" to="." method="_on_undo_button_pressed"]
 [connection signal="pressed" from="HBoxContainer/RedoButton" to="." method="_on_redo_button_pressed"]
 [connection signal="pressed" from="HBoxContainer/ExportImageButton" to="." method="_on_export_image_button_pressed"]
+[connection signal="pressed" from="HBoxContainer3/FullScreenButton" to="." method="_on_full_screen_button_pressed"]

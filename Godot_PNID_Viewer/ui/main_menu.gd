@@ -11,6 +11,8 @@ signal project_tab_close(project: Project)
 
 var tab_project_array: Array
 
+
+
 func _on_open_files_button_pressed():
 	open_files.emit()
 
