@@ -11,7 +11,7 @@ extends Node
 @onready var _project_viewer: Control = $CanvasLayer/MainWindow/Middle/RightSide/ProjectViewer
 @onready var _xml_tree_viewer: Control = $CanvasLayer/MainWindow/Middle/RightSide/XMLTreeViewer
 # bottom section
-@onready var status_bar: Control = $CanvasLayer/MainWindow/StatusBar
+@onready var _status_bar: Control = $CanvasLayer/MainWindow/StatusBar
 
 # dialogs
 @onready var _new_project_dialog = $CanvasLayer/Dialogs/NewProjectDialog
@@ -41,7 +41,7 @@ func _ready():
 	
 	_toolbar.add_xml.connect(_on_add_xml)
 	_toolbar.export_image.connect(_on_export_img)
-	_toolbar.undo_action.connect(_on_undo_action) # TODO
+	_toolbar.undo_action.connect(_on_undo_action)
 	_toolbar.redo_action.connect(_on_redo_action)
 	
 	_image_viewer.screenshot_taken.connect(_on_screenshot_taken)
@@ -171,6 +171,7 @@ func _on_symbol_selected(symbol_object: SymbolObject, from_tree: bool):
 		_xml_tree_viewer.select_symbol(symbol_object)
 	else:
 		_image_viewer.select_symbol(symbol_object)
+	_project_viewer.select_xml(symbol_object.source_xml)
 	ProjectManager.active_project.symbol_edit_started(symbol_object)
 	
 	
@@ -200,8 +201,9 @@ func _on_add_symbol(pos: Vector2):
 	
 func _on_remove_symbol():
 	var target_symbol = _image_viewer.selected_symbol
+	target_symbol.removed = true
+	ProjectManager.active_project.symbol_edited(target_symbol)
 	_image_viewer.cancel_selected()
-	ProjectManager.active_project.symbol_remove(target_symbol)
 
 	
 func _on_undo_action():
@@ -218,6 +220,8 @@ func _on_symbol_action(target_symbol: SymbolObject):
 	_project_viewer.update_dirty()
 	_main_menu.update_dirty()
 	get_tree().call_group("draw_group", "redraw")
+	if _project_viewer.selected_xml != null:
+		_status_bar.update_xml_status(_project_viewer.selected_xml)
 	
 	
 func update_guis():
@@ -228,6 +232,7 @@ func update_guis():
 	
 func _on_xml_selected(xml_data: XMLData):
 	_xml_tree_viewer.scroll_to_xml(xml_data)
+	_status_bar.update_xml_status(xml_data)
 	
 	
 func _on_save_as_xml():
@@ -276,9 +281,9 @@ func _show_type_change_window(symbol_object:SymbolObject):
 
 func _on_zoom_changed(zoom: float):
 	get_tree().call_group("draw_group", "redraw")
-	status_bar.update_camera_zoom(zoom)
+	_status_bar.update_camera_zoom(zoom)
 	
 	
 func _on_camera_moved(pos: Vector2):
-	status_bar.update_camera_position(pos)
+	_status_bar.update_camera_position(pos)
 	

@@ -24,6 +24,11 @@ func use_project(project: Project) -> void:
 	update_dirty()
 	
 	
+func select_xml(xml_data: XMLData):
+	var target_item = _tree_item_dict.keys().filter(func(d): return _tree_item_dict[d] == xml_data)
+	target_item[0].select(0)
+	
+	
 func _reset_tree(project: Project):
 	reset_root(project.img_filename)
 	for xml_data in project.xml_datas:

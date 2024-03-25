@@ -34,11 +34,17 @@ func process_input(event):
 		moved.emit(self.global_position)
 
 
+func set_cam_position(pos: Vector2):
+	global_position = pos
+	moved.emit(self.global_position)
+
+
 func focus_symbol(symbol_object: SymbolObject):
 	if _is_symbol_visible(symbol_object):
 		return
 		
 	global_position = symbol_object.get_center()
+	moved.emit(self.global_position)
 
 
 func _is_symbol_visible(target_symbol: SymbolObject):

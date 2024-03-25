@@ -51,7 +51,7 @@ func use_project(project: Project):
 		node_ref.editor_control = _add_child_editor_control(node_ref.project_node)
 		node_ref.image_scene = _add_child_image_scene(node_ref.project_node)
 		node_ref.image_scene.set_texture(project.img)
-		_image_view_camera.global_position = Vector2(project.img.get_width()*0.5, project.img.get_height()*0.5) 
+		_image_view_camera.set_cam_position(Vector2(project.img.get_width()*0.5, project.img.get_height()*0.5))
 		for xml_data in project.xml_datas:
 			node_ref.xml_nodes[xml_data] = _add_child_xml_scene(node_ref.project_node, xml_data)
 			
@@ -69,9 +69,7 @@ func get_camera():
 	
 	
 func cancel_selected(): # force hiding when symbol is removed
-	ProjectManager.active_project.symbol_edit_canceled(selected_symbol)
-	selected_symbol = null
-	_active_editor_control.visible = false
+	_process_symbol_deselected()
 	
 	
 func select_symbol(symbol_object: SymbolObject):
@@ -171,10 +169,10 @@ func _add_child_editor_control(parent: Node2D):
 	
 func apply_symbol_change(symbol_object: SymbolObject):
 	var xml_scene = _active_xml_nodes[symbol_object.source_xml]
-	if xml_scene.symbol_nodes.has(symbol_object): 
+	if xml_scene.has_symbol(symbol_object): 
 		if symbol_object.source_xml.symbol_objects.has(symbol_object): # symbol edited
 			xml_scene.apply_symbol_edit(symbol_object)
-		else: # symbol removed
+		else: # symbol add undo
 			xml_scene.remove_symbol_node(symbol_object)
 	else: # symbol added
 		xml_scene.add_symbol_node(symbol_object)

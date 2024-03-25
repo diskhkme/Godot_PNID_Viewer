@@ -144,6 +144,7 @@ func symbol_add(pos: Vector2, target_xml: XMLData):
 	new_symbol.bndbox += Vector4(pos.x, pos.y, pos.x, pos.y)
 	new_symbol.id = target_xml.symbol_objects.size()
 	new_symbol.dirty = true
+	new_symbol.is_new = true
 	
 	if add_action_id >= add_symbol_stack.size():
 		add_symbol_stack.push_back(new_symbol)
@@ -173,33 +174,3 @@ func undo_symbol_add():
 	do_symbol_action()
 	print("undo add action ", current_symbol.id)
 	
-	
-func symbol_remove(symbol_object: SymbolObject):
-	if remove_action_id >= remove_symbol_stack.size():
-		remove_symbol_stack.push_back(symbol_object)
-	else:
-		remove_symbol_stack[remove_action_id] = symbol_object
-
-	undo_redo.create_action("Remove symbol")
-	undo_redo.add_do_method(do_symbol_remove)
-	undo_redo.add_undo_method(undo_symbol_remove)
-	undo_redo.commit_action()
-	
-	
-func do_symbol_remove():
-	current_symbol = remove_symbol_stack[remove_action_id]
-	current_symbol.source_xml.symbol_objects.erase(current_symbol)
-	remove_action_id += 1
-	do_symbol_action()
-	print("do remove action ", current_symbol.id)
-	
-	
-func undo_symbol_remove():
-	remove_action_id -= 1
-	current_symbol = remove_symbol_stack[remove_action_id]
-	var index = current_symbol.source_xml.get_index_of_id(current_symbol.id)
-	current_symbol.source_xml.symbol_objects.insert(index, current_symbol)
-	do_symbol_action()
-	print("do add action ", current_symbol.id)
-
-

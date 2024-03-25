@@ -22,7 +22,8 @@ var source_xml: XMLData
 var origin_xml: XMLData
 var is_text: bool 
 var dirty = false
-#var removed = false
+var removed = false
+var is_new = false
 
 # --------------------------------------------------------------------
 # --- Methods    -----------------------------------------------------
@@ -52,6 +53,8 @@ func clone():
 	symbol_object.origin_xml = origin_xml
 	symbol_object.is_text = is_text
 	symbol_object.dirty = dirty
+	symbol_object.removed = removed
+	symbol_object.is_new = is_new
 	return symbol_object
 	
 	
@@ -67,6 +70,8 @@ func restore(other: SymbolObject):
 	origin_xml = other.origin_xml
 	is_text = other.is_text
 	dirty = other.dirty
+	removed = other.removed
+	is_new = other.is_new
 	
 
 func get_rect() -> Rect2:

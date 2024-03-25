@@ -38,6 +38,19 @@ layout_mode = 2
 size_flags_horizontal = 8
 alignment = 2
 
-[node name="Label" type="Label" parent="MarginContainer/HBoxContainer/Right"]
+[node name="VSeparator" type="VSeparator" parent="MarginContainer/HBoxContainer/Right"]
+layout_mode = 2
+
+[node name="CountLabel" type="Label" parent="MarginContainer/HBoxContainer/Right"]
 layout_mode = 2
 text = "Symbol: "
+
+[node name="VSeparator2" type="VSeparator" parent="MarginContainer/HBoxContainer/Right"]
+layout_mode = 2
+
+[node name="EditLabel" type="Label" parent="MarginContainer/HBoxContainer/Right"]
+layout_mode = 2
+text = "Edit:"
+
+[node name="VSeparator3" type="VSeparator" parent="MarginContainer/HBoxContainer/Right"]
+layout_mode = 2

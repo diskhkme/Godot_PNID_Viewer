@@ -41,12 +41,17 @@ func update_symbol():
 	var width = Config.DEFAULT_LINE_WIDTH
 	static_symbol_draw.global_position = symbol_center
 	static_symbol_draw.rotation = deg_to_rad(symbol_object.get_godot_degree())
+	
 	static_symbol_draw.update_draw(size,color,width)
+	if symbol_object.removed:
+		static_symbol_draw.visible = false
+	else:
+		static_symbol_draw.visible = true
 	
 
 func _input(event):
 	if event is InputEventMouseButton and (event.button_index == MOUSE_BUTTON_LEFT or event.button_index == MOUSE_BUTTON_RIGHT):
-		if event.is_pressed() and on_cursor:
+		if event.is_pressed() and on_cursor and not symbol_object.removed:
 			report_static_selected.emit(self)
 			
 			

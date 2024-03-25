@@ -18,7 +18,8 @@ func update_label(symbol_object: SymbolObject):
 	cls_label.text += symbol_object.cls.left(Config.SYMBOL_LABEL_MAX_LENGTH)
 	
 	visible = symbol_object.source_xml.is_show_label
-
+	if symbol_object.removed:
+		visible = false
 
 func _on_cls_panel_resized():
 	var symbol_size = _symbol_object.get_size()

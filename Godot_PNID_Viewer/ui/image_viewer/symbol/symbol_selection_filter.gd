@@ -17,8 +17,8 @@ func process_input(event):
 		if !event.is_pressed():
 			var candidates: Array[StaticSymbol] = []
 			for scene in target_xml_scenes:
-				if scene.xml_data.is_selectable:
-					candidates.append_array(scene.selected_candidate)
+				if scene.get_xml_data().is_selectable:
+					candidates.append_array(scene.get_candidate())
 			
 			clear_candidates()
 
