@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://en0mt7v4ddrg"]
+[gd_scene load_steps=14 format=3 uid="uid://en0mt7v4ddrg"]
 
 [ext_resource type="Script" path="res://main.gd" id="1_h1xnr"]
 [ext_resource type="Theme" uid="uid://dseywhd5dettr" path="res://resources/project_default.tres" id="2_6rl77"]
@@ -11,6 +11,7 @@
 [ext_resource type="PackedScene" uid="uid://bub4qah0tbwdj" path="res://ui/status_bar.tscn" id="8_87pkj"]
 [ext_resource type="PackedScene" uid="uid://fxwcfnsk0rgt" path="res://ui/dialogs/diff_window.tscn" id="11_3hrp5"]
 [ext_resource type="PackedScene" uid="uid://drge4asvwjmcu" path="res://ui/context/image_view_context_menu.tscn" id="12_p38sp"]
+[ext_resource type="PackedScene" uid="uid://boievbgrlb6nb" path="res://ui/context/xml_view_context_menu.tscn" id="13_36m10"]
 [ext_resource type="PackedScene" uid="uid://chyc6mjjmyek7" path="res://ui/context/project_view_context_menu.tscn" id="13_sobsl"]
 
 [node name="Main" type="Node"]
@@ -99,13 +100,16 @@ visible = false
 layout_mode = 3
 anchors_preset = 0
 
-[node name="ImageViewContextMenu" parent="CanvasLayer/ContextMenus" node_paths=PackedStringArray("image_view") instance=ExtResource("12_p38sp")]
-image_view = NodePath("../../MainWindow/Middle/ImageViewer")
+[node name="ImageViewContextMenu" parent="CanvasLayer/ContextMenus" node_paths=PackedStringArray("_image_view") instance=ExtResource("12_p38sp")]
+_image_view = NodePath("../../MainWindow/Middle/ImageViewer")
 
 [node name="ProjectViewContextMenu" parent="CanvasLayer/ContextMenus" node_paths=PackedStringArray("project_viewer") instance=ExtResource("13_sobsl")]
 visible = false
 layout_mode = 1
 project_viewer = NodePath("../../MainWindow/Middle/RightSide/ProjectViewer")
+
+[node name="XMLViewContextMenu" parent="CanvasLayer/ContextMenus" node_paths=PackedStringArray("xml_tree_view") instance=ExtResource("13_36m10")]
+xml_tree_view = NodePath("../../MainWindow/Middle/RightSide/XMLTreeViewer")
 
 [connection signal="mouse_entered" from="CanvasLayer/MainWindow/Middle/RightSide/XMLTreeViewer" to="CanvasLayer/MainWindow/Middle/RightSide/XMLTreeViewer" method="_on_mouse_entered"]
 [connection signal="mouse_exited" from="CanvasLayer/MainWindow/Middle/RightSide/XMLTreeViewer" to="CanvasLayer/MainWindow/Middle/RightSide/XMLTreeViewer" method="_on_mouse_exited"]

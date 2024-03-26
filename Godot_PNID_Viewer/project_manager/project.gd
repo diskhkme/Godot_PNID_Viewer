@@ -119,7 +119,7 @@ func symbol_edited(symbol_object: SymbolObject):
 	
 func symbol_edit_canceled(symbol_object: SymbolObject):
 	print("canceled ", symbol_object.id)
-	snapshot_stack.pop_back()
+	#snapshot_stack.pop_back()
 		
 		
 func do_symbol_edit():

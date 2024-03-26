@@ -24,6 +24,7 @@ extends Node
 # context menu
 @onready var _image_viewer_context_menu = $CanvasLayer/ContextMenus/ImageViewContextMenu
 @onready var _project_viewer_context_menu = $CanvasLayer/ContextMenus/ProjectViewContextMenu
+@onready var _xml_tree_viewer_context_menu = $CanvasLayer/ContextMenus/XMLViewContextMenu
 
 var is_context_on = false
 
@@ -52,6 +53,7 @@ func _ready():
 	_image_viewer.camera_moved.connect(_on_camera_moved)
 	_image_viewer_context_menu.add_symbol_pressed.connect(_on_add_symbol)
 	_image_viewer_context_menu.remove_symbol_pressed.connect(_on_remove_symbol)
+	_image_viewer_context_menu.edit_symbol_pressed.connect(_on_edit_symbol)
 	
 	_project_viewer.xml_selected.connect(_on_xml_selected)
 	_project_viewer.xml_visibility_changed.connect(_on_xml_visibility_changed)
@@ -61,10 +63,12 @@ func _ready():
 	_project_viewer_context_menu.diff_pressed.connect(_on_diff_xml)
 	
 	_xml_tree_viewer.symbol_selected.connect(_on_symbol_selected)
-	_xml_tree_viewer.symbol_deselected.connect(_on_symbol_deselected)
+	#_xml_tree_viewer.symbol_deselected.connect(_on_symbol_deselected)
+	_xml_tree_viewer_context_menu.edit_pressed.connect(_on_edit_symbol)
 	
 	_diff_window.diff_calc_completed.connect(_on_diff_calc_completed)
 	
+	#_type_change_dialog.symbol_type_changed.connect(_on_symbol_type_change)
 	#_xml_tree_viewer.request_type_change_window.connect(_show_type_change_window)
 	
 	
@@ -74,7 +78,9 @@ func _input(event):
 		return
 	
 	if event is InputEventMouse:
-		is_context_on = _image_viewer_context_menu.visible or _project_viewer_context_menu.visible
+		is_context_on = _image_viewer_context_menu.visible or \
+					_project_viewer_context_menu.visible or \
+					_xml_tree_viewer_context_menu.visible
 		
 		if !is_context_on:
 			_image_viewer.process_input(event)
@@ -84,6 +90,8 @@ func _input(event):
 			_image_viewer_context_menu.process_input(event, _image_viewer.selected_symbol != null)
 		elif _project_viewer.get_global_rect().has_point(event.position):
 			_project_viewer_context_menu.process_input(event)
+		elif _xml_tree_viewer.get_global_rect().has_point(event.position):
+			_xml_tree_viewer_context_menu.process_input(event)
 			
 	if event is InputEventKey and event.is_pressed():
 		if event.ctrl_pressed and event.keycode == KEY_Z:
@@ -175,15 +183,11 @@ func _on_symbol_selected(symbol_object: SymbolObject, from_tree: bool):
 	ProjectManager.active_project.symbol_edit_started(symbol_object)
 	
 	
-func _on_symbol_deselected(symbol_object: SymbolObject, edited: bool):
+func _on_symbol_deselected(symbol_object: SymbolObject):
 	_xml_tree_viewer.deselect_symbol()
-	if edited:
-		ProjectManager.active_project.symbol_edited(symbol_object)
-		_image_viewer.apply_symbol_change(symbol_object)
-		
-	else:
-		ProjectManager.active_project.symbol_edit_canceled(symbol_object)
-
+	ProjectManager.active_project.symbol_edited(symbol_object)
+	_image_viewer.apply_symbol_change(symbol_object)
+	
 
 func _on_symbol_editing(symbol_object: SymbolObject):
 	_xml_tree_viewer.apply_symbol_change(symbol_object)
@@ -284,4 +288,14 @@ func _on_zoom_changed(zoom: float):
 	
 func _on_camera_moved(pos: Vector2):
 	_status_bar.update_camera_position(pos)
+	
+	
+func _on_edit_symbol():
+	_type_change_dialog.initialize_types(_xml_tree_viewer.selected_symbol)
+	_type_change_dialog.popup_centered()
+	
+	
+#func _on_symbol_type_change(symbol_object: SymbolObject):
+	#ProjectManager.active_project.symbol_edited(symbol_object)
+	
 	

@@ -1,0 +1,30 @@
+[gd_scene load_steps=2 format=3 uid="uid://boievbgrlb6nb"]
+
+[ext_resource type="Script" path="res://ui/context/xml_view_context_menu.gd" id="1_grhwf"]
+
+[node name="XMLViewContextMenu" type="Control"]
+visible = false
+layout_mode = 3
+anchors_preset = 0
+mouse_filter = 1
+script = ExtResource("1_grhwf")
+
+[node name="PanelContainer" type="PanelContainer" parent="."]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+mouse_filter = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer"]
+layout_mode = 2
+
+[node name="EditButton" type="Button" parent="PanelContainer/VBoxContainer"]
+layout_mode = 2
+mouse_filter = 1
+text = "Edit"
+
+[connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="." to="." method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="PanelContainer/VBoxContainer/EditButton" to="." method="_on_edit_button_mouse_entered"]
+[connection signal="mouse_exited" from="PanelContainer/VBoxContainer/EditButton" to="." method="_on_edit_button_mouse_exited"]
+[connection signal="pressed" from="PanelContainer/VBoxContainer/EditButton" to="." method="_on_edit_button_pressed"]

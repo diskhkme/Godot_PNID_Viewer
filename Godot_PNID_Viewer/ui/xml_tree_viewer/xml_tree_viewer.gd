@@ -2,10 +2,10 @@
 # Display symbol information of the middle right table-like GUI
 
 extends Control
+class_name XMLTreeViewer
 
-signal request_type_change_window(symbol_object: SymbolObject)
 signal symbol_selected(symbol_object: SymbolObject, from_tree: bool)
-signal symbol_deselected(symbol_object: SymbolObject, edited: bool)
+#signal symbol_deselected(symbol_object: SymbolObject, edited: bool)
 
 @onready var tree = $Tree
 
@@ -14,19 +14,12 @@ signal symbol_deselected(symbol_object: SymbolObject, edited: bool)
 var _xml_items_dict = {} # xml_data : tree_item
 var _symbol_items_dict = {} # symbol_object: tree_item
 var _root
+#var selected_symbol
 
 const COLUMN_COUNT = 8
 
 func _ready():
 	reset_tree()
-
-
-func _input(event):
-	# bring type class editing window by double clicking
-	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
-		if event.double_click: 
-			var selected_symbol = _symbol_items_dict.values().filter(func(a): return a == tree.get_selected())
-			request_type_change_window.emit(selected_symbol)
 
 #-------------------------------------------------------------
 # Tree Initialization-----------------------------------------
@@ -138,8 +131,9 @@ func scroll_to_xml(xml_data: XMLData):
 #-------------------------------------------------------------
 func _on_tree_item_selected():
 	var selected_item = tree.get_selected()
-	var selected_symbol = _symbol_items_dict.keys().filter(func(a): return _symbol_items_dict[a] == selected_item)
-	symbol_selected.emit(selected_symbol[0], true)
+	var selected_symbols = _symbol_items_dict.keys().filter(func(a): return _symbol_items_dict[a] == selected_item)
+	#selected_symbol = selected_symbols[0]
+	symbol_selected.emit(selected_symbols[0], true)
 	
 
 func _on_tree_column_title_clicked(column, mouse_button_index):

@@ -4,8 +4,6 @@ signal xml_save_as_pressed
 signal diff_pressed
 
 @export var project_viewer: ProjectViewer
-#@export var save_file_dialog: FileDialog
-#@export var diff_dialog: DiffDialog
 
 @onready var save_as_button = $PanelContainer/VBoxContainer/SaveAsButton
 

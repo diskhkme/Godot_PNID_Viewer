@@ -6,7 +6,7 @@ class_name ImageViewer
 
 signal symbol_selected(symbol_object: SymbolObject, from_tree: bool)
 signal symbol_editing(symbol_object: SymbolObject)
-signal symbol_deselected(edited: bool) # true if edited, false if canceled
+signal symbol_deselected(symbol_object: SymbolObject)
 signal screenshot_taken(img: Image)
 signal zoom_changed(zoom: float)
 signal camera_moved(pos: Vector2)
@@ -87,10 +87,7 @@ func process_input(event):
 
 	if _active_editor_control.visible:
 		if not _active_editor_control.process_input(event): #end editing
-			if _active_editor_control.is_actually_edited:
-				symbol_deselected.emit(selected_symbol, true)
-			else:
-				symbol_deselected.emit(selected_symbol, false)
+			symbol_deselected.emit(selected_symbol)
 			_process_symbol_deselected()
 		#else: # delay updating for performance
 			#symbol_editing.emit(selected_symbol)

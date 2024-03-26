@@ -19,6 +19,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 column_titles_visible = true
+allow_rmb_select = true
 
 [connection signal="column_title_clicked" from="Tree" to="." method="_on_tree_column_title_clicked"]
 [connection signal="item_selected" from="Tree" to="." method="_on_tree_item_selected"]
