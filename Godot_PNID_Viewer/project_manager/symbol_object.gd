@@ -73,6 +73,18 @@ func restore(other: SymbolObject):
 	removed = other.removed
 	is_new = other.is_new
 	
+	
+func compare(other: SymbolObject) -> bool:
+	if id == other.id and type == other.type and cls == other.cls and \
+	bndbox == other.bndbox and is_large == other.is_large and \
+	degree == other.degree and flip == other.flip and \
+	source_xml == other.source_xml and origin_xml == other.origin_xml and \
+	is_text == other.is_text and dirty == other.dirty and \
+	removed == other.removed and is_new == other.is_new:
+		return true
+		
+	return false
+	
 
 func get_rect() -> Rect2:
 	var width = bndbox.z-bndbox.x

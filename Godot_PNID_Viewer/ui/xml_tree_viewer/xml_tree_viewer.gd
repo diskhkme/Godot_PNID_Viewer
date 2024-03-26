@@ -5,7 +5,7 @@ extends Control
 class_name XMLTreeViewer
 
 signal symbol_selected(symbol_object: SymbolObject, from_tree: bool)
-#signal symbol_deselected(symbol_object: SymbolObject, edited: bool)
+signal symbol_deselected(symbol_object: SymbolObject, from_tree: bool)
 
 @onready var tree = $Tree
 
@@ -14,7 +14,7 @@ signal symbol_selected(symbol_object: SymbolObject, from_tree: bool)
 var _xml_items_dict = {} # xml_data : tree_item
 var _symbol_items_dict = {} # symbol_object: tree_item
 var _root
-#var selected_symbol
+var selected_symbol
 
 const COLUMN_COUNT = 8
 
@@ -87,7 +87,9 @@ func fill_treeitem(symbol_child: TreeItem, symbol_object: SymbolObject):
 	if symbol_object.dirty:
 		if symbol_object.removed:
 			symbol_child.set_text(0, "(-)" + "%04d  " % symbol_object.id)
-		else:
+		if symbol_object.is_new:
+			symbol_child.set_text(0, "(+)" + "%04d  " % symbol_object.id)
+		if not symbol_object.removed and not symbol_object.is_new:
 			symbol_child.set_text(0, "(*)" + "%04d  " % symbol_object.id)
 	else:
 		symbol_child.set_text(0, "%04d  " % symbol_object.id)
@@ -121,6 +123,7 @@ func select_symbol(symbol_object: SymbolObject):
 	
 func deselect_symbol():
 	tree.deselect_all()
+	symbol_deselected.emit(selected_symbol, true)
 	
 	
 func scroll_to_xml(xml_data: XMLData):
@@ -132,7 +135,7 @@ func scroll_to_xml(xml_data: XMLData):
 func _on_tree_item_selected():
 	var selected_item = tree.get_selected()
 	var selected_symbols = _symbol_items_dict.keys().filter(func(a): return _symbol_items_dict[a] == selected_item)
-	#selected_symbol = selected_symbols[0]
+	selected_symbol = selected_symbols[0]
 	symbol_selected.emit(selected_symbols[0], true)
 	
 

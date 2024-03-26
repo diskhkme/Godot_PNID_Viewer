@@ -83,7 +83,7 @@ func _on_ok_button_pressed():
 	if type != _init_type or cls != _init_cls:
 		_symbol_object.type = type
 		_symbol_object.cls = cls
-		#symbol_type_changed.emit(_symbol_object)
+		symbol_type_changed.emit(_symbol_object)
 		
 	self.visible = false
 

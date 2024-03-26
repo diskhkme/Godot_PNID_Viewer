@@ -109,6 +109,10 @@ func symbol_edit_started(symbol_object: SymbolObject):
 	
 	
 func symbol_edited(symbol_object: SymbolObject):
+	if symbol_object.compare(snapshot_stack[current_action_id].before):
+		snapshot_stack.pop_back()
+		return # do nothing if nothing changed
+	
 	symbol_object.dirty = true
 	snapshot_stack[current_action_id].after = symbol_object.clone()
 	undo_redo.create_action("Edit symbol")
@@ -117,11 +121,11 @@ func symbol_edited(symbol_object: SymbolObject):
 	undo_redo.commit_action()
 	
 	
-func symbol_edit_canceled(symbol_object: SymbolObject):
-	print("canceled ", symbol_object.id)
-	#snapshot_stack.pop_back()
-		
-		
+func symbol_edit_canceled():
+	snapshot_stack[current_action_id].ref.restore(snapshot_stack[current_action_id].before)
+	snapshot_stack.pop_back()
+	
+	
 func do_symbol_edit():
 	var snapshot = snapshot_stack[current_action_id]
 	snapshot.ref.restore(snapshot.after)

@@ -6,7 +6,8 @@ class_name ImageViewer
 
 signal symbol_selected(symbol_object: SymbolObject, from_tree: bool)
 signal symbol_editing(symbol_object: SymbolObject)
-signal symbol_deselected(symbol_object: SymbolObject)
+signal symbol_edit_cancel(symbol_object: SymbolObject)
+signal symbol_deselected(symbol_object: SymbolObject, from_tree: bool)
 signal screenshot_taken(img: Image)
 signal zoom_changed(zoom: float)
 signal camera_moved(pos: Vector2)
@@ -75,6 +76,10 @@ func cancel_selected(): # force hiding when symbol is removed
 	_process_symbol_deselected()
 	
 	
+func is_editing():
+	return _active_editor_control.visible
+	
+	
 func select_symbol(symbol_object: SymbolObject):
 	if selected_symbol != symbol_object:
 		_process_symbol_deselected()
@@ -83,21 +88,20 @@ func select_symbol(symbol_object: SymbolObject):
 
 
 func process_input(event):
-	_image_view_camera.process_input(event)
+	if event is InputEventMouse:
+		_image_view_camera.process_input(event)
 
-	if _active_editor_control.visible:
-		if not _active_editor_control.process_input(event): #end editing
-			symbol_deselected.emit(selected_symbol)
-			_process_symbol_deselected()
-		#else: # delay updating for performance
-			#symbol_editing.emit(selected_symbol)
-	else:
-		var selected = _active_selection_filter.process_input(event) 
-		_active_xml_nodes.values().map(func(s): s.process_input(event))
-		if selected != null:
-			symbol_selected.emit(selected, false)
-			_process_symbol_selected(selected)
-			
+		if _active_editor_control.visible:
+			if not _active_editor_control.process_input(event): #end editing
+				symbol_deselected.emit(selected_symbol, false)
+				_process_symbol_deselected()
+		else:
+			_active_xml_nodes.values().map(func(s): s.process_input(event))
+			var selected = _active_selection_filter.process_input(event) 
+			if selected != null:
+				symbol_selected.emit(selected, false)
+				_process_symbol_selected(selected)
+
 			
 func _on_tick_update():
 	if _active_editor_control.visible:

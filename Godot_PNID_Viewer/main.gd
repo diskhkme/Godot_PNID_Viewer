@@ -63,12 +63,12 @@ func _ready():
 	_project_viewer_context_menu.diff_pressed.connect(_on_diff_xml)
 	
 	_xml_tree_viewer.symbol_selected.connect(_on_symbol_selected)
-	#_xml_tree_viewer.symbol_deselected.connect(_on_symbol_deselected)
+	_xml_tree_viewer.symbol_deselected.connect(_on_symbol_deselected)
 	_xml_tree_viewer_context_menu.edit_pressed.connect(_on_edit_symbol)
 	
 	_diff_window.diff_calc_completed.connect(_on_diff_calc_completed)
 	
-	#_type_change_dialog.symbol_type_changed.connect(_on_symbol_type_change)
+	_type_change_dialog.symbol_type_changed.connect(_on_symbol_type_change)
 	#_xml_tree_viewer.request_type_change_window.connect(_show_type_change_window)
 	
 	
@@ -82,11 +82,10 @@ func _input(event):
 					_project_viewer_context_menu.visible or \
 					_xml_tree_viewer_context_menu.visible
 		
-		if !is_context_on:
-			_image_viewer.process_input(event)
-		
 		# TODO: Exclusive context popup
 		if _image_viewer.get_global_rect().has_point(event.position):
+			if !is_context_on:
+				_image_viewer.process_input(event)
 			_image_viewer_context_menu.process_input(event, _image_viewer.selected_symbol != null)
 		elif _project_viewer.get_global_rect().has_point(event.position):
 			_project_viewer_context_menu.process_input(event)
@@ -98,6 +97,9 @@ func _input(event):
 			_on_undo_action()
 		if event.ctrl_pressed and event.keycode == KEY_Y:
 			_on_redo_action()
+		if event.keycode == KEY_ESCAPE and _image_viewer.is_editing():
+			ProjectManager.active_project.symbol_edit_canceled()
+			_image_viewer.cancel_selected()
 			
 
 func _on_new_project(): # web & windows
@@ -179,14 +181,16 @@ func _on_symbol_selected(symbol_object: SymbolObject, from_tree: bool):
 		_xml_tree_viewer.select_symbol(symbol_object)
 	else:
 		_image_viewer.select_symbol(symbol_object)
-	_project_viewer.select_xml(symbol_object.source_xml)
-	ProjectManager.active_project.symbol_edit_started(symbol_object)
+		_project_viewer.select_xml(symbol_object.source_xml)
+		ProjectManager.active_project.symbol_edit_started(symbol_object)
 	
 	
-func _on_symbol_deselected(symbol_object: SymbolObject):
-	_xml_tree_viewer.deselect_symbol()
-	ProjectManager.active_project.symbol_edited(symbol_object)
-	_image_viewer.apply_symbol_change(symbol_object)
+func _on_symbol_deselected(symbol_object: SymbolObject, from_tree: bool):
+	if not from_tree:
+		_xml_tree_viewer.deselect_symbol()
+	else:
+		ProjectManager.active_project.symbol_edited(symbol_object)
+		_image_viewer.apply_symbol_change(symbol_object)
 	
 
 func _on_symbol_editing(symbol_object: SymbolObject):
@@ -295,7 +299,7 @@ func _on_edit_symbol():
 	_type_change_dialog.popup_centered()
 	
 	
-#func _on_symbol_type_change(symbol_object: SymbolObject):
-	#ProjectManager.active_project.symbol_edited(symbol_object)
+func _on_symbol_type_change(symbol_object: SymbolObject):
+	_xml_tree_viewer.apply_symbol_change(symbol_object)
 	
 	
