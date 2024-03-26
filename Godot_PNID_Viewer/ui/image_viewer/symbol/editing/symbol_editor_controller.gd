@@ -4,23 +4,20 @@
 class_name SymbolEditorController
 extends Node2D
 
+signal tick_update()
+
 @onready var handles = [$TL_Handle, $TR_Handle, $BL_Handle, $BR_Handle, $Rot_Handle, $Translate_Handle]
 @onready var center_node = $SymbolRect
 
 var rot_start_angle: float
 var rot_start_vec: Vector2
 
-var xml_id: int
-var symbol_id: int
 var target_symbol: SymbolObject
 var is_actually_edited = false
 
 func _ready():
 	for handle in handles:
-		if handle.type == Handle.TYPE.ROTATE or handle.scale_type == Handle.TYPE.TRANSLATE:
-			# for rotation and translation, should save initial state when started
-			handle.indicator_move_started.connect(on_indicator_move_started)
-	
+		handle.indicator_move_started.connect(on_indicator_move_started)
 		handle.indicator_moved.connect(on_indicator_moved)
 		handle.indicator_move_ended.connect(on_indicator_move_ended)
 
@@ -66,8 +63,7 @@ func get_handle(handle_type: Handle.TYPE, scale_type: Handle.SCALE_TYPE):
 	
 
 func process_input(event) -> bool: # return false if edit end
-	for handle in handles:
-		handle.process_input(event)
+	handles.map(func(h): h.process_input(event))
 				
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
 		if event.is_pressed():
@@ -108,11 +104,11 @@ func update_handle_positions():
 			elif handle.scale_type == Handle.SCALE_TYPE.BOTTOM_RIGHT:
 				handle.global_position = br_pos + (-up_vec + right_vec).normalized()*Config.EDITOR_HANDLE_PADDING
 				
-	await RenderingServer.frame_post_draw # (note) prevent too much redraw according to the handle movement
 	queue_redraw()
 
 	
 func on_indicator_move_started(target: Handle, start_pos: Vector2):
+	print("started")
 	if target.type == Handle.TYPE.ROTATE:
 		rot_start_angle = center_node.rotation
 		rot_start_vec = (start_pos - center_node.global_position).normalized()
@@ -151,7 +147,9 @@ func on_indicator_moved(target: Handle, mouse_pos: Vector2, mouse_pos_delta: Vec
 	update_symbol_box()
 	is_actually_edited = true
 
+
 func on_indicator_move_ended(target: Handle, start_pos: Vector2):
+	tick_update.emit()
 	for handle in handles:
 		handle.enable_collision()
 

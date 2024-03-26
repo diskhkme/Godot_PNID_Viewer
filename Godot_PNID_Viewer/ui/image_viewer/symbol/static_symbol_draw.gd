@@ -8,8 +8,6 @@ func update_draw(size:Vector2, color:Color, line_width:float):
 	_size = size
 	_color = color
 	_line_width = line_width
-	
-	await RenderingServer.frame_post_draw
 	queue_redraw()
 
 

@@ -121,12 +121,12 @@ func _make_project_active(project: Project):
 	
 	
 func _on_project_close(project: Project):
-	if project.dirty:
-		pass # TODO: check dialog
-	else:	
-		_main_menu.close_project_tab(project)
-		_image_viewer.close_project(project)
-		ProjectManager.close_project(project)
+	_main_menu.close_project_tab(project)
+	_image_viewer.close_project(project)
+	_project_viewer.close_project(project)
+	_xml_tree_viewer.close_project(project)
+	ProjectManager.close_project(project)
+	_status_bar.reset()
 		
 		
 func _on_add_xml():

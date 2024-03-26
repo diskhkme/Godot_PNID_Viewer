@@ -49,6 +49,7 @@ func use_project(project: Project):
 		node_ref.project_node.name = project.img_filename
 		node_ref.selection_filter = _add_child_selection_filter(node_ref.project_node)
 		node_ref.editor_control = _add_child_editor_control(node_ref.project_node)
+		node_ref.editor_control.tick_update.connect(_on_tick_update)
 		node_ref.image_scene = _add_child_image_scene(node_ref.project_node)
 		node_ref.image_scene.set_texture(project.img)
 		_image_view_camera.set_cam_position(Vector2(project.img.get_width()*0.5, project.img.get_height()*0.5))
@@ -85,20 +86,25 @@ func process_input(event):
 	_image_view_camera.process_input(event)
 
 	if _active_editor_control.visible:
-		if !_active_editor_control.process_input(event): #end editing
+		if not _active_editor_control.process_input(event): #end editing
 			if _active_editor_control.is_actually_edited:
 				symbol_deselected.emit(selected_symbol, true)
 			else:
 				symbol_deselected.emit(selected_symbol, false)
 			_process_symbol_deselected()
-		else:
-			symbol_editing.emit(selected_symbol)
+		#else: # delay updating for performance
+			#symbol_editing.emit(selected_symbol)
 	else:
 		var selected = _active_selection_filter.process_input(event) 
 		_active_xml_nodes.values().map(func(s): s.process_input(event))
 		if selected != null:
 			symbol_selected.emit(selected, false)
 			_process_symbol_selected(selected)
+			
+			
+func _on_tick_update():
+	if _active_editor_control.visible:
+		symbol_editing.emit(selected_symbol)
 
 			
 func _process_symbol_selected(selected):

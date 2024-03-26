@@ -44,6 +44,12 @@ func use_project(project: Project):
 		
 		update_xml_visibility(xml_data)
 		update_xml_selectability(xml_data)	
+		
+		
+func close_project(project: Project):
+	reset_tree()
+	_symbol_items_dict.clear()
+	_xml_items_dict.clear()
 
 
 func reset_tree():

@@ -24,6 +24,11 @@ func use_project(project: Project) -> void:
 	update_dirty()
 	
 	
+func close_project(project: Project):
+	_tree_item_dict.clear()
+	_tree.clear()
+	
+	
 func select_xml(xml_data: XMLData):
 	var target_item = _tree_item_dict.keys().filter(func(d): return _tree_item_dict[d] == xml_data)
 	target_item[0].select(0)

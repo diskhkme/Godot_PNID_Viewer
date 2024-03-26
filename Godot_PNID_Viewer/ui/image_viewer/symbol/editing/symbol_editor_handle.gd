@@ -49,9 +49,10 @@ func process_input(event):
 				last_mouse_position = get_global_mouse_position()
 				indicator_move_started.emit(self, get_global_mouse_position())
 		else:
-			is_dragging = false
-			on_cursor = false
-			indicator_move_ended.emit(self,get_global_mouse_position())
+			if is_dragging:
+				is_dragging = false
+				on_cursor = false
+				indicator_move_ended.emit(self,get_global_mouse_position())
 		
 	if event is InputEventMouseMotion and is_dragging:
 		var delta = get_global_mouse_position() - last_mouse_position
@@ -62,14 +63,11 @@ func process_input(event):
 
 
 func disable_collision():
-	collision_area.free()
-	collision_area.disable_mode = CollisionObject2D.DISABLE_MODE_REMOVE
-	collision_rect.disabled = true
+	remove_child(collision_area)
 	
 	
 func enable_collision():
-	collision_area.disable_mode = CollisionObject2D.DISABLE_MODE_REMOVE
-	collision_rect.disabled = false
+	add_child(collision_area)
 
 
 func _on_area_2d_mouse_entered():
