@@ -91,16 +91,17 @@ func process_input(event):
 	if event is InputEventMouse:
 		_image_view_camera.process_input(event)
 
-		if _active_editor_control.visible:
-			if not _active_editor_control.process_input(event): #end editing
-				symbol_deselected.emit(selected_symbol, false)
-				_process_symbol_deselected()
-		else:
-			_active_xml_nodes.values().map(func(s): s.process_input(event))
-			var selected = _active_selection_filter.process_input(event) 
-			if selected != null:
-				symbol_selected.emit(selected, false)
-				_process_symbol_selected(selected)
+		if get_global_rect().has_point(event.position): # limit selection on canvas
+			if _active_editor_control.visible:
+				if not _active_editor_control.process_input(event): #end editing
+					symbol_deselected.emit(selected_symbol, false)
+					_process_symbol_deselected()
+			else:
+				_active_xml_nodes.values().map(func(s): s.process_input(event))
+				var selected = _active_selection_filter.process_input(event) 
+				if selected != null:
+					symbol_selected.emit(selected, false)
+					_process_symbol_selected(selected)
 
 			
 func _on_tick_update():

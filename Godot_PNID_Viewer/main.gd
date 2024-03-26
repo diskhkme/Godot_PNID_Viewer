@@ -71,7 +71,8 @@ func _ready():
 	_type_change_dialog.symbol_type_changed.connect(_on_symbol_type_change)
 	#_xml_tree_viewer.request_type_change_window.connect(_show_type_change_window)
 	
-	
+	# TODO: Close xml
+	# TODO: remove symbol from tree viewer
 	
 func _input(event):
 	if ProjectManager.active_project == null:
@@ -81,16 +82,26 @@ func _input(event):
 		is_context_on = _image_viewer_context_menu.visible or \
 					_project_viewer_context_menu.visible or \
 					_xml_tree_viewer_context_menu.visible
-		
-		# TODO: Exclusive context popup
-		if _image_viewer.get_global_rect().has_point(event.position):
-			if !is_context_on:
-				_image_viewer.process_input(event)
+
+		if !is_context_on:
+			_xml_tree_viewer.set_mouse_event_process(false)
+			_image_viewer.process_input(event)
 			_image_viewer_context_menu.process_input(event, _image_viewer.selected_symbol != null)
-		elif _project_viewer.get_global_rect().has_point(event.position):
 			_project_viewer_context_menu.process_input(event)
-		elif _xml_tree_viewer.get_global_rect().has_point(event.position):
 			_xml_tree_viewer_context_menu.process_input(event)
+		else:
+			_xml_tree_viewer.set_mouse_event_process(true)
+			if _image_viewer_context_menu.visible:
+				_image_viewer_context_menu.process_input(event, _image_viewer.selected_symbol != null)
+				return
+			if _project_viewer_context_menu.visible:
+				_project_viewer_context_menu.process_input(event)
+				return
+			if _xml_tree_viewer_context_menu.visible:
+				_xml_tree_viewer_context_menu.process_input(event)
+				return
+
+
 			
 	if event is InputEventKey and event.is_pressed():
 		if event.ctrl_pressed and event.keycode == KEY_Z:
@@ -178,10 +189,10 @@ func _on_screenshot_taken(img: Image, path: String):
 	
 func _on_symbol_selected(symbol_object: SymbolObject, from_tree: bool):
 	if not from_tree:
+		_project_viewer.select_xml(symbol_object.source_xml)
 		_xml_tree_viewer.select_symbol(symbol_object)
 	else:
 		_image_viewer.select_symbol(symbol_object)
-		_project_viewer.select_xml(symbol_object.source_xml)
 		ProjectManager.active_project.symbol_edit_started(symbol_object)
 	
 	

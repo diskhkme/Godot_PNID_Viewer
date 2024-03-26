@@ -128,6 +128,13 @@ func deselect_symbol():
 	
 func scroll_to_xml(xml_data: XMLData):
 	tree.scroll_to_item(_xml_items_dict[xml_data], true)
+	
+
+func set_mouse_event_process(enable: bool):
+	if enable:
+		tree.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	else:
+		tree.mouse_filter = Control.MOUSE_FILTER_STOP
 		
 #-------------------------------------------------------------
 # Self Event Handle  -----------------------------------------

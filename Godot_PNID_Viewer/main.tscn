@@ -100,16 +100,16 @@ visible = false
 layout_mode = 3
 anchors_preset = 0
 
-[node name="ImageViewContextMenu" parent="CanvasLayer/ContextMenus" node_paths=PackedStringArray("_image_view") instance=ExtResource("12_p38sp")]
-_image_view = NodePath("../../MainWindow/Middle/ImageViewer")
+[node name="ImageViewContextMenu" parent="CanvasLayer/ContextMenus" node_paths=PackedStringArray("_image_viewer") instance=ExtResource("12_p38sp")]
+_image_viewer = NodePath("../../MainWindow/Middle/ImageViewer")
 
-[node name="ProjectViewContextMenu" parent="CanvasLayer/ContextMenus" node_paths=PackedStringArray("project_viewer") instance=ExtResource("13_sobsl")]
+[node name="ProjectViewContextMenu" parent="CanvasLayer/ContextMenus" node_paths=PackedStringArray("_project_viewer") instance=ExtResource("13_sobsl")]
 visible = false
 layout_mode = 1
-project_viewer = NodePath("../../MainWindow/Middle/RightSide/ProjectViewer")
+_project_viewer = NodePath("../../MainWindow/Middle/RightSide/ProjectViewer")
 
-[node name="XMLViewContextMenu" parent="CanvasLayer/ContextMenus" node_paths=PackedStringArray("xml_tree_view") instance=ExtResource("13_36m10")]
-xml_tree_view = NodePath("../../MainWindow/Middle/RightSide/XMLTreeViewer")
+[node name="XMLViewContextMenu" parent="CanvasLayer/ContextMenus" node_paths=PackedStringArray("_xml_tree_viewer") instance=ExtResource("13_36m10")]
+_xml_tree_viewer = NodePath("../../MainWindow/Middle/RightSide/XMLTreeViewer")
 
 [connection signal="mouse_entered" from="CanvasLayer/MainWindow/Middle/RightSide/XMLTreeViewer" to="CanvasLayer/MainWindow/Middle/RightSide/XMLTreeViewer" method="_on_mouse_entered"]
 [connection signal="mouse_exited" from="CanvasLayer/MainWindow/Middle/RightSide/XMLTreeViewer" to="CanvasLayer/MainWindow/Middle/RightSide/XMLTreeViewer" method="_on_mouse_exited"]

@@ -2,18 +2,19 @@ extends Control
 
 signal edit_pressed
 
-@export var xml_tree_view: XMLTreeViewer
+@export var _xml_tree_viewer: XMLTreeViewer
 
 @onready var edit_button = $PanelContainer/VBoxContainer/EditButton
 
 var is_in_context_menu: bool
 
 func process_input(event):
-	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_RIGHT:
-		if !event.is_pressed() and !visible and xml_tree_view.selected_symbol != null:
-			position = event.position
-			visible = true
-			
+	if _xml_tree_viewer.get_global_rect().has_point(event.position):
+		if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_RIGHT:
+			if !event.is_pressed() and !visible and _xml_tree_viewer.selected_symbol != null:
+				position = event.position
+				visible = true
+				
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
 		if !is_in_context_menu:
 			visible = false
