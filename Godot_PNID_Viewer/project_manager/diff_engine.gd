@@ -26,18 +26,18 @@ func calculate_diff(first: Array[SymbolObject], second: Array[SymbolObject], opt
 		num_total = first.size() + second.size()
 	num_current = 0
 
-	var time_start = Time.get_ticks_msec()
+	Util.log_start("diff calc")
 	# Note: Diff xml has reference for original symbols	
 	var diffs: Array[SymbolObject] = []
-	var first_filtered = await filter_by_iou_string_degree(first, second, iou_th, compare_string, compare_degree)
-	diffs.append_array(first_filtered)
+	var ret = await filter_by_iou_string_degree(first, second, iou_th, compare_string, compare_degree)
+	diffs.append_array(ret[0])
+	second = second.filter(func(s): return not ret[1].has(s))
+	first = first.filter(func(f): return not diffs.has(f))
 	
 	if direction == DIRECTION.TWO:
 		var second_filtered = await filter_by_iou_string_degree(second, first, iou_th, compare_string, compare_degree)
-		diffs.append_array(second_filtered)
-	
-	var time_elapsed = Time.get_ticks_msec() - time_start
-	print(time_elapsed, " ms elapsed")
+		diffs.append_array(second_filtered[0])
+	Util.log_end("diff calc")
 
 	return diffs
 
@@ -52,10 +52,10 @@ func filter_by_type(symbol_array: Array[SymbolObject], include_symbol: bool, inc
 
 func filter_by_iou_string_degree(first, second, iou_th, compare_string, compare_degree):
 	var filtered = []
+	var second_cache = []
+	var last_emit = Time.get_ticks_msec()
 	for i in range(first.size()):
-
 		var progress = num_current/float(num_total)
-		report_progress.emit(progress)
 		
 		var f = first[i]
 		var candidate = second.filter(func(s): return check_iou_cond(f, s, iou_th))
@@ -72,11 +72,17 @@ func filter_by_iou_string_degree(first, second, iou_th, compare_string, compare_
 				
 		if candidate.size() == 0: # if no cond meet, store f
 			filtered.push_back(f.clone())
+		else:
+			second_cache.append_array(candidate)
 			
 		num_current += 1
-		await get_tree().process_frame
+		var current_time = Time.get_ticks_msec()
+		if current_time - last_emit >= 100:
+			report_progress.emit(progress)
+			await get_tree().process_frame
+			last_emit = current_time
 			
-	return filtered
+	return [filtered, second_cache]
 
 
 func check_iou_cond(a: SymbolObject, b: SymbolObject, iou_th:float) -> bool:

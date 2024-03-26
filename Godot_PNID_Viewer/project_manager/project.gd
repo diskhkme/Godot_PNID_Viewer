@@ -103,7 +103,7 @@ func symbol_edit_started(symbol_object: SymbolObject):
 	snapshot.before = symbol_object.clone()
 	if current_action_id >= snapshot_stack.size():
 		snapshot_stack.push_back(snapshot)
-		print("add stack ", symbol_object.id)
+		#print("add stack ", symbol_object.id)
 	else:
 		snapshot_stack[current_action_id] = snapshot
 	
@@ -132,7 +132,7 @@ func do_symbol_edit():
 	current_symbol = snapshot.ref
 	current_action_id += 1
 	do_symbol_action()
-	print("do edit action ", snapshot.ref.id)
+	#print("do edit action ", snapshot.ref.id)
 	
 		
 func undo_symbol_edit():
@@ -141,7 +141,7 @@ func undo_symbol_edit():
 	snapshot.ref.restore(snapshot.before)
 	current_symbol = snapshot.ref
 	do_symbol_action()
-	print("undo edit action ", snapshot.ref.id)
+	#print("undo edit action ", snapshot.ref.id)
 	
 # in case of add symbol, actual adding happens here
 func symbol_add(pos: Vector2, target_xml: XMLData):
@@ -157,8 +157,7 @@ func symbol_add(pos: Vector2, target_xml: XMLData):
 		add_symbol_stack.push_back(new_symbol)
 	else:
 		add_symbol_stack[add_action_id] = new_symbol
-	
-	
+		
 	undo_redo.create_action("Add symbol")
 	undo_redo.add_do_method(do_symbol_add)
 	undo_redo.add_undo_method(undo_symbol_add)
@@ -171,7 +170,7 @@ func do_symbol_add():
 	current_symbol.source_xml.symbol_objects.insert(index, current_symbol)
 	add_action_id += 1
 	do_symbol_action()
-	print("do add action ", current_symbol.id)
+	#print("do add action ", current_symbol.id)
 	
 	
 func undo_symbol_add():
@@ -179,5 +178,5 @@ func undo_symbol_add():
 	current_symbol = add_symbol_stack[add_action_id]
 	current_symbol.source_xml.symbol_objects.erase(current_symbol)
 	do_symbol_action()
-	print("undo add action ", current_symbol.id)
+	#print("undo add action ", current_symbol.id)
 	
