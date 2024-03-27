@@ -2,6 +2,7 @@ extends Control
 
 signal xml_save_as_pressed
 signal diff_pressed
+signal close_pressed
 
 @export var _project_viewer: ProjectViewer
 
@@ -29,10 +30,13 @@ func _on_save_as_button_pressed():
 
 func _on_diff_button_pressed():
 	diff_pressed.emit()
-	#diff_dialog.popup()
-	#diff_dialog.initialize_with_selected(project_viewer.selected_xml)
 	visible = false
 	
+	
+func _on_close_button_pressed():
+	close_pressed.emit()
+	visible = false
+
 
 func _on_mouse_entered():
 	is_in_context_menu = true
@@ -40,3 +44,5 @@ func _on_mouse_entered():
 
 func _on_mouse_exited():
 	is_in_context_menu = false
+
+

@@ -142,3 +142,9 @@ func save_xml(path: String):
 	if OS.get_name() == "Windows":
 		var file = FileAccess.open(path, FileAccess.WRITE)
 		file.store_string(xml_dump)
+
+
+func close_xml(xml_data: XMLData):
+	var xml_item = _tree_item_dict.find_key(xml_data)
+	_tree_item_dict.erase(xml_item)
+	xml_item.free()

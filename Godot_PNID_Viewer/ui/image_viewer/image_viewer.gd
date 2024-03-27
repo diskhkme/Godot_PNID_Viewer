@@ -161,6 +161,13 @@ func update_xml(project: Project): # ex, xml added
 			
 	_node_table[project].selection_filter.set_target_xml_scene(_node_table[project].xml_nodes.values())
 	
+	
+func close_xml(xml_data: XMLData):
+	_active_xml_nodes[xml_data].free()
+	_node_table[ProjectManager.active_project].xml_nodes.erase(xml_data)
+	_active_xml_nodes.erase(xml_data)
+	_active_selection_filter.set_target_xml_scene(_active_xml_nodes.values())
+	
 		
 func _add_child_xml_scene(parent: Node2D, xml_data: XMLData):
 	var xml_scene_instance = XMLScene.instantiate() as XMLScene

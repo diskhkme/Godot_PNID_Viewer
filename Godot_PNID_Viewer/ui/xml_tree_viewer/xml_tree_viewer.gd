@@ -4,15 +4,15 @@
 extends Control
 class_name XMLTreeViewer
 
-signal symbol_selected(symbol_object: SymbolObject, from_tree: bool)
-signal symbol_deselected(symbol_object: SymbolObject, from_tree: bool)
+signal symbol_selected(symbol_object: SymbolObject, from__tree: bool)
+signal symbol_deselected(symbol_object: SymbolObject, from__tree: bool)
 
-@onready var tree = $Tree
+@onready var _tree = $Tree
 
 @export var ColorIcon = preload("res://assets/icons/rectangle_tool.png")
 
-var _xml_items_dict = {} # xml_data : tree_item
-var _symbol_items_dict = {} # symbol_object: tree_item
+var _xml_items_dict = {} # xml_data : _tree_item
+var _symbol_items_dict = {} # symbol_object: _tree_item
 var _root
 var selected_symbol
 
@@ -46,35 +46,35 @@ func close_project(project: Project):
 
 
 func reset_tree():
-	tree.clear()
-	tree.set_columns(COLUMN_COUNT)
-	tree.set_column_title(0, "ID")
-	tree.set_column_clip_content(0, true)
-	tree.set_column_custom_minimum_width(0, 100)
-	tree.set_column_title(1, "Type")
-	tree.set_column_clip_content(1, true)
-	tree.set_column_custom_minimum_width(1, 100)
-	tree.set_column_title(2, "Class")
-	tree.set_column_clip_content(2, true)
-	tree.set_column_custom_minimum_width(2, 100)
-	tree.set_column_title(3, "XMin")
-	tree.set_column_title(4, "YMin")
-	tree.set_column_title(5, "XMax")
-	tree.set_column_title(6, "YMax")
-	tree.set_column_title(7, "Deg")
+	_tree.clear()
+	_tree.set_columns(COLUMN_COUNT)
+	_tree.set_column_title(0, "ID")
+	_tree.set_column_clip_content(0, true)
+	_tree.set_column_custom_minimum_width(0, 100)
+	_tree.set_column_title(1, "Type")
+	_tree.set_column_clip_content(1, true)
+	_tree.set_column_custom_minimum_width(1, 100)
+	_tree.set_column_title(2, "Class")
+	_tree.set_column_clip_content(2, true)
+	_tree.set_column_custom_minimum_width(2, 100)
+	_tree.set_column_title(3, "XMin")
+	_tree.set_column_title(4, "YMin")
+	_tree.set_column_title(5, "XMax")
+	_tree.set_column_title(6, "YMax")
+	_tree.set_column_title(7, "Deg")
 	
-	tree.column_titles_visible = true
+	_tree.column_titles_visible = true
 	
 	for i in range(COLUMN_COUNT):
 		if i != 2:
-			tree.set_column_expand(i, false)
+			_tree.set_column_expand(i, false)
 			
-	_root = tree.create_item() 
-	tree.hide_root = true
+	_root = _tree.create_item() 
+	_tree.hide_root = true
 
 
 func add_xml_on_tree(xml_data: XMLData) -> TreeItem:
-	var xml_item = tree.create_item(_root)
+	var xml_item = _tree.create_item(_root)
 	xml_item.set_text(0,xml_data.filename)
 	for i in range(COLUMN_COUNT):
 		xml_item.set_selectable(i, false)
@@ -103,7 +103,7 @@ func fill_treeitem(symbol_child: TreeItem, symbol_object: SymbolObject):
 
 	
 func add_symbol_on_tree(parent: TreeItem, symbol_object: SymbolObject) -> TreeItem:
-	var symbol_item: TreeItem = tree.create_item(parent)
+	var symbol_item: TreeItem = _tree.create_item(parent)
 	fill_treeitem(symbol_item,symbol_object)
 	symbol_item.set_custom_color(0, symbol_object.origin_xml.color)
 	symbol_item.set_text_alignment(0, HORIZONTAL_ALIGNMENT_RIGHT)
@@ -118,29 +118,29 @@ func select_symbol(symbol_object: SymbolObject):
 	var symbol_item = _symbol_items_dict[symbol_object]
 	if not symbol_item.is_selected(0):
 		symbol_item.select(0) 
-		tree.scroll_to_item(symbol_item, true)
+		_tree.scroll_to_item(symbol_item, true)
 	
 	
 func deselect_symbol():
-	tree.deselect_all()
+	_tree.deselect_all()
 	symbol_deselected.emit(selected_symbol, true)
 	
 	
 func scroll_to_xml(xml_data: XMLData):
-	tree.scroll_to_item(_xml_items_dict[xml_data], true)
+	_tree.scroll_to_item(_xml_items_dict[xml_data], true)
 	
 
 func set_mouse_event_process(enable: bool):
 	if not enable:
-		tree.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		_tree.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	else:
-		tree.mouse_filter = Control.MOUSE_FILTER_STOP
+		_tree.mouse_filter = Control.MOUSE_FILTER_STOP
 		
 #-------------------------------------------------------------
 # Self Event Handle  -----------------------------------------
 #-------------------------------------------------------------
 func _on_tree_item_selected():
-	var selected_item = tree.get_selected()
+	var selected_item = _tree.get_selected()
 	var selected_symbols = _symbol_items_dict.keys().filter(func(a): return _symbol_items_dict[a] == selected_item)
 	selected_symbol = selected_symbols[0]
 	if not selected_symbol.removed:
@@ -191,7 +191,7 @@ func apply_symbol_change(symbol_object: SymbolObject):
 	else: # add case
 		var symbol_item = add_symbol_on_tree(xml_tree, symbol_object)
 		_symbol_items_dict[symbol_object] = symbol_item
-		tree.scroll_to_item(_symbol_items_dict[symbol_object], true)
+		_tree.scroll_to_item(_symbol_items_dict[symbol_object], true)
 
 
 func update_xml_visibility(xml_data: XMLData):
@@ -213,3 +213,12 @@ func update_xml_selectability(xml_data: XMLData):
 	for symbol_object in xml_data.symbol_objects:
 		for i in range(COLUMN_COUNT):
 			_symbol_items_dict[symbol_object].set_selectable(i,xml_data.is_selectable)
+
+
+func close_xml(xml_data: XMLData):
+	_xml_items_dict[xml_data].free()
+	_xml_items_dict.erase(xml_data)
+	for symbol_object in xml_data.symbol_objects:
+		_symbol_items_dict.erase(symbol_object)
+	
+	

@@ -29,7 +29,7 @@ var is_context_on = false
 
 func _ready():
 	# Init?
-	
+	Util.print_log = false
 	
 	# Signal
 	DataLoader.project_files_opened.connect(_on_project_files_opened)
@@ -60,6 +60,7 @@ func _ready():
 	_project_viewer.xml_label_visibility_changed.connect(_on_xml_label_visibility_changed)
 	_project_viewer_context_menu.xml_save_as_pressed.connect(_on_save_as_xml)
 	_project_viewer_context_menu.diff_pressed.connect(_on_diff_xml)
+	_project_viewer_context_menu.close_pressed.connect(_on_close_xml)
 	
 	_xml_tree_viewer.symbol_selected.connect(_on_symbol_selected)
 	_xml_tree_viewer.symbol_deselected.connect(_on_symbol_deselected)
@@ -69,7 +70,6 @@ func _ready():
 	_type_change_dialog.symbol_type_changed.connect(_on_symbol_type_change)
 	
 	# TODO: Close xml
-	# TODO: select viewed symbol/text
 	
 func _input(event):
 	if ProjectManager.active_project == null:
@@ -163,6 +163,14 @@ func _on_xml_files_opened(args):
 	var xml_str = args[2]
 	ProjectManager.active_project.add_xmls(num_xml, xml_filenames, xml_str)
 	update_guis()
+	
+	
+func _on_close_xml():
+	var xml_data = _project_viewer.selected_xml
+	ProjectManager.active_project.close_xml(xml_data)
+	_image_viewer.close_xml(xml_data)
+	_project_viewer.close_xml(xml_data)
+	_xml_tree_viewer.close_xml(xml_data)
 	
 	
 func _on_export_img():

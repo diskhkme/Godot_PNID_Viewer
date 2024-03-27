@@ -1,6 +1,8 @@
 class_name Util
 
 static var timers = {}
+static var print_log: bool = true
+static var is_debug: bool = true
 
 static func get_img_path(paths) -> String:
 	for path in paths:
@@ -25,4 +27,10 @@ static func log_start(log_name: String):
 	
 static func log_end(log_name: String):
 	var time = Time.get_ticks_msec() - timers[log_name]
-	print(log_name, " %d ms" % time)
+	if print_log:
+		print(log_name, " %d ms" % time)
+
+
+static func debug_msg(msg):
+	if is_debug:
+		print(msg)

@@ -108,7 +108,6 @@ func update_handle_positions():
 
 	
 func on_indicator_move_started(target: Handle, start_pos: Vector2):
-	print("started")
 	if target.type == Handle.TYPE.ROTATE:
 		rot_start_angle = center_node.rotation
 		rot_start_vec = (start_pos - center_node.global_position).normalized()

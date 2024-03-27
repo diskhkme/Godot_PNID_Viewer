@@ -15,15 +15,10 @@ class Snapshot:
 	var after: SymbolObject
 var snapshot_stack: Array # array of snapshot
 var snapshot_ref: Snapshot
-var current_action_id: int = 0
+var edit_action_id: int = 0
 
 var add_symbol_stack: Array
-var add_symbol_ref
 var add_action_id: int = 0
-
-var remove_symbol_stack: Array
-var remove_symbol_ref
-var remove_action_id: int = 0
 
 var dirty: bool = false
 
@@ -69,6 +64,69 @@ func add_diff_xml(symbol_objects, diff_name, source_xml, target_xml):
 	xml_data.initialize_diff(xml_id, new_name, symbol_objects, source_xml, target_xml)
 	xml_datas.push_back(xml_data)
 
+
+func close_xml(xml_data: XMLData):
+	var new_undo_redo = UndoRedo.new()
+	var new_snapshot_stack: Array
+	var new_add_symbol_stack: Array
+	var replay_undo_count = 0
+	
+	# redo all to check how many replay requred
+	while undo_redo.has_redo():
+		undo_redo.redo()
+		if undo_redo.get_current_action_name() == "Edit symbol":
+			if xml_data != snapshot_stack[edit_action_id-1].ref.source_xml:
+				replay_undo_count += 1
+		if undo_redo.get_current_action_name() == "Add symbol":
+			if xml_data != add_symbol_stack[add_action_id-1].source_xml:
+				replay_undo_count += 1
+		
+	# undo all to start
+	while undo_redo.has_undo():
+		undo_redo.undo()
+	
+	# replay do except closed xml
+	edit_action_id = 0
+	add_action_id = 0
+	var replay_edit_action_id = 0
+	var replay_add_action_id = 0
+	var removed_action_count = 0
+	for i in range(undo_redo.get_history_count()):
+		if undo_redo.get_action_name(i) == "Edit symbol":
+			if xml_data != snapshot_stack[edit_action_id].ref.source_xml:
+				new_snapshot_stack.push_back(snapshot_stack[edit_action_id])
+				new_undo_redo.create_action("Edit symbol")
+				new_undo_redo.add_do_method(do_symbol_edit)
+				new_undo_redo.add_undo_method(undo_symbol_edit)
+				new_undo_redo.commit_action()
+				replay_edit_action_id += 1
+			else:
+				edit_action_id += 1
+		if undo_redo.get_action_name(i) == "Add symbol":
+			if xml_data != add_symbol_stack[add_action_id].source_xml:
+				new_add_symbol_stack.push_back(add_symbol_stack[add_action_id])
+				new_undo_redo.create_action("Add symbol")
+				new_undo_redo.add_do_method(do_symbol_add)
+				new_undo_redo.add_undo_method(undo_symbol_add)
+				new_undo_redo.commit_action()
+				replay_add_action_id += 1
+			else:
+				add_action_id += 1
+	
+	# replay undos except closed xml
+	edit_action_id = replay_edit_action_id
+	add_action_id = replay_add_action_id
+	snapshot_stack = new_snapshot_stack
+	add_symbol_stack = new_add_symbol_stack
+	for i in range(replay_undo_count):
+		new_undo_redo.undo()
+		
+	# replace current undo_redo
+	undo_redo = new_undo_redo
+			
+	xml_data.symbol_objects.clear()
+	xml_datas.erase(xml_data)		
+
 		
 # --------------------------------------------------------------------
 # ---Undo/Redo--------------------------------------------------------
@@ -77,7 +135,7 @@ func add_diff_xml(symbol_objects, diff_name, source_xml, target_xml):
 func get_current_symbol():
 	return current_symbol
 	
-	
+
 func do_symbol_action():
 	var has_dirty = false
 	for xml_data in xml_datas:
@@ -94,6 +152,8 @@ func do_symbol_action():
 		self.dirty = false
 	
 	symbol_action.emit(current_symbol)
+	#Util.debug_msg(["history: ", undo_redo.get_history_count()])
+	#Util.debug_msg(["current: ", undo_redo.get_current_action()])
 	
 
 func symbol_edit_started(symbol_object: SymbolObject):
@@ -110,10 +170,10 @@ func symbol_edited(symbol_object: SymbolObject):
 	
 	symbol_object.dirty = true
 	snapshot_ref.after = symbol_object.clone()
-	if current_action_id >= snapshot_stack.size():
+	if edit_action_id >= snapshot_stack.size():
 		snapshot_stack.push_back(snapshot_ref)
 	else:
-		snapshot_stack[current_action_id] = snapshot_ref
+		snapshot_stack[edit_action_id] = snapshot_ref
 	
 	
 	undo_redo.create_action("Edit symbol")
@@ -123,22 +183,22 @@ func symbol_edited(symbol_object: SymbolObject):
 	
 	
 func symbol_edit_canceled():
-	snapshot_stack[current_action_id].ref.restore(snapshot_stack[current_action_id].before)
+	snapshot_stack[edit_action_id].ref.restore(snapshot_stack[edit_action_id].before)
 	#snapshot_stack.pop_back()
 	
 	
 func do_symbol_edit():
-	var snapshot = snapshot_stack[current_action_id]
+	var snapshot = snapshot_stack[edit_action_id]
 	snapshot.ref.restore(snapshot.after)
 	current_symbol = snapshot.ref
-	current_action_id += 1
+	edit_action_id += 1
 	do_symbol_action()
 	#print("do edit action ", snapshot.ref.id)
 	
 		
 func undo_symbol_edit():
-	current_action_id -= 1
-	var snapshot = snapshot_stack[current_action_id]
+	edit_action_id -= 1
+	var snapshot = snapshot_stack[edit_action_id]
 	snapshot.ref.restore(snapshot.before)
 	current_symbol = snapshot.ref
 	do_symbol_action()
