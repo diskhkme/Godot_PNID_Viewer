@@ -96,9 +96,6 @@ func _input(event):
 			if _project_viewer_context_menu.visible:
 				_project_viewer_context_menu.process_input(event)
 				return
-
-
-
 			
 	if event is InputEventKey and event.is_pressed():
 		if event.ctrl_pressed and event.keycode == KEY_Z:
@@ -108,6 +105,7 @@ func _input(event):
 		if event.keycode == KEY_ESCAPE and _image_viewer.is_editing():
 			ProjectManager.active_project.symbol_edit_canceled()
 			_image_viewer.cancel_selected()
+			_xml_tree_viewer.deselect_symbol()
 			
 
 func _on_new_project(): # web & windows
