@@ -54,12 +54,12 @@ func _update_button_enabled():
 		add_xml_button.disabled = false
 		export_img_button.disabled = false
 		
-		if ProjectManager.active_project.undo_redo.has_undo():
+		if ProjectManager.active_project.has_undo():
 			undo_button.disabled = false
 		else:
 			undo_button.disabled = true
 			
-		if ProjectManager.active_project.undo_redo.has_redo():
+		if ProjectManager.active_project.has_redo():
 			redo_button.disabled = false
 		else:
 			redo_button.disabled = true

@@ -1,37 +1,21 @@
-extends Node
 class_name Project
 
 signal symbol_action(symbol_object: SymbolObject) # edit/add/remove
 
 var id: int
-var undo_redo: UndoRedo
-
-# TODO: consider move undoredo module to separate file
-var current_symbol: SymbolObject
-	
-class Snapshot:
-	var ref: SymbolObject
-	var before: SymbolObject
-	var after: SymbolObject
-var snapshot_stack: Array # array of snapshot
-var snapshot_ref: Snapshot
-var edit_action_id: int = 0
-
-var add_symbol_stack: Array
-var add_action_id: int = 0
-
 var dirty: bool = false
-
 var img_filename: String
 var img: Image
 var xml_datas: Array[XMLData]
+
+var undoredo_mgr: UndoRedoManager
 
 func initialize(id, img_filename, img, num_xml, xml_filenames, xml_strs):
 	self.id = id
 	self.img_filename = img_filename
 	self.img = img
 	
-	undo_redo = UndoRedo.new()
+	undoredo_mgr = UndoRedoManager.new()
 	xml_datas.clear()
 	for i in range(num_xml):
 		var xml_data = XMLData.new()
@@ -65,78 +49,14 @@ func add_diff_xml(symbol_objects, diff_name, source_xml, target_xml):
 	xml_datas.push_back(xml_data)
 
 
-func close_xml(xml_data: XMLData):
-	var new_undo_redo = UndoRedo.new()
-	var new_snapshot_stack: Array
-	var new_add_symbol_stack: Array
-	var replay_undo_count = 0
-	
-	# redo all to check how many replay requred
-	while undo_redo.has_redo():
-		undo_redo.redo()
-		if undo_redo.get_current_action_name() == "Edit symbol":
-			if xml_data != snapshot_stack[edit_action_id-1].ref.source_xml:
-				replay_undo_count += 1
-		if undo_redo.get_current_action_name() == "Add symbol":
-			if xml_data != add_symbol_stack[add_action_id-1].source_xml:
-				replay_undo_count += 1
-		
-	# undo all to start
-	while undo_redo.has_undo():
-		undo_redo.undo()
-	
-	# replay do except closed xml
-	edit_action_id = 0
-	add_action_id = 0
-	var replay_edit_action_id = 0
-	var replay_add_action_id = 0
-	var removed_action_count = 0
-	for i in range(undo_redo.get_history_count()):
-		if undo_redo.get_action_name(i) == "Edit symbol":
-			if xml_data != snapshot_stack[edit_action_id].ref.source_xml:
-				new_snapshot_stack.push_back(snapshot_stack[edit_action_id])
-				new_undo_redo.create_action("Edit symbol")
-				new_undo_redo.add_do_method(do_symbol_edit)
-				new_undo_redo.add_undo_method(undo_symbol_edit)
-				new_undo_redo.commit_action()
-				replay_edit_action_id += 1
-			else:
-				edit_action_id += 1
-		if undo_redo.get_action_name(i) == "Add symbol":
-			if xml_data != add_symbol_stack[add_action_id].source_xml:
-				new_add_symbol_stack.push_back(add_symbol_stack[add_action_id])
-				new_undo_redo.create_action("Add symbol")
-				new_undo_redo.add_do_method(do_symbol_add)
-				new_undo_redo.add_undo_method(undo_symbol_add)
-				new_undo_redo.commit_action()
-				replay_add_action_id += 1
-			else:
-				add_action_id += 1
-	
-	# replay undos except closed xml
-	edit_action_id = replay_edit_action_id
-	add_action_id = replay_add_action_id
-	snapshot_stack = new_snapshot_stack
-	add_symbol_stack = new_add_symbol_stack
-	for i in range(replay_undo_count):
-		new_undo_redo.undo()
-		
-	# replace current undo_redo
-	undo_redo = new_undo_redo
+func close_xml(removed_xml: XMLData):
+	undoredo_mgr.filter_closed_xml_history(removed_xml)
 			
-	xml_data.symbol_objects.clear()
-	xml_datas.erase(xml_data)		
+	removed_xml.symbol_objects.clear()
+	xml_datas.erase(removed_xml)		
 
-		
-# --------------------------------------------------------------------
-# ---Undo/Redo--------------------------------------------------------
-# --------------------------------------------------------------------
 
-func get_current_symbol():
-	return current_symbol
-	
-
-func do_symbol_action():
+func update_dirty():
 	var has_dirty = false
 	for xml_data in xml_datas:
 		var dirty_symbols = xml_data.symbol_objects.filter(func(a): return a.dirty == true)
@@ -151,60 +71,42 @@ func do_symbol_action():
 	else:
 		self.dirty = false
 	
-	symbol_action.emit(current_symbol)
-	#Util.debug_msg(["history: ", undo_redo.get_history_count()])
-	#Util.debug_msg(["current: ", undo_redo.get_current_action()])
+	
+func has_undo():
+	return undoredo_mgr.has_undo()
+	
+	
+func has_redo():
+	return undoredo_mgr.has_redo()
+	
+	
+func undo():
+	undoredo_mgr.undo()
+	update_dirty()
+	symbol_action.emit(undoredo_mgr.current_symbol)
 	
 
+func redo():
+	undoredo_mgr.redo()
+	update_dirty()
+	symbol_action.emit(undoredo_mgr.current_symbol)
+	
+	
 func symbol_edit_started(symbol_object: SymbolObject):
-	var snapshot = Snapshot.new()
-	snapshot.ref = symbol_object
-	snapshot.before = symbol_object.clone()
-	snapshot_ref = snapshot
+	undoredo_mgr.cache_snapshot(symbol_object)
 	
 	
 func symbol_edited(symbol_object: SymbolObject):
-	assert(snapshot_ref.ref == symbol_object, "not expected")
-	if symbol_object.compare(snapshot_ref.before):
-		return # do nothing if nothing changed
-	
 	symbol_object.dirty = true
-	snapshot_ref.after = symbol_object.clone()
-	if edit_action_id >= snapshot_stack.size():
-		snapshot_stack.push_back(snapshot_ref)
-	else:
-		snapshot_stack[edit_action_id] = snapshot_ref
-	
-	
-	undo_redo.create_action("Edit symbol")
-	undo_redo.add_do_method(do_symbol_edit)
-	undo_redo.add_undo_method(undo_symbol_edit)
-	undo_redo.commit_action()
+	undoredo_mgr.commit_edit_action(symbol_object)
+	update_dirty()
+	symbol_action.emit(undoredo_mgr.current_symbol)
 	
 	
 func symbol_edit_canceled():
-	snapshot_stack[edit_action_id].ref.restore(snapshot_stack[edit_action_id].before)
-	#snapshot_stack.pop_back()
+	undoredo_mgr.cancel_snapshot()
 	
 	
-func do_symbol_edit():
-	var snapshot = snapshot_stack[edit_action_id]
-	snapshot.ref.restore(snapshot.after)
-	current_symbol = snapshot.ref
-	edit_action_id += 1
-	do_symbol_action()
-	#print("do edit action ", snapshot.ref.id)
-	
-		
-func undo_symbol_edit():
-	edit_action_id -= 1
-	var snapshot = snapshot_stack[edit_action_id]
-	snapshot.ref.restore(snapshot.before)
-	current_symbol = snapshot.ref
-	do_symbol_action()
-	#print("undo edit action ", snapshot.ref.id)
-	
-# in case of add symbol, actual adding happens here
 func symbol_add(pos: Vector2, target_xml: XMLData):
 	var new_symbol = SymbolObject.new()
 	new_symbol.source_xml = target_xml
@@ -213,31 +115,6 @@ func symbol_add(pos: Vector2, target_xml: XMLData):
 	new_symbol.id = target_xml.symbol_objects.size()
 	new_symbol.dirty = true
 	new_symbol.is_new = true
-	
-	if add_action_id >= add_symbol_stack.size():
-		add_symbol_stack.push_back(new_symbol)
-	else:
-		add_symbol_stack[add_action_id] = new_symbol
-		
-	undo_redo.create_action("Add symbol")
-	undo_redo.add_do_method(do_symbol_add)
-	undo_redo.add_undo_method(undo_symbol_add)
-	undo_redo.commit_action()
-	
-	
-func do_symbol_add():
-	current_symbol = add_symbol_stack[add_action_id]
-	var index = current_symbol.source_xml.get_index_of_id(current_symbol.id)
-	current_symbol.source_xml.symbol_objects.insert(index, current_symbol)
-	add_action_id += 1
-	do_symbol_action()
-	#print("do add action ", current_symbol.id)
-	
-	
-func undo_symbol_add():
-	add_action_id -= 1
-	current_symbol = add_symbol_stack[add_action_id]
-	current_symbol.source_xml.symbol_objects.erase(current_symbol)
-	do_symbol_action()
-	#print("undo add action ", current_symbol.id)
-	
+	undoredo_mgr.commit_add_action(new_symbol)
+	update_dirty()
+	symbol_action.emit(undoredo_mgr.current_symbol)

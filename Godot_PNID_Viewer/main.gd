@@ -231,11 +231,11 @@ func _on_remove_symbol():
 
 	
 func _on_undo_action():
-	ProjectManager.active_project.undo_redo.undo()
+	ProjectManager.active_project.undo()
 
 	
 func _on_redo_action():
-	ProjectManager.active_project.undo_redo.redo()
+	ProjectManager.active_project.redo()
 	
 	
 func _on_any_symbol_action(target_symbol: SymbolObject):
