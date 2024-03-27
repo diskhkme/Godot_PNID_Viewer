@@ -7,14 +7,14 @@ var id: int
 var undo_redo: UndoRedo
 
 # TODO: consider move undoredo module to separate file
+var current_symbol: SymbolObject
+	
 class Snapshot:
 	var ref: SymbolObject
 	var before: SymbolObject
 	var after: SymbolObject
-	
-var snapshot_stack: Array # array of [symbol_object, snapshot_start]
-var current_symbol: SymbolObject
-
+var snapshot_stack: Array # array of snapshot
+var snapshot_ref: Snapshot
 var current_action_id: int = 0
 
 var add_symbol_stack: Array
@@ -95,26 +95,27 @@ func do_symbol_action():
 	
 	symbol_action.emit(current_symbol)
 	
-# in case of edit symbol, editing is already done by edit controller
-# TODO: consider change actual edit action happens here
+
 func symbol_edit_started(symbol_object: SymbolObject):
 	var snapshot = Snapshot.new()
 	snapshot.ref = symbol_object
 	snapshot.before = symbol_object.clone()
-	if current_action_id >= snapshot_stack.size():
-		snapshot_stack.push_back(snapshot)
-		#print("add stack ", symbol_object.id)
-	else:
-		snapshot_stack[current_action_id] = snapshot
+	snapshot_ref = snapshot
 	
 	
 func symbol_edited(symbol_object: SymbolObject):
-	if symbol_object.compare(snapshot_stack[current_action_id].before):
-		snapshot_stack.pop_back()
+	assert(snapshot_ref.ref == symbol_object, "not expected")
+	if symbol_object.compare(snapshot_ref.before):
 		return # do nothing if nothing changed
 	
 	symbol_object.dirty = true
-	snapshot_stack[current_action_id].after = symbol_object.clone()
+	snapshot_ref.after = symbol_object.clone()
+	if current_action_id >= snapshot_stack.size():
+		snapshot_stack.push_back(snapshot_ref)
+	else:
+		snapshot_stack[current_action_id] = snapshot_ref
+	
+	
 	undo_redo.create_action("Edit symbol")
 	undo_redo.add_do_method(do_symbol_edit)
 	undo_redo.add_undo_method(undo_symbol_edit)
@@ -123,7 +124,7 @@ func symbol_edited(symbol_object: SymbolObject):
 	
 func symbol_edit_canceled():
 	snapshot_stack[current_action_id].ref.restore(snapshot_stack[current_action_id].before)
-	snapshot_stack.pop_back()
+	#snapshot_stack.pop_back()
 	
 	
 func do_symbol_edit():

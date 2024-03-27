@@ -84,7 +84,11 @@ func select_symbol(symbol_object: SymbolObject):
 	if selected_symbol != symbol_object:
 		_process_symbol_deselected()
 	_process_symbol_selected(symbol_object)
-	_image_view_camera.focus_symbol(symbol_object)
+	focus_symbol(symbol_object)
+	
+	
+func focus_symbol(symbol_object: SymbolObject):
+	_image_view_camera.try_focus_point(symbol_object.get_center())
 
 
 func process_input(event):
@@ -114,7 +118,7 @@ func _process_symbol_selected(selected):
 	_active_editor_control.visible = true
 	_active_xml_nodes[selected.source_xml].hide_symbol_node(selected)
 	_active_selection_filter.clear_candidates()
-	_image_view_camera.focus_symbol(selected)
+	focus_symbol(selected)
 	selected_symbol = selected
 	
 	

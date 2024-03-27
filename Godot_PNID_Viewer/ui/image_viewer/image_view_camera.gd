@@ -39,18 +39,17 @@ func set_cam_position(pos: Vector2):
 	moved.emit(self.global_position)
 
 
-func focus_symbol(symbol_object: SymbolObject):
-	if _is_symbol_visible(symbol_object):
+func try_focus_point(point: Vector2):
+	if _is_point_in_view(point):
 		return
 		
-	global_position = symbol_object.get_center()
+	global_position = point
 	moved.emit(self.global_position)
 
 
-func _is_symbol_visible(target_symbol: SymbolObject):
+func _is_point_in_view(point: Vector2):
 	var camera_pos = global_position
-	var symbol_center = target_symbol.get_center()
-	var cam_center_to_symbol = symbol_center - camera_pos
+	var cam_center_to_symbol = point - camera_pos
 	var visible_rect = get_viewport().get_visible_rect()
 	visible_rect.size /= zoom.x
 	if visible_rect.size.x*0.5 - abs(cam_center_to_symbol.x) > 0 and visible_rect.size.y*0.5 - abs(cam_center_to_symbol.y) > 0:

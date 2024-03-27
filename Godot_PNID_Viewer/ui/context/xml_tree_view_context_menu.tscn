@@ -1,0 +1,74 @@
+[gd_scene load_steps=2 format=3 uid="uid://c13ce4rscdfrh"]
+
+[sub_resource type="GDScript" id="GDScript_x5iqf"]
+script/source = "extends Control
+
+signal edit_pressed
+signal remove_pressed
+
+@export var _xml_tree_viewer: XMLTreeViewer
+
+@onready var edit_button = $PanelContainer/VBoxContainer/EditButton
+
+var is_in_context_menu: bool
+
+func process_input(event):
+	if _xml_tree_viewer.get_global_rect().has_point(event.position):
+		if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_RIGHT:
+			if !event.is_pressed() and !visible and _xml_tree_viewer.selected_symbol != null:
+				position = event.position
+				visible = true
+				
+	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
+		if !is_in_context_menu:
+			visible = false
+	
+
+func _on_mouse_entered():
+	is_in_context_menu = true
+
+
+func _on_mouse_exited():
+	is_in_context_menu = false
+
+
+func _on_edit_button_pressed():
+	edit_pressed.emit()
+	visible = false
+
+
+func _on_remove_button_pressed():
+	remove_pressed.emit()
+	visible = false
+"
+
+[node name="XMLViewContextMenu" type="Control"]
+visible = false
+layout_mode = 3
+anchors_preset = 0
+mouse_filter = 1
+script = SubResource("GDScript_x5iqf")
+
+[node name="PanelContainer" type="PanelContainer" parent="."]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+mouse_filter = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer"]
+layout_mode = 2
+
+[node name="EditButton" type="Button" parent="PanelContainer/VBoxContainer"]
+layout_mode = 2
+mouse_filter = 1
+text = "Edit"
+
+[node name="RemoveButton" type="Button" parent="PanelContainer/VBoxContainer"]
+layout_mode = 2
+mouse_filter = 1
+text = "Remove"
+
+[connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="." to="." method="_on_mouse_exited"]
+[connection signal="pressed" from="PanelContainer/VBoxContainer/EditButton" to="." method="_on_edit_button_pressed"]
+[connection signal="pressed" from="PanelContainer/VBoxContainer/RemoveButton" to="." method="_on_remove_button_pressed"]

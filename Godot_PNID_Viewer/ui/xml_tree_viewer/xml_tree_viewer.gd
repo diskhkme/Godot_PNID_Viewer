@@ -131,7 +131,7 @@ func scroll_to_xml(xml_data: XMLData):
 	
 
 func set_mouse_event_process(enable: bool):
-	if enable:
+	if not enable:
 		tree.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	else:
 		tree.mouse_filter = Control.MOUSE_FILTER_STOP
@@ -143,7 +143,8 @@ func _on_tree_item_selected():
 	var selected_item = tree.get_selected()
 	var selected_symbols = _symbol_items_dict.keys().filter(func(a): return _symbol_items_dict[a] == selected_item)
 	selected_symbol = selected_symbols[0]
-	symbol_selected.emit(selected_symbols[0], true)
+	if not selected_symbol.removed:
+		symbol_selected.emit(selected_symbols[0], true)
 	
 
 func _on_tree_column_title_clicked(column, mouse_button_index):

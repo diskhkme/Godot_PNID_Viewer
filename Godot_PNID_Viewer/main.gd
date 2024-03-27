@@ -24,7 +24,6 @@ extends Node
 # context menu
 @onready var _image_viewer_context_menu = $CanvasLayer/ContextMenus/ImageViewContextMenu
 @onready var _project_viewer_context_menu = $CanvasLayer/ContextMenus/ProjectViewContextMenu
-@onready var _xml_tree_viewer_context_menu = $CanvasLayer/ContextMenus/XMLViewContextMenu
 
 var is_context_on = false
 
@@ -64,15 +63,13 @@ func _ready():
 	
 	_xml_tree_viewer.symbol_selected.connect(_on_symbol_selected)
 	_xml_tree_viewer.symbol_deselected.connect(_on_symbol_deselected)
-	_xml_tree_viewer_context_menu.edit_pressed.connect(_on_edit_symbol)
 	
 	_diff_window.diff_calc_completed.connect(_on_diff_calc_completed)
 	
 	_type_change_dialog.symbol_type_changed.connect(_on_symbol_type_change)
-	#_xml_tree_viewer.request_type_change_window.connect(_show_type_change_window)
 	
 	# TODO: Close xml
-	# TODO: remove symbol from tree viewer
+	# TODO: select viewed symbol/text
 	
 func _input(event):
 	if ProjectManager.active_project == null:
@@ -80,26 +77,26 @@ func _input(event):
 	
 	if event is InputEventMouse:
 		is_context_on = _image_viewer_context_menu.visible or \
-					_project_viewer_context_menu.visible or \
-					_xml_tree_viewer_context_menu.visible
-
-		if !is_context_on:
+					_project_viewer_context_menu.visible
+					
+		if is_context_on or _image_viewer.is_editing():
 			_xml_tree_viewer.set_mouse_event_process(false)
-			_image_viewer.process_input(event)
-			_image_viewer_context_menu.process_input(event, _image_viewer.selected_symbol != null)
-			_project_viewer_context_menu.process_input(event)
-			_xml_tree_viewer_context_menu.process_input(event)
 		else:
 			_xml_tree_viewer.set_mouse_event_process(true)
+
+		if !is_context_on:
+			_image_viewer.process_input(event)
+			_image_viewer_context_menu.process_input(event, _image_viewer.selected_symbol != null)
+			if not _image_viewer.is_editing():
+				_project_viewer_context_menu.process_input(event)
+		else:
 			if _image_viewer_context_menu.visible:
 				_image_viewer_context_menu.process_input(event, _image_viewer.selected_symbol != null)
 				return
 			if _project_viewer_context_menu.visible:
 				_project_viewer_context_menu.process_input(event)
 				return
-			if _xml_tree_viewer_context_menu.visible:
-				_xml_tree_viewer_context_menu.process_input(event)
-				return
+
 
 
 			
@@ -125,7 +122,7 @@ func _on_new_project(): # web & windows
 	
 func _on_project_files_opened(args):
 	var project: Project = ProjectManager.add_project(args)
-	project.symbol_action.connect(_on_symbol_action)
+	project.symbol_action.connect(_on_any_symbol_action)
 	_make_project_active(project)
 
 
@@ -189,9 +186,9 @@ func _on_screenshot_taken(img: Image, path: String):
 	
 func _on_symbol_selected(symbol_object: SymbolObject, from_tree: bool):
 	if not from_tree:
-		_project_viewer.select_xml(symbol_object.source_xml)
 		_xml_tree_viewer.select_symbol(symbol_object)
 	else:
+		_project_viewer.select_xml(symbol_object.source_xml)
 		_image_viewer.select_symbol(symbol_object)
 		ProjectManager.active_project.symbol_edit_started(symbol_object)
 	
@@ -227,14 +224,15 @@ func _on_remove_symbol():
 	
 func _on_undo_action():
 	ProjectManager.active_project.undo_redo.undo()
-			
+
 	
 func _on_redo_action():
 	ProjectManager.active_project.undo_redo.redo()
 	
 	
-func _on_symbol_action(target_symbol: SymbolObject):
+func _on_any_symbol_action(target_symbol: SymbolObject):
 	_image_viewer.apply_symbol_change(target_symbol)
+	_image_viewer.focus_symbol(target_symbol)
 	_xml_tree_viewer.apply_symbol_change(target_symbol)	
 	_project_viewer.update_dirty()
 	_main_menu.update_dirty()
