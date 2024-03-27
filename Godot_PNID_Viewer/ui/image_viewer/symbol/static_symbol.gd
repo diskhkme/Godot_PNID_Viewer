@@ -38,9 +38,20 @@ func update_symbol():
 
 func process_input(event):
 	if event is InputEventMouseButton and (event.button_index == MOUSE_BUTTON_LEFT or event.button_index == MOUSE_BUTTON_RIGHT):
-		if event.is_pressed() and not symbol_object.removed:
+		if event.is_pressed() and _check_selectability():
 			if symbol_object.has_point(get_global_mouse_position()):
 				report_static_selected.emit(self)
+
+
+func _check_selectability() -> bool:
+	if symbol_object.removed:
+		return false
+	if symbol_object.is_text and not symbol_object.source_xml.is_text_visible:
+		return false
+	if not symbol_object.is_text and not symbol_object.source_xml.is_symbol_visible:
+		return false
+		
+	return true
 
 
 func set_label_visibility(enabled: bool):
