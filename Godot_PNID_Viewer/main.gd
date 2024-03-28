@@ -21,6 +21,7 @@ extends Node
 @onready var _save_img_dialog = $CanvasLayer/Dialogs/SaveImageDialog
 @onready var _type_change_dialog = $CanvasLayer/Dialogs/TypeChangeWindow
 @onready var _diff_window = $CanvasLayer/Dialogs/DiffWindow
+@onready var _measure_window = $CanvasLayer/Dialogs/MeasureWindow
 
 # context menu
 @onready var _image_viewer_context_menu = $CanvasLayer/ContextMenus/ImageViewContextMenu
@@ -62,6 +63,7 @@ func _ready():
 	_project_viewer.xml_label_visibility_changed.connect(_on_xml_label_visibility_changed)
 	_project_viewer_context_menu.xml_save_as_pressed.connect(_on_save_as_xml)
 	_project_viewer_context_menu.diff_pressed.connect(_on_diff_xml)
+	_project_viewer_context_menu.measure_pressed.connect(_on_measure_xml)
 	_project_viewer_context_menu.close_pressed.connect(_on_close_xml)
 	
 	_xml_tree_viewer.symbol_selected.connect(_on_symbol_selected)
@@ -305,6 +307,11 @@ func _on_diff_xml():
 func _on_diff_calc_completed(symbol_objects, diff_name, source_xml, target_xml):
 	ProjectManager.active_project.add_diff_xml(symbol_objects, diff_name, source_xml, target_xml)
 	update_guis()
+
+
+func _on_measure_xml():
+	_measure_window.popup_centered()
+	_measure_window.initialize_with_selected(_project_viewer.selected_xml)
 
 
 func _show_type_change_window(symbol_object:SymbolObject):

@@ -1,0 +1,149 @@
+[gd_scene load_steps=4 format=3 uid="uid://myj67o0jfstd"]
+
+[ext_resource type="Theme" uid="uid://dseywhd5dettr" path="res://resources/project_default.tres" id="1_0e2r4"]
+[ext_resource type="Script" path="res://ui/dialogs/measure_window.gd" id="1_jlxx1"]
+[ext_resource type="Texture2D" uid="uid://beeog2d8ijh8s" path="res://assets/icons/minus.png" id="2_tob66"]
+
+[node name="MeasureWindow" type="Window"]
+title = "Performance Measure"
+position = Vector2i(0, 36)
+size = Vector2i(827, 610)
+wrap_controls = true
+theme = ExtResource("1_0e2r4")
+script = ExtResource("1_jlxx1")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -142.0
+offset_top = -142.5
+offset_right = 142.0
+offset_bottom = 142.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 40
+theme_override_constants/margin_top = 25
+theme_override_constants/margin_right = 40
+theme_override_constants/margin_bottom = 25
+
+[node name="FileSelect" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/FileSelect"]
+layout_mode = 2
+alignment = 1
+
+[node name="Label" type="Label" parent="MarginContainer/FileSelect/HBoxContainer"]
+layout_mode = 2
+text = "Detection:"
+
+[node name="DTXML" type="OptionButton" parent="MarginContainer/FileSelect/HBoxContainer"]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="MarginContainer/FileSelect/HBoxContainer"]
+layout_mode = 2
+texture = ExtResource("2_tob66")
+
+[node name="Label2" type="Label" parent="MarginContainer/FileSelect/HBoxContainer"]
+layout_mode = 2
+text = "Ground Truth:"
+
+[node name="GTXML" type="OptionButton" parent="MarginContainer/FileSelect/HBoxContainer"]
+layout_mode = 2
+
+[node name="OptionResult" type="HBoxContainer" parent="MarginContainer/FileSelect"]
+layout_mode = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="MarginContainer/FileSelect/OptionResult"]
+layout_mode = 2
+
+[node name="Options" type="MarginContainer" parent="MarginContainer/FileSelect/OptionResult/PanelContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 25
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 25
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/FileSelect/OptionResult/PanelContainer/Options"]
+layout_mode = 2
+
+[node name="GridContainer" type="HBoxContainer" parent="MarginContainer/FileSelect/OptionResult/PanelContainer/Options/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MarginContainer/FileSelect/OptionResult/PanelContainer/Options/VBoxContainer/GridContainer"]
+layout_mode = 2
+tooltip_text = "매칭이 된 것으로 판단하는 IoU 기준값 (*수직, 수평이 아닌 상자의 경우 계산 오차 있음)"
+mouse_filter = 0
+text = "IoU Threshold: "
+
+[node name="IOUThresholdRange" type="SpinBox" parent="MarginContainer/FileSelect/OptionResult/PanelContainer/Options/VBoxContainer/GridContainer"]
+layout_mode = 2
+max_value = 1.0
+step = 0.01
+value = 0.5
+
+[node name="GridContainer4" type="HBoxContainer" parent="MarginContainer/FileSelect/OptionResult/PanelContainer/Options/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MarginContainer/FileSelect/OptionResult/PanelContainer/Options/VBoxContainer/GridContainer4"]
+layout_mode = 2
+tooltip_text = "String: 문자열의 경우 문자가 일치하는지까지 매칭 기준으로 사용
+Degree: Degree 각도값이 일치하는지까지 매칭 기준으로 사용(4도 이하 차이의 경우 매칭된 것으로 판정)"
+mouse_filter = 0
+text = "Compare: "
+
+[node name="Label3" type="Label" parent="MarginContainer/FileSelect/OptionResult/PanelContainer/Options/VBoxContainer/GridContainer4"]
+layout_mode = 2
+text = "String"
+
+[node name="CompareStringCheckbox" type="CheckBox" parent="MarginContainer/FileSelect/OptionResult/PanelContainer/Options/VBoxContainer/GridContainer4"]
+layout_mode = 2
+
+[node name="Label2" type="Label" parent="MarginContainer/FileSelect/OptionResult/PanelContainer/Options/VBoxContainer/GridContainer4"]
+layout_mode = 2
+text = "Degree"
+
+[node name="CompareDegreeCheckbox" type="CheckBox" parent="MarginContainer/FileSelect/OptionResult/PanelContainer/Options/VBoxContainer/GridContainer4"]
+layout_mode = 2
+button_pressed = true
+
+[node name="PanelContainer2" type="PanelContainer" parent="MarginContainer/FileSelect/OptionResult"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/FileSelect/OptionResult/PanelContainer2"]
+layout_mode = 2
+
+[node name="ResultTextLabel" type="RichTextLabel" parent="MarginContainer/FileSelect/OptionResult/PanelContainer2/MarginContainer"]
+custom_minimum_size = Vector2(500, 500)
+layout_mode = 2
+
+[node name="Buttons" type="HBoxContainer" parent="MarginContainer/FileSelect"]
+layout_mode = 2
+alignment = 1
+
+[node name="OKButton" type="Button" parent="MarginContainer/FileSelect/Buttons"]
+layout_mode = 2
+text = "OK"
+
+[node name="CancelButton" type="Button" parent="MarginContainer/FileSelect/Buttons"]
+layout_mode = 2
+text = "Cancel"
+
+[node name="Progress" type="HBoxContainer" parent="MarginContainer/FileSelect"]
+layout_mode = 2
+alignment = 1
+
+[node name="ProgressBar" type="ProgressBar" parent="MarginContainer/FileSelect/Progress"]
+visible = false
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+max_value = 1.0
+
+[connection signal="about_to_popup" from="." to="." method="_on_about_to_popup"]
+[connection signal="close_requested" from="." to="." method="_on_close_requested"]
+[connection signal="pressed" from="MarginContainer/FileSelect/Buttons/OKButton" to="." method="_on_ok_button_pressed"]
+[connection signal="pressed" from="MarginContainer/FileSelect/Buttons/CancelButton" to="." method="_on_cancel_button_pressed"]

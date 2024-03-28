@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://en0mt7v4ddrg"]
+[gd_scene load_steps=14 format=3 uid="uid://en0mt7v4ddrg"]
 
 [ext_resource type="Script" path="res://main.gd" id="1_h1xnr"]
 [ext_resource type="Theme" uid="uid://dseywhd5dettr" path="res://resources/project_default.tres" id="2_6rl77"]
@@ -10,6 +10,7 @@
 [ext_resource type="PackedScene" uid="uid://bdsyjmvhhrl76" path="res://ui/dialogs/type_change_window.tscn" id="6_xn5xa"]
 [ext_resource type="PackedScene" uid="uid://bub4qah0tbwdj" path="res://ui/status_bar.tscn" id="8_87pkj"]
 [ext_resource type="PackedScene" uid="uid://fxwcfnsk0rgt" path="res://ui/dialogs/diff_window.tscn" id="11_3hrp5"]
+[ext_resource type="PackedScene" uid="uid://myj67o0jfstd" path="res://ui/dialogs/measure_window.tscn" id="11_8k5ry"]
 [ext_resource type="PackedScene" uid="uid://drge4asvwjmcu" path="res://ui/context/image_view_context_menu.tscn" id="12_p38sp"]
 [ext_resource type="PackedScene" uid="uid://chyc6mjjmyek7" path="res://ui/context/project_view_context_menu.tscn" id="13_sobsl"]
 
@@ -103,6 +104,9 @@ use_native_dialog = true
 visible = false
 
 [node name="DiffWindow" parent="CanvasLayer/Dialogs" instance=ExtResource("11_3hrp5")]
+visible = false
+
+[node name="MeasureWindow" parent="CanvasLayer/Dialogs" instance=ExtResource("11_8k5ry")]
 visible = false
 
 [node name="ContextMenus" type="Control" parent="CanvasLayer"]
