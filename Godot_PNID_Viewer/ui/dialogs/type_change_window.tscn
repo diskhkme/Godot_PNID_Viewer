@@ -56,12 +56,10 @@ custom_minimum_size = Vector2(400, 0)
 layout_mode = 2
 clip_text = true
 
-[node name="TextEdit" type="TextEdit" parent="VBoxContainer/MarginContainer/VBoxContainer/HBoxContainer2"]
+[node name="TextEdit" type="LineEdit" parent="VBoxContainer/MarginContainer/VBoxContainer/HBoxContainer2"]
 custom_minimum_size = Vector2(400, 40)
 layout_mode = 2
 size_flags_horizontal = 3
-text = "23423423423"
-placeholder_text = "234234234234234"
 
 [node name="MarginContainer2" type="MarginContainer" parent="VBoxContainer"]
 layout_mode = 2
@@ -83,5 +81,6 @@ text = "Cancel"
 
 [connection signal="close_requested" from="." to="." method="_on_close_requested"]
 [connection signal="item_selected" from="VBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/TypeOptionButton" to="." method="_on_type_option_button_item_selected"]
+[connection signal="text_submitted" from="VBoxContainer/MarginContainer/VBoxContainer/HBoxContainer2/TextEdit" to="." method="_on_text_edit_text_submitted"]
 [connection signal="pressed" from="VBoxContainer/MarginContainer2/HBoxContainer/OKButton" to="." method="_on_ok_button_pressed"]
 [connection signal="pressed" from="VBoxContainer/MarginContainer2/HBoxContainer/CancelButton" to="." method="_on_cancel_button_pressed"]

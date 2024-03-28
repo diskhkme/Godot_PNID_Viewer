@@ -94,5 +94,5 @@ func _on_close_requested():
 	self.visible = false
 
 
-
-
+func _on_text_edit_text_submitted(new_text):
+	_on_ok_button_pressed()
