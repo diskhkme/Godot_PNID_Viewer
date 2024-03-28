@@ -14,47 +14,56 @@ signal indicator_move_ended(target: Handle,mouse_pos: Vector2)
 @export var type: TYPE
 @export var scale_type: SCALE_TYPE
 
-@onready var collision_rect: CollisionShape2D = $Area2D/CollisionShape2D
-@onready var collision_area: Area2D = $Area2D
+#@onready var collision_rect: CollisionShape2D = $Area2D/CollisionShape2D
+@onready var _collision_area: Area2D = $Area2D
 
-var is_dragging: bool = false
 var on_cursor: bool = false
-var reference_size: Vector2
+var _is_dragging: bool = false
+var _reference_size: Vector2
 
 var last_mouse_position
 
 func _ready():
+	add_to_group("draw")
 	set_physics_process(false)
 
+
 func set_initial_handle_size(size: Vector2):
-	reference_size = size
-	collision_area.scale = size
+	_reference_size = size
+	_collision_area.scale = size
+
+
+func redraw():
+	queue_redraw()
 	
 
 func _draw():
+	var zoom_factor = get_viewport().get_camera_2d().zoom.x
 	var color = Config.EDITOR_HANDLE_COLOR
-	var line_width = Config.EDITOR_RECT_LINE_WIDTH
+	var line_width = Config.EDITOR_RECT_LINE_WIDTH / zoom_factor
 	
 	if type == TYPE.SCALING:
-		draw_circle(Vector2.ZERO, (reference_size.x*0.5), color)
+		_collision_area.scale = _reference_size / zoom_factor
+		draw_circle(Vector2.ZERO, (_reference_size.x * 0.5 / zoom_factor), color)
 	elif type == TYPE.ROTATE:
-		draw_rect(Rect2(-reference_size*0.5, reference_size), color, false, line_width)
+		_collision_area.scale = _reference_size / zoom_factor
+		draw_rect(Rect2(-_reference_size * 0.5 / zoom_factor, _reference_size / zoom_factor), color, false, line_width)
 		
 
 func process_input(event):
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
 		if event.is_pressed():
 			if on_cursor:
-				is_dragging = true
+				_is_dragging = true
 				last_mouse_position = get_global_mouse_position()
 				indicator_move_started.emit(self, get_global_mouse_position())
 		else:
-			if is_dragging:
-				is_dragging = false
+			if _is_dragging:
+				_is_dragging = false
 				on_cursor = false
 				indicator_move_ended.emit(self,get_global_mouse_position())
 		
-	if event is InputEventMouseMotion and is_dragging:
+	if event is InputEventMouseMotion and _is_dragging:
 		var delta = get_global_mouse_position() - last_mouse_position
 		if type != TYPE.ROTATE:
 			self.translate(event.relative)
@@ -63,11 +72,11 @@ func process_input(event):
 
 
 func disable_collision():
-	remove_child(collision_area)
+	remove_child(_collision_area)
 	
 	
 func enable_collision():
-	add_child(collision_area)
+	add_child(_collision_area)
 
 
 func _on_area_2d_mouse_entered():

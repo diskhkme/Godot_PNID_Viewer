@@ -16,6 +16,7 @@ var target_symbol: SymbolObject
 var is_actually_edited = false
 
 func _ready():
+	add_to_group("draw")
 	for handle in handles:
 		handle.indicator_move_started.connect(on_indicator_move_started)
 		handle.indicator_moved.connect(on_indicator_moved)
@@ -38,11 +39,17 @@ func initialize(symbol_object: SymbolObject):
 	
 	update_handle_positions()
 	is_actually_edited = false
+	
+	
+func redraw():
+	queue_redraw()
+	update_handle_positions()
 
 
 func _draw():
+	var zoom_factor = get_viewport().get_camera_2d().zoom.x
 	var color = Config.EDITOR_RECT_COLOR
-	var line_width = Config.EDITOR_RECT_LINE_WIDTH
+	var line_width = Config.EDITOR_RECT_LINE_WIDTH / zoom_factor
 
 	var right_vec = Vector2.RIGHT.rotated(center_node.rotation)
 	var up_vec = Vector2.UP.rotated(center_node.rotation)
@@ -77,15 +84,16 @@ func process_input(event) -> bool: # return false if edit end
 				
 				
 func update_handle_positions():
+	var zoom_factor = get_viewport().get_camera_2d().zoom.x
 	# rot anchor adjust depending on the zoom level
 	var right_vec = Vector2.RIGHT.rotated(center_node.rotation)
 	var up_vec = Vector2.UP.rotated(center_node.rotation)
-	var up_offset = Config.EDITOR_ROTATION_HANDLE_OFFSET
+	var up_offset = Config.EDITOR_ROTATION_HANDLE_OFFSET / zoom_factor
 	
-	var tl_pos = center_node.global_position + (-right_vec*center_node.scale.x + up_vec*center_node.scale.y)*0.5
-	var tr_pos = center_node.global_position + (right_vec*center_node.scale.x + up_vec*center_node.scale.y)*0.5
-	var bl_pos = center_node.global_position + (-right_vec*center_node.scale.x - up_vec*center_node.scale.y)*0.5
-	var br_pos = center_node.global_position + (right_vec*center_node.scale.x - up_vec*center_node.scale.y)*0.5
+	var tl_pos = center_node.global_position + (-right_vec*center_node.scale.x + up_vec*center_node.scale.y)*0.5 
+	var tr_pos = center_node.global_position + (right_vec*center_node.scale.x + up_vec*center_node.scale.y)*0.5 
+	var bl_pos = center_node.global_position + (-right_vec*center_node.scale.x - up_vec*center_node.scale.y)*0.5 
+	var br_pos = center_node.global_position + (right_vec*center_node.scale.x - up_vec*center_node.scale.y)*0.5 
 	
 	for handle in handles:
 		if handle.type == Handle.TYPE.TRANSLATE:
@@ -96,13 +104,13 @@ func update_handle_positions():
 			handle.global_position = center_node.global_position + up_vec * (center_node.scale.y/2 + up_offset)
 		else:
 			if handle.scale_type == Handle.SCALE_TYPE.TOP_LEFT:
-				handle.global_position = tl_pos + (up_vec - right_vec).normalized()*Config.EDITOR_HANDLE_PADDING
+				handle.global_position = tl_pos + (up_vec - right_vec).normalized()*Config.EDITOR_HANDLE_PADDING / zoom_factor
 			elif handle.scale_type == Handle.SCALE_TYPE.TOP_RIGHT:
-				handle.global_position = tr_pos + (up_vec + right_vec).normalized()*Config.EDITOR_HANDLE_PADDING
+				handle.global_position = tr_pos + (up_vec + right_vec).normalized()*Config.EDITOR_HANDLE_PADDING / zoom_factor
 			elif handle.scale_type == Handle.SCALE_TYPE.BOTTOM_LEFT:
-				handle.global_position = bl_pos + (-up_vec - right_vec).normalized()*Config.EDITOR_HANDLE_PADDING
+				handle.global_position = bl_pos + (-up_vec - right_vec).normalized()*Config.EDITOR_HANDLE_PADDING / zoom_factor
 			elif handle.scale_type == Handle.SCALE_TYPE.BOTTOM_RIGHT:
-				handle.global_position = br_pos + (-up_vec + right_vec).normalized()*Config.EDITOR_HANDLE_PADDING
+				handle.global_position = br_pos + (-up_vec + right_vec).normalized()*Config.EDITOR_HANDLE_PADDING / zoom_factor
 				
 	queue_redraw()
 

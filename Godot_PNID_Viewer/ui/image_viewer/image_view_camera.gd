@@ -28,7 +28,6 @@ func process_input(event):
 				self.zoom -= target_zoom
 				zoom_changed.emit(self.zoom.x)
 
-
 	if event is InputEventMouseMotion and is_dragging:
 		self.global_translate((-event.relative)/self.zoom)
 		moved.emit(self.global_position)

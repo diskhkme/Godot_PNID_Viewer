@@ -1,6 +1,4 @@
 class_name Config
-# 
-const MAX_UNDOREDO_SNAPSHOT = 3
 
 # Static visual
 const SYMBOL_COLOR_PRESET = [Color.RED, Color.GREEN, Color.BLUE, Color.MAGENTA, Color.CYAN, Color.ORANGE]
@@ -31,3 +29,4 @@ const TEXT_TYPE_NAME = "text"
 # Interaction
 const CONTEXT_MENU_THRESHOLD = 10
 const CAMERA_ZOOM_TICK = 0.05
+const CAMERA_ZOOM_NOTI_THRESHOLD = 0.5

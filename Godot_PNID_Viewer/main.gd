@@ -25,11 +25,11 @@ extends Node
 @onready var _image_viewer_context_menu = $CanvasLayer/ContextMenus/ImageViewContextMenu
 @onready var _project_viewer_context_menu = $CanvasLayer/ContextMenus/ProjectViewContextMenu
 
-var is_context_on = false
+var _is_context_on = false
 
 func _ready():
 	# Init?
-	Util.print_log = false
+	Util.is_debug = true
 	
 	# Signal
 	DataLoader.project_files_opened.connect(_on_project_files_opened)
@@ -76,15 +76,15 @@ func _input(event):
 		return
 	
 	if event is InputEventMouse:
-		is_context_on = _image_viewer_context_menu.visible or \
+		_is_context_on = _image_viewer_context_menu.visible or \
 					_project_viewer_context_menu.visible
 					
-		if is_context_on or _image_viewer.is_editing():
+		if _is_context_on or _image_viewer.is_editing():
 			_xml_tree_viewer.set_mouse_event_process(false)
 		else:
 			_xml_tree_viewer.set_mouse_event_process(true)
 
-		if !is_context_on:
+		if !_is_context_on:
 			_image_viewer.process_input(event)
 			_image_viewer_context_menu.process_input(event, _image_viewer.selected_symbol != null)
 			if not _image_viewer.is_editing():
@@ -304,6 +304,7 @@ func _show_type_change_window(symbol_object:SymbolObject):
 
 func _on_zoom_changed(zoom: float):
 	_status_bar.update_camera_zoom(zoom)
+	get_tree().call_group("draw", "redraw")
 	
 	
 func _on_camera_moved(pos: Vector2):
