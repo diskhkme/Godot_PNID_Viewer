@@ -70,8 +70,6 @@ func update_symbol_object():
 		_symbol_object.set_cls(_cls_option_button.get_item_text(_cls_option_button.selected))
 
 
-# change only applied when pressed OK
-# TODO: after closing, XML treeviewer still waits click so selected is jumped(?)
 func _on_ok_button_pressed():
 	var type = _type_option_button.get_item_text(_type_option_button.selected)
 	var cls

@@ -1,4 +1,4 @@
-class_name XMLData # TODO: separate diff xml
+class_name XMLData 
 
 var id: int
 var filename: String

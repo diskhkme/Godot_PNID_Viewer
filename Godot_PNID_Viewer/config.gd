@@ -1,5 +1,8 @@
 class_name Config
 
+# Global
+const AWAIT_MSEC = 100
+
 # Static visual
 const SYMBOL_COLOR_PRESET = [Color.RED, Color.GREEN, Color.BLUE, Color.MAGENTA, Color.CYAN, Color.ORANGE]
 const DEFAULT_LINE_WIDTH = 3.0
@@ -30,3 +33,6 @@ const TEXT_TYPE_NAME = "text"
 const CONTEXT_MENU_THRESHOLD = 10
 const CAMERA_ZOOM_TICK = 0.05
 const CAMERA_ZOOM_NOTI_THRESHOLD = 0.5
+
+# Diff calc
+const DEGREE_MATCH_THRESHOLD = 4

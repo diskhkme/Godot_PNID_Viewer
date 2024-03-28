@@ -8,6 +8,7 @@ signal symbol_selected(symbol_object: SymbolObject, from_tree: bool)
 signal symbol_editing(symbol_object: SymbolObject)
 signal symbol_edit_cancel(symbol_object: SymbolObject)
 signal symbol_deselected(symbol_object: SymbolObject, from_tree: bool)
+signal screenshot_start()
 signal screenshot_taken(img: Image)
 signal zoom_changed(zoom: float)
 signal camera_moved(pos: Vector2)
@@ -151,7 +152,6 @@ func close_project(project: Project):
 	
 	
 func update_xml(project: Project): # ex, xml added
-	# TODO: consider xml clsed case (and add xml close interface)
 	for xml_data in project.xml_datas:
 		if not _node_table[project].xml_nodes.has(xml_data):
 			Util.log_start("child_scene %s" % xml_data.filename)
@@ -219,6 +219,7 @@ func update_label_visibility(xml_data: XMLData):
 	
 
 func generate_screenshot(path: String):
+	screenshot_start.emit()
 	var screenshot = await _image_export.take_screenshot()
 	screenshot_taken.emit(screenshot, path)
 	

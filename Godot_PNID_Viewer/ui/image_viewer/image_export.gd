@@ -21,7 +21,6 @@ func save_scene_status():
 	return [previous_size, previous_cam_pos, previous_cam_zoom]
 	
 
-# TODO: Visualize coroutine awaiting
 func get_screenshot_image():
 	var target_size = ProjectManager.active_project.img.get_size()
 	viewport.size = target_size

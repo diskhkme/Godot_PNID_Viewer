@@ -43,7 +43,7 @@ func get_xml_data():
 func _add_child_static_symbol(symbol_object: SymbolObject):
 	var symbol = StaticSymbol.instantiate() as StaticSymbol
 	symbol.name = str(symbol_object.id)
-	symbol.symbol_object = symbol_object # TODO: or encapsulate create symbol with add_child to avoid internal variable access
+	symbol.symbol_object = symbol_object 
 	symbol.report_static_selected.connect(on_static_symbol_select_reported)
 	self.add_child(symbol)
 	_symbol_nodes[symbol_object] = symbol

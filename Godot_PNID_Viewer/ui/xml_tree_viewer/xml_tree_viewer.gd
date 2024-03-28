@@ -107,9 +107,9 @@ func add_symbol_on_tree(parent: TreeItem, symbol_object: SymbolObject) -> TreeIt
 	fill_treeitem(symbol_item,symbol_object)
 	symbol_item.set_custom_color(0, symbol_object.origin_xml.color)
 	symbol_item.set_text_alignment(0, HORIZONTAL_ALIGNMENT_RIGHT)
-	if symbol_object.is_text:
-		# TODO: text editing does not signal symbol edited
-		symbol_item.set_editable(2, true)
+	#if symbol_object.is_text:
+		## TODO: text editing does not signal symbol edited
+		#symbol_item.set_editable(2, true)
 		
 	return symbol_item
 		

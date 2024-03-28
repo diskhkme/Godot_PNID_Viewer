@@ -3,6 +3,7 @@
 
 extends Node
 
+@onready var _wait_panel: Control = $CanvasLayer/WaitPanel
 # top section
 @onready var _main_menu: Control = $CanvasLayer/MainWindow/MainMenu
 @onready var _toolbar: Control = $CanvasLayer/MainWindow/Toolbar
@@ -44,6 +45,7 @@ func _ready():
 	_toolbar.undo_action.connect(_on_undo_action)
 	_toolbar.redo_action.connect(_on_redo_action)
 	
+	_image_viewer.screenshot_start.connect(_on_screenshot_start)
 	_image_viewer.screenshot_taken.connect(_on_screenshot_taken)
 	_image_viewer.symbol_selected.connect(_on_symbol_selected)
 	_image_viewer.symbol_editing.connect(_on_symbol_editing)
@@ -68,10 +70,12 @@ func _ready():
 	_diff_window.diff_calc_completed.connect(_on_diff_calc_completed)
 	
 	_type_change_dialog.symbol_type_changed.connect(_on_symbol_type_change)
-	
-	# TODO: Close xml
+
 	
 func _input(event):
+	if _wait_panel.visible:
+		return
+	
 	if ProjectManager.active_project == null:
 		return
 	
@@ -182,6 +186,10 @@ func _on_export_img():
 		_image_viewer.generate_screenshot("") # no path required for web
 
 
+func _on_screenshot_start():
+	_wait_panel.visible = true
+	
+
 func _on_screenshot_taken(img: Image, path: String):
 	if OS.get_name() == "Windows":
 		if !path.contains(".png"):
@@ -190,6 +198,7 @@ func _on_screenshot_taken(img: Image, path: String):
 	if OS.get_name() == "Web":
 		var data = img.save_png_to_buffer()
 		JavaScriptBridge.download_buffer(data, "Screenshot.png", "image/png")
+	_wait_panel.visible = false
 
 	
 func _on_symbol_selected(symbol_object: SymbolObject, from_tree: bool):

@@ -44,7 +44,6 @@ func reset_root(img_filename: String):
 	_tree.set_columns(COLUMN_COUNT)
 	_root = _tree.create_item()
 	_root.set_text(0, img_filename)
-	# TODO: Show symbol & text separately
 	_root.set_text(1, "Symbol")
 	_root.set_text(2, "Text")
 	_root.set_text(3, "Select")

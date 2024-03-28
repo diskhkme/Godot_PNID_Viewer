@@ -46,7 +46,6 @@ func popup(pos: Vector2, is_selected: bool):
 
 func _on_add_button_pressed():
 	var pos = _image_viewer.get_camera().get_pixel_from_image_canvas(position)
-	#var new_symbol = ProjectManager.active_project.xml_datas[0].add_symbol(pos_in_image) # TODO: how to set target xml?
 	add_symbol_pressed.emit(pos)
 	visible = false
 

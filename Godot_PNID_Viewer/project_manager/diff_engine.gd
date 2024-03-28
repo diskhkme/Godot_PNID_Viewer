@@ -67,8 +67,7 @@ func filter_by_iou_string_degree(first, second, iou_th, compare_string, compare_
 			if compare_string and f.is_text:
 				candidate = candidate.filter(func(s): return f.cls == s.cls)
 			if compare_degree:
-				# TODO: parameterize degree threshold?
-				candidate = candidate.filter(func(s): return abs(f.degree - s.degree) < 4)
+				candidate = candidate.filter(func(s): return abs(f.degree - s.degree) < Config.DEGREE_MATCH_THRESHOLD)
 				
 		if candidate.size() == 0: # if no cond meet, store f
 			filtered.push_back(f.clone())
@@ -77,7 +76,7 @@ func filter_by_iou_string_degree(first, second, iou_th, compare_string, compare_
 			
 		num_current += 1
 		var current_time = Time.get_ticks_msec()
-		if current_time - last_emit >= 100:
+		if current_time - last_emit >= Config.AWAIT_MSEC:
 			report_progress.emit(progress)
 			await get_tree().process_frame
 			last_emit = current_time
