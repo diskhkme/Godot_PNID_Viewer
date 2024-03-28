@@ -10,7 +10,7 @@ var _snapshot_stack: Array # array of snapshot
 var _snapshot_cache: Snapshot
 var _edit_action_id: int = 0
 
-var current_symbol: SymbolObject
+var latest_symbol: SymbolObject
 
 func _init():
 	_undo_redo = UndoRedo.new()
@@ -92,6 +92,7 @@ func cache_snapshot(symbol_object: SymbolObject):
 	snapshot.ref = symbol_object
 	snapshot.before = symbol_object.clone()
 	_snapshot_cache = snapshot
+	latest_symbol = symbol_object
 	
 	
 func commit_edit_action(symbol_object: SymbolObject):
@@ -100,6 +101,7 @@ func commit_edit_action(symbol_object: SymbolObject):
 	if symbol_object.compare(_snapshot_cache.before):
 		return # do nothing if nothing changed
 
+	symbol_object.dirty = true
 	_snapshot_cache.after = symbol_object.clone()
 	if _edit_action_id >= _snapshot_stack.size():
 		_snapshot_stack.push_back(_snapshot_cache)
@@ -121,7 +123,7 @@ func cancel_snapshot():
 func _do_symbol_edit():
 	var snapshot = _snapshot_stack[_edit_action_id]
 	snapshot.ref.restore(snapshot.after)
-	current_symbol = snapshot.ref
+	latest_symbol = snapshot.ref
 	_edit_action_id += 1
 	#print("do edit action ", snapshot.ref.id)
 	
@@ -130,7 +132,7 @@ func _undo_symbol_edit():
 	_edit_action_id -= 1
 	var snapshot = _snapshot_stack[_edit_action_id]
 	snapshot.ref.restore(snapshot.before)
-	current_symbol = snapshot.ref
+	latest_symbol = snapshot.ref
 	#print("undo edit action ", snapshot.ref.id)
 	
 # in case of add symbol, actual adding happens here
@@ -152,17 +154,17 @@ func commit_add_action(new_symbol: SymbolObject):
 	
 	
 func _do_symbol_add():
-	current_symbol = _snapshot_stack[_edit_action_id].ref
-	var index = current_symbol.source_xml.get_index_of_id(current_symbol.id)
-	current_symbol.source_xml.symbol_objects.insert(index, current_symbol)
+	latest_symbol = _snapshot_stack[_edit_action_id].ref
+	var index = latest_symbol.source_xml.get_index_of_id(latest_symbol.id)
+	latest_symbol.source_xml.symbol_objects.insert(index, latest_symbol)
 	_edit_action_id += 1
 	#print("do add action ", current_symbol.id)
 	
 	
 func _undo_symbol_add():
 	_edit_action_id -= 1
-	current_symbol = _snapshot_stack[_edit_action_id].ref
-	current_symbol.source_xml.symbol_objects.erase(current_symbol)
+	latest_symbol = _snapshot_stack[_edit_action_id].ref
+	latest_symbol.source_xml.symbol_objects.erase(latest_symbol)
 	#print("undo add action ", current_symbol.id)
 	
 

@@ -199,6 +199,7 @@ func _add_child_editor_control(parent: Node2D):
 	
 	
 func apply_symbol_change(symbol_object: SymbolObject):
+	focus_symbol(symbol_object)
 	var xml_scene = _active_xml_nodes[symbol_object.source_xml]
 	if xml_scene.has_symbol(symbol_object): 
 		if symbol_object.source_xml.symbol_objects.has(symbol_object): # symbol edited

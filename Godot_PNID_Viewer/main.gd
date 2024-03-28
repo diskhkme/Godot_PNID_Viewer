@@ -106,6 +106,8 @@ func _input(event):
 			ProjectManager.active_project.symbol_edit_canceled()
 			_image_viewer.cancel_selected()
 			_xml_tree_viewer.deselect_symbol()
+		if event.keycode == KEY_DELETE and _image_viewer.is_editing():
+			_on_remove_symbol()
 			
 
 func _on_new_project(): # web & windows
@@ -238,7 +240,6 @@ func _on_redo_action():
 	
 func _on_any_symbol_action(target_symbol: SymbolObject):
 	_image_viewer.apply_symbol_change(target_symbol)
-	_image_viewer.focus_symbol(target_symbol)
 	_xml_tree_viewer.apply_symbol_change(target_symbol)	
 	_project_viewer.update_dirty()
 	_main_menu.update_dirty()

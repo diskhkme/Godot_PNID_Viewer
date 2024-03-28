@@ -184,6 +184,7 @@ func apply_symbol_change(symbol_object: SymbolObject):
 		var symbol_item = _symbol_items_dict[symbol_object]
 		if symbol_object.source_xml.symbol_objects.has(symbol_object): # edited case
 			fill_treeitem(symbol_item, symbol_object)
+			_tree.scroll_to_item(_symbol_items_dict[symbol_object], true)
 		else: # undo add case
 			xml_tree.remove_child(symbol_item)
 			symbol_item.free()

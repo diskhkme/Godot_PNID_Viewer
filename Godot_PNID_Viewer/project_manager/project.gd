@@ -83,13 +83,13 @@ func has_redo():
 func undo():
 	undoredo_mgr.undo()
 	update_dirty()
-	symbol_action.emit(undoredo_mgr.current_symbol)
+	symbol_action.emit(undoredo_mgr.latest_symbol)
 	
 
 func redo():
 	undoredo_mgr.redo()
 	update_dirty()
-	symbol_action.emit(undoredo_mgr.current_symbol)
+	symbol_action.emit(undoredo_mgr.latest_symbol)
 	
 	
 func symbol_edit_started(symbol_object: SymbolObject):
@@ -97,10 +97,9 @@ func symbol_edit_started(symbol_object: SymbolObject):
 	
 	
 func symbol_edited(symbol_object: SymbolObject):
-	symbol_object.dirty = true
 	undoredo_mgr.commit_edit_action(symbol_object)
 	update_dirty()
-	symbol_action.emit(undoredo_mgr.current_symbol)
+	symbol_action.emit(undoredo_mgr.latest_symbol)
 	
 	
 func symbol_edit_canceled():
@@ -117,4 +116,4 @@ func symbol_add(pos: Vector2, target_xml: XMLData):
 	new_symbol.is_new = true
 	undoredo_mgr.commit_add_action(new_symbol)
 	update_dirty()
-	symbol_action.emit(undoredo_mgr.current_symbol)
+	symbol_action.emit(undoredo_mgr.latest_symbol)
