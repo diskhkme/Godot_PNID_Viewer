@@ -1,14 +1,14 @@
 extends Window
 class_name EvaluationDialog
 
-@onready var _dt_xml = $MarginContainer/FileSelect/HBoxContainer/DTXML
-@onready var _gt_xml = $MarginContainer/FileSelect/HBoxContainer/GTXML
+@onready var _dt_xml = %DTXML
+@onready var _gt_xml = %GTXML
 
-@onready var iou_threshold = $MarginContainer/FileSelect/OptionResult/PanelContainer/Options/VBoxContainer/GridContainer/IOUThresholdRange
-@onready var compare_string = $MarginContainer/FileSelect/OptionResult/PanelContainer/Options/VBoxContainer/GridContainer4/CompareStringCheckbox
-@onready var compare_degree = $MarginContainer/FileSelect/OptionResult/PanelContainer/Options/VBoxContainer/GridContainer4/CompareDegreeCheckbox
-@onready var progress_bar = $MarginContainer/FileSelect/Progress/ProgressBar
-@onready var result_text_label = $MarginContainer/FileSelect/OptionResult/PanelContainer2/MarginContainer/ResultTextLabel
+@onready var iou_threshold = %IOUThresholdRange
+@onready var compare_string = %CompareStringCheckbox
+@onready var compare_degree = %CompareDegreeCheckbox
+@onready var progress_bar = %ProgressBar
+@onready var result_text_label = %ResultTextLabel
 
 var filename_id_dict = {}
 
@@ -17,11 +17,13 @@ func _ready():
 	
 
 func _gather_calculate_options():
-	var iou_th = iou_threshold.value
-	var is_string_compare = compare_string.button_pressed
-	var is_degree_compare = compare_degree.button_pressed
+	var options = EvaluationEngine.EvalOptions.new()
+	options.iou_th = float(iou_threshold.value)
+	options.is_compare_string = compare_string.button_pressed
+	options.is_compare_degree = compare_degree.button_pressed
+	options.filename = ProjectManager.active_project.img_filename
 	
-	return [iou_th, is_string_compare, is_degree_compare]
+	return options
 	
 	
 func _get_xml_data(selected_xml_item):
@@ -41,26 +43,9 @@ func _on_close_requested():
 	visible = false
 	
 
-func _on_ok_button_pressed():
-	progress_bar.visible = true
-	var dt_xml_data = _get_xml_data(_dt_xml)
-	var gt_xml_data = _get_xml_data(_gt_xml)
-	var options = _gather_calculate_options()
-		
-	var result = await EvaluationEngine.calculate_precision_recall(dt_xml_data.symbol_objects, gt_xml_data.symbol_objects, options)
-	progress_bar.visible = false
-	#diff_calc_completed.emit(result, diff_name.text, first_xml_data, second_xml_data)
-	result_text_label.text = result
-	
-	
 func _on_progress_reported(progress: float):
-	#print(progress)
 	if progress_bar.visible:
 		progress_bar.value = progress
-
-
-func _on_cancel_button_pressed():
-	visible = false
 
 
 func _on_about_to_popup():
@@ -74,5 +59,18 @@ func _on_about_to_popup():
 		_dt_xml.add_item(xml_data.filename)
 		_gt_xml.add_item(xml_data.filename)
 		id += 1
-	
 
+
+func _on_run_button_pressed():
+	progress_bar.visible = true
+	var dt_xml_data = _get_xml_data(_dt_xml)
+	var gt_xml_data = _get_xml_data(_gt_xml)
+	var options = _gather_calculate_options()
+		
+	var result = await EvaluationEngine.calculate_precision_recall(dt_xml_data.symbol_objects, gt_xml_data.symbol_objects, options)
+	progress_bar.visible = false
+	result_text_label.text = result
+
+
+func _on_close_button_pressed():
+	visible = false

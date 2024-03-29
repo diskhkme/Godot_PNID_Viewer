@@ -2,14 +2,17 @@ extends Node
 
 signal report_progress(progress: float)
 
+class EvalOptions:
+	var filename: String
+	var iou_th: float
+	var is_compare_string: bool
+	var is_compare_degree: bool
+	
+
 var num_total
 var num_current
 
-func calculate_precision_recall(dt_symbols: Array[SymbolObject], gt_symbols: Array[SymbolObject], options: Variant) -> String:
-	var iou_th: float = options[0]
-	var compare_string: bool = options[1]
-	var compare_degree: bool = options[2]
-	
+func calculate_precision_recall(dt_symbols: Array[SymbolObject], gt_symbols: Array[SymbolObject], options: EvalOptions) -> String:
 	var gt_symbols_cpy: Array
 	gt_symbols_cpy.resize(gt_symbols.size())
 	range(gt_symbols.size()).map(func(i): gt_symbols_cpy[i] = gt_symbols[i].clone())
@@ -22,15 +25,15 @@ func calculate_precision_recall(dt_symbols: Array[SymbolObject], gt_symbols: Arr
 	var last_emit = Time.get_ticks_msec()
 	for i in range(dt_symbols.size()):
 		var f = dt_symbols[i]
-		var candidate = gt_symbols_cpy.filter(func(s): return check_iou_cond(f, s, iou_th))
+		var candidate = gt_symbols_cpy.filter(func(s): return check_iou_cond(f, s, options.iou_th))
 		
 		if candidate.size() == 0: # if no iou cond meet, store f
 			put_new_symbol_to_result(f, result, false, true)
 			continue
 		else: # check remaining condition
-			if compare_string and f.is_text:
+			if options.is_compare_string and f.is_text:
 				candidate = candidate.filter(func(s): return f.cls == s.cls)
-			if compare_degree:
+			if options.is_compare_degree:
 				candidate = candidate.filter(func(s): return abs(f.degree - s.degree) < Config.DEGREE_MATCH_THRESHOLD)
 				
 		if candidate.size() == 0: # if no cond meet, store f
@@ -47,11 +50,11 @@ func calculate_precision_recall(dt_symbols: Array[SymbolObject], gt_symbols: Arr
 			await get_tree().process_frame
 			last_emit = current_time
 			
-	return summarize_result(result)
+	return summarize_result(result, options)
 	
 	
-func put_new_symbol_to_result(symbol, result, is_gt, redundant = false):
-	if not redundant:
+func put_new_symbol_to_result(symbol, result, is_gt, nonmatched = false):
+	if not nonmatched:
 		if symbol.is_text: 
 			if result.has(symbol.type):
 				if is_gt: result[symbol.type].y += 1
@@ -69,44 +72,70 @@ func put_new_symbol_to_result(symbol, result, is_gt, redundant = false):
 				if is_gt: result[symbol.cls].y += 1
 				else: result[symbol.cls].x += 1
 	else:
-		if result.has("Redundant"):
-			result["Redundant"].x += 1
+		if symbol.is_text: 
+			if result.has("nonmatched_text"):
+				result["nonmatched_text"].x += 1
+			else:
+				result["nonmatched_text"] = Vector2i.ZERO
 		else:
-			result["Redundant"] = Vector2i.ZERO
+			if result.has("nonmatched_symbol"):
+				result["nonmatched_symbol"].x += 1
+			else:
+				result["nonmatched_symbol"] = Vector2i.ZERO
+				
 
-
-func put_matched_symbol_to_result(symbol, result):
-	if symbol.is_text: 
-		if result.has(symbol.type):
-			result[symbol.type].x += 1
-		else:
-			assert(false, "not expected")
-	else:
-		if result.has(symbol.cls):
-			result[symbol.cls].x += 1
-		else:
-			assert(false, "not expected")
-			
-			
-func summarize_result(result) -> String:
-	var tp = 0
-	var tp_plus_fp = 0
-	var fn = 0
+func summarize_result(result, options) -> String:
+	var sym_tp = 0
+	var text_tp = 0
+	var sym_tp_plus_fp = 0
+	var text_tp_plus_fp = 0
+	var sym_fn = 0
+	var text_fn = 0
 	var str_result = ""
-	for r in result:
-		if r == "Redundant":
-			str_result += "%s: %d / %d\n" % [r, result[r].x, result[r].y]
+	str_result += "Filename: %s\n" % options.filename
+	str_result += "Options: \n"
+	str_result += "\tIoU Threshold: %f\n" % options.iou_th
+	str_result += "\tIs Compare String: %s\n" % options.is_compare_string
+	str_result += "\tIs Compare Degree: %s\n" % options.is_compare_degree
+	str_result += "-------------------------------------------------------\n"
+	
+	var sorted_key = result.keys()
+	sorted_key.sort_custom(func(a,b): return a.naturalnocasecmp_to(b) < 0)
+	for r in sorted_key:
+		if r == "nonmatched_text" or r == "nonmatched_symbol":
 			continue
-		tp += result[r].x
-		tp_plus_fp += result[r].y
-		str_result += "%s: %d / %d\n" % [r, result[r].x, result[r].y]
+			
+		if r == Config.TEXT_TYPE_NAME:
+			text_tp += result[r].x
+		else:
+			sym_tp += result[r].x
+			
+		if r == Config.TEXT_TYPE_NAME:
+			text_tp_plus_fp += result[r].y
+		else:
+			sym_tp_plus_fp += result[r].y
+			
+		if r != Config.TEXT_TYPE_NAME:
+			str_result += "%s: %d / %d\n" % [r, result[r].x, result[r].y]
+		
+	str_result += "%s: %d / %d\n" % [Config.TEXT_TYPE_NAME, result[Config.TEXT_TYPE_NAME].x, result[Config.TEXT_TYPE_NAME].y]
+	str_result += "%s: %d / %d\n" % ["nonmatched_symbol", result["nonmatched_symbol"].x, result["nonmatched_symbol"].y]
+	str_result += "%s: %d / %d\n" % ["nonmatched_text", result["nonmatched_text"].x, result["nonmatched_text"].y]
 	
-	if result.has("Redundant"):
-		fn = result["Redundant"].x
-	
-	str_result += "Precition: %f (%d/%d)\n" % [(float(tp)/tp_plus_fp), tp, tp_plus_fp]
-	str_result += "Recall: %f (%d/%d)\n" % [(float(tp)/(tp+fn)), tp, (tp+fn)]
-	
+	sym_fn = result["nonmatched_symbol"].x
+	text_fn = result["nonmatched_text"].x
+		
+	var total_tp = sym_tp + text_tp
+	var total_tp_plus_fp = sym_tp_plus_fp + text_tp_plus_fp
+	var total_fn = sym_fn + text_fn
+	str_result += "-------------------------------------------------------\n"
+	str_result += "Precition: %f (%d/%d)\n" % [(float(total_tp)/total_tp_plus_fp), total_tp, total_tp_plus_fp]
+	str_result += "Recall: %f (%d/%d)\n" % [(float(total_tp)/(total_tp+total_fn)), total_tp, (total_tp+total_fn)]
+	str_result += "\tSymbol Precition: %f (%d/%d)\n" % [(float(sym_tp)/sym_tp_plus_fp), sym_tp, sym_tp_plus_fp]
+	str_result += "\tSymbol Recall: %f (%d/%d)\n" % [(float(sym_tp)/(sym_tp+sym_fn)), sym_tp, (sym_tp+sym_fn)]
+	str_result += "\tText Precition: %f (%d/%d)\n" % [(float(text_tp)/text_tp_plus_fp), text_tp, text_tp_plus_fp]
+	str_result += "\tText Recall: %f (%d/%d)\n" % [(float(text_tp)/(text_tp+text_fn)), text_tp, (text_tp+text_fn)]
+		
 	return str_result
 	
 

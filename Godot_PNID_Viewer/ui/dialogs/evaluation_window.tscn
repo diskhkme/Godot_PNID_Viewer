@@ -7,21 +7,15 @@
 [node name="EvaluationWindow" type="Window"]
 title = "Evaluate"
 position = Vector2i(0, 36)
-size = Vector2i(827, 410)
+size = Vector2i(827, 416)
 wrap_controls = true
 theme = ExtResource("1_0e2r4")
 script = ExtResource("1_jlxx1")
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -142.0
-offset_top = -142.5
-offset_right = 142.0
-offset_bottom = 142.5
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/margin_left = 40
@@ -29,117 +23,133 @@ theme_override_constants/margin_top = 25
 theme_override_constants/margin_right = 40
 theme_override_constants/margin_bottom = 25
 
-[node name="FileSelect" type="VBoxContainer" parent="MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
 layout_mode = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/FileSelect"]
+[node name="PanelContainer" type="PanelContainer" parent="MarginContainer/VBoxContainer"]
 layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/PanelContainer"]
+layout_mode = 2
+size_flags_vertical = 0
 alignment = 1
 
-[node name="Label" type="Label" parent="MarginContainer/FileSelect/HBoxContainer"]
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/PanelContainer/HBoxContainer"]
 layout_mode = 2
 text = "Detection:"
 
-[node name="DTXML" type="OptionButton" parent="MarginContainer/FileSelect/HBoxContainer"]
+[node name="DTXML" type="OptionButton" parent="MarginContainer/VBoxContainer/PanelContainer/HBoxContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 
-[node name="TextureRect" type="TextureRect" parent="MarginContainer/FileSelect/HBoxContainer"]
+[node name="TextureRect" type="TextureRect" parent="MarginContainer/VBoxContainer/PanelContainer/HBoxContainer"]
 layout_mode = 2
 texture = ExtResource("2_tob66")
 
-[node name="Label2" type="Label" parent="MarginContainer/FileSelect/HBoxContainer"]
+[node name="Label2" type="Label" parent="MarginContainer/VBoxContainer/PanelContainer/HBoxContainer"]
 layout_mode = 2
 text = "Ground Truth:"
 
-[node name="GTXML" type="OptionButton" parent="MarginContainer/FileSelect/HBoxContainer"]
+[node name="GTXML" type="OptionButton" parent="MarginContainer/VBoxContainer/PanelContainer/HBoxContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 
-[node name="OptionResult" type="HBoxContainer" parent="MarginContainer/FileSelect"]
+[node name="OptionResult" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="PanelContainer" type="PanelContainer" parent="MarginContainer/VBoxContainer/OptionResult"]
 layout_mode = 2
 
-[node name="PanelContainer" type="PanelContainer" parent="MarginContainer/FileSelect/OptionResult"]
-layout_mode = 2
-
-[node name="Options" type="MarginContainer" parent="MarginContainer/FileSelect/OptionResult/PanelContainer"]
+[node name="Options" type="MarginContainer" parent="MarginContainer/VBoxContainer/OptionResult/PanelContainer"]
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 25
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 25
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/FileSelect/OptionResult/PanelContainer/Options"]
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/OptionResult/PanelContainer/Options"]
 layout_mode = 2
 
-[node name="GridContainer" type="HBoxContainer" parent="MarginContainer/FileSelect/OptionResult/PanelContainer/Options/VBoxContainer"]
+[node name="GridContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/OptionResult/PanelContainer/Options/VBoxContainer"]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="MarginContainer/FileSelect/OptionResult/PanelContainer/Options/VBoxContainer/GridContainer"]
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/OptionResult/PanelContainer/Options/VBoxContainer/GridContainer"]
 layout_mode = 2
 tooltip_text = "매칭이 된 것으로 판단하는 IoU 기준값 (*수직, 수평이 아닌 상자의 경우 계산 오차 있음)"
 mouse_filter = 0
 text = "IoU Threshold: "
 
-[node name="IOUThresholdRange" type="SpinBox" parent="MarginContainer/FileSelect/OptionResult/PanelContainer/Options/VBoxContainer/GridContainer"]
+[node name="IOUThresholdRange" type="SpinBox" parent="MarginContainer/VBoxContainer/OptionResult/PanelContainer/Options/VBoxContainer/GridContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 max_value = 1.0
 step = 0.01
 value = 0.5
 
-[node name="GridContainer4" type="HBoxContainer" parent="MarginContainer/FileSelect/OptionResult/PanelContainer/Options/VBoxContainer"]
+[node name="GridContainer4" type="HBoxContainer" parent="MarginContainer/VBoxContainer/OptionResult/PanelContainer/Options/VBoxContainer"]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="MarginContainer/FileSelect/OptionResult/PanelContainer/Options/VBoxContainer/GridContainer4"]
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/OptionResult/PanelContainer/Options/VBoxContainer/GridContainer4"]
 layout_mode = 2
 tooltip_text = "String: 문자열의 경우 문자가 일치하는지까지 매칭 기준으로 사용
 Degree: Degree 각도값이 일치하는지까지 매칭 기준으로 사용(4도 이하 차이의 경우 매칭된 것으로 판정)"
 mouse_filter = 0
 text = "Compare: "
 
-[node name="Label3" type="Label" parent="MarginContainer/FileSelect/OptionResult/PanelContainer/Options/VBoxContainer/GridContainer4"]
+[node name="Label3" type="Label" parent="MarginContainer/VBoxContainer/OptionResult/PanelContainer/Options/VBoxContainer/GridContainer4"]
 layout_mode = 2
 text = "String"
 
-[node name="CompareStringCheckbox" type="CheckBox" parent="MarginContainer/FileSelect/OptionResult/PanelContainer/Options/VBoxContainer/GridContainer4"]
+[node name="CompareStringCheckbox" type="CheckBox" parent="MarginContainer/VBoxContainer/OptionResult/PanelContainer/Options/VBoxContainer/GridContainer4"]
+unique_name_in_owner = true
 layout_mode = 2
 
-[node name="Label2" type="Label" parent="MarginContainer/FileSelect/OptionResult/PanelContainer/Options/VBoxContainer/GridContainer4"]
+[node name="Label2" type="Label" parent="MarginContainer/VBoxContainer/OptionResult/PanelContainer/Options/VBoxContainer/GridContainer4"]
 layout_mode = 2
 text = "Degree"
 
-[node name="CompareDegreeCheckbox" type="CheckBox" parent="MarginContainer/FileSelect/OptionResult/PanelContainer/Options/VBoxContainer/GridContainer4"]
+[node name="CompareDegreeCheckbox" type="CheckBox" parent="MarginContainer/VBoxContainer/OptionResult/PanelContainer/Options/VBoxContainer/GridContainer4"]
+unique_name_in_owner = true
 layout_mode = 2
 button_pressed = true
 
-[node name="PanelContainer2" type="PanelContainer" parent="MarginContainer/FileSelect/OptionResult"]
+[node name="PanelContainer2" type="PanelContainer" parent="MarginContainer/VBoxContainer/OptionResult"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/FileSelect/OptionResult/PanelContainer2"]
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/OptionResult/PanelContainer2"]
 layout_mode = 2
 
-[node name="ResultTextLabel" type="RichTextLabel" parent="MarginContainer/FileSelect/OptionResult/PanelContainer2/MarginContainer"]
-custom_minimum_size = Vector2(500, 300)
+[node name="ResultTextLabel" type="RichTextLabel" parent="MarginContainer/VBoxContainer/OptionResult/PanelContainer2/MarginContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(300, 300)
 layout_mode = 2
 focus_mode = 2
 selection_enabled = true
 
-[node name="Buttons" type="HBoxContainer" parent="MarginContainer/FileSelect"]
+[node name="PanelContainer2" type="PanelContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Buttons" type="HBoxContainer" parent="MarginContainer/VBoxContainer/PanelContainer2"]
 layout_mode = 2
 alignment = 1
 
-[node name="OKButton" type="Button" parent="MarginContainer/FileSelect/Buttons"]
+[node name="RunButton" type="Button" parent="MarginContainer/VBoxContainer/PanelContainer2/Buttons"]
 layout_mode = 2
-text = "OK"
+text = "Run"
 
-[node name="CancelButton" type="Button" parent="MarginContainer/FileSelect/Buttons"]
+[node name="CloseButton" type="Button" parent="MarginContainer/VBoxContainer/PanelContainer2/Buttons"]
 layout_mode = 2
-text = "Cancel"
+text = "Close"
 
-[node name="Progress" type="HBoxContainer" parent="MarginContainer/FileSelect"]
+[node name="Progress" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
 layout_mode = 2
+size_flags_vertical = 8
 alignment = 1
 
-[node name="ProgressBar" type="ProgressBar" parent="MarginContainer/FileSelect/Progress"]
+[node name="ProgressBar" type="ProgressBar" parent="MarginContainer/VBoxContainer/Progress"]
+unique_name_in_owner = true
 visible = false
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
@@ -147,5 +157,5 @@ max_value = 1.0
 
 [connection signal="about_to_popup" from="." to="." method="_on_about_to_popup"]
 [connection signal="close_requested" from="." to="." method="_on_close_requested"]
-[connection signal="pressed" from="MarginContainer/FileSelect/Buttons/OKButton" to="." method="_on_ok_button_pressed"]
-[connection signal="pressed" from="MarginContainer/FileSelect/Buttons/CancelButton" to="." method="_on_cancel_button_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/PanelContainer2/Buttons/RunButton" to="." method="_on_run_button_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/PanelContainer2/Buttons/CloseButton" to="." method="_on_close_button_pressed"]
