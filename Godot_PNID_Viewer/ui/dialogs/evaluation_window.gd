@@ -1,5 +1,5 @@
 extends Window
-class_name MeasureDialog
+class_name EvaluationDialog
 
 @onready var _dt_xml = $MarginContainer/FileSelect/HBoxContainer/DTXML
 @onready var _gt_xml = $MarginContainer/FileSelect/HBoxContainer/GTXML
@@ -10,11 +10,10 @@ class_name MeasureDialog
 @onready var progress_bar = $MarginContainer/FileSelect/Progress/ProgressBar
 @onready var result_text_label = $MarginContainer/FileSelect/OptionResult/PanelContainer2/MarginContainer/ResultTextLabel
 
-
 var filename_id_dict = {}
 
 func _ready():
-	MeasureEngine.report_progress.connect(_on_progress_reported)
+	EvaluationEngine.report_progress.connect(_on_progress_reported)
 	
 
 func _gather_calculate_options():
@@ -48,7 +47,7 @@ func _on_ok_button_pressed():
 	var gt_xml_data = _get_xml_data(_gt_xml)
 	var options = _gather_calculate_options()
 		
-	var result = await MeasureEngine.calculate_precision_recall(dt_xml_data.symbol_objects, gt_xml_data.symbol_objects, options)
+	var result = await EvaluationEngine.calculate_precision_recall(dt_xml_data.symbol_objects, gt_xml_data.symbol_objects, options)
 	progress_bar.visible = false
 	#diff_calc_completed.emit(result, diff_name.text, first_xml_data, second_xml_data)
 	result_text_label.text = result

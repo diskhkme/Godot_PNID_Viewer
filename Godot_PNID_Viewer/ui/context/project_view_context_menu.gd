@@ -3,7 +3,7 @@ extends Control
 signal xml_save_as_pressed
 signal diff_pressed
 signal close_pressed
-signal measure_pressed
+signal eval_pressed
 
 @export var _project_viewer: ProjectViewer
 
@@ -47,6 +47,6 @@ func _on_mouse_exited():
 	is_in_context_menu = false
 
 
-func _on_measure_button_pressed():
-	measure_pressed.emit()
+func _on_eval_button_pressed():
+	eval_pressed.emit()
 	visible = false

@@ -17,6 +17,9 @@ func calculate_precision_recall(dt_symbols: Array[SymbolObject], gt_symbols: Arr
 	var result = {}
 	gt_symbols_cpy.map(func(d): put_new_symbol_to_result(d, result, true))
 			
+	var total_num = dt_symbols.size()
+			
+	var last_emit = Time.get_ticks_msec()
 	for i in range(dt_symbols.size()):
 		var f = dt_symbols[i]
 		var candidate = gt_symbols_cpy.filter(func(s): return check_iou_cond(f, s, iou_th))
@@ -37,6 +40,12 @@ func calculate_precision_recall(dt_symbols: Array[SymbolObject], gt_symbols: Arr
 			gt_symbols_cpy.erase(candidate[0])
 			for j in range(1, candidate.size()):
 				put_new_symbol_to_result(f, result, false, true)
+				
+		var current_time = Time.get_ticks_msec()
+		if current_time - last_emit >= Config.AWAIT_MSEC:
+			report_progress.emit(float(i)/total_num)
+			await get_tree().process_frame
+			last_emit = current_time
 			
 	return summarize_result(result)
 	

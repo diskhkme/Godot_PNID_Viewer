@@ -21,7 +21,7 @@ config/icon="res://icon.svg"
 ProjectManager="*res://project_manager/project_manager.gd"
 DiffEngine="*res://project_manager/diff_engine.gd"
 DataLoader="*res://project_manager/data_loader.gd"
-MeasureEngine="*res://project_manager/measure_engine.gd"
+EvaluationEngine="*res://project_manager/evaluation_engine.gd"
 
 [rendering]
 
