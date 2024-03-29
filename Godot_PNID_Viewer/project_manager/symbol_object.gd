@@ -154,5 +154,19 @@ func has_point(point: Vector2):
 	else:
 		return false	
 	
-
+	
+func get_bndbox_from_fourpoint_degree(p1,p2,p3,p4,degree) -> Vector4:
+	if degree != 0:
+		var a = 1
+	
+	var center = (p1 + p2 + p3 + p4) / 4.0
+	var p1_vec = p1 - center # upper left
+	var p3_vec = p3 - center # bottom right
+	p1_vec = p1_vec.rotated(deg_to_rad(degree)) # minus degree, actually
+	p3_vec = p3_vec.rotated(deg_to_rad(degree)) # minus degree, actually
+	
+	p1_vec += center
+	p3_vec += center
+	var bndbox = Vector4(p1_vec.x, p1_vec.y, p3_vec.x, p3_vec.y)
+	return bndbox
 	
