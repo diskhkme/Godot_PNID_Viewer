@@ -5,8 +5,9 @@ static var is_debug: bool = true
 
 static func get_img_path(paths) -> String:
 	for path in paths:
-		if path.contains(".png"): # cannot open jpeg, currently
-			return path
+		for img_format in Config.ALLOW_IMG_FORMAT:
+			if path.contains(img_format): # cannot open jpeg, currently
+				return path
 			
 	return String()
 			
@@ -14,10 +15,21 @@ static func get_img_path(paths) -> String:
 static func get_xml_paths(paths) -> PackedStringArray:
 	var xml_paths = PackedStringArray()
 	for path in paths:
-		if path.contains(".xml"): 
-			xml_paths.append(path)
+		for data_format in Config.ALLOW_DATA_FORMAT:
+			if path.contains(data_format): 
+				xml_paths.append(path)
 			
 	return xml_paths
+	
+	
+static func get_all_file_filter() -> String:
+	var str = ""
+	for img_format in Config.ALLOW_IMG_FORMAT:
+		str += img_format + ", "
+	for data_format in Config.ALLOW_DATA_FORMAT:
+		str += data_format + ", "
+	str += ";"
+	return str
 
 
 static func log_start(log_name: String):

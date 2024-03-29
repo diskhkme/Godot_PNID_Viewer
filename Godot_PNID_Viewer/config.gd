@@ -2,6 +2,8 @@ class_name Config
 
 # Global
 const AWAIT_MSEC = 100
+const ALLOW_IMG_FORMAT = [".png", ".jpg", ".jpeg"]
+const ALLOW_DATA_FORMAT = [".xml"]
 
 # Static visual
 const SYMBOL_COLOR_PRESET = [Color.RED, Color.GREEN, Color.BLUE, Color.MAGENTA, Color.CYAN, Color.ORANGE]

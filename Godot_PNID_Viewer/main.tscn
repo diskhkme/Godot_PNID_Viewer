@@ -74,7 +74,7 @@ title = "Open File(s)"
 ok_button_text = "열기"
 file_mode = 1
 access = 2
-filters = PackedStringArray("*.xml, *.png")
+filters = PackedStringArray("*.xml, *.png, *.jpg, *.jpeg")
 use_native_dialog = true
 
 [node name="AddXMLDialog" type="FileDialog" parent="CanvasLayer/Dialogs"]

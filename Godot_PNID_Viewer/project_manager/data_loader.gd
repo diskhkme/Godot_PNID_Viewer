@@ -49,8 +49,13 @@ func project_files_load_from_web(args):
 		print("Error!")
 	
 	var img_filename = args[0]
-
-	var img_base64_str = args[1].replace("data:image/png;base64,", "")
+	var meta
+	if img_filename.get_extension() == "png":
+		meta = "png"
+	elif img_filename.get_extension() == "jpg" or img_filename.get_extension() == "jpeg":
+		meta = "jpeg"
+	
+	var img_base64_str = args[1].replace("data:image/%s;base64," % meta, "")
 	var img_byte_buffer = Marshalls.base64_to_raw(img_base64_str)
 	var img = Image.new()
 	img.load_png_from_buffer(img_byte_buffer)
