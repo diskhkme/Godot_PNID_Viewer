@@ -170,3 +170,13 @@ func get_bndbox_from_fourpoint_degree(p1,p2,p3,p4,degree) -> Vector4:
 	var bndbox = Vector4(p1_vec.x, p1_vec.y, p3_vec.x, p3_vec.y)
 	return bndbox
 	
+
+func get_degree_from_dota_fourpoint(p1,p2,p3,p4):
+	var p1_to_p2_vec = p2 - p1
+	var angle = p1_to_p2_vec.angle()
+	var degree = -rad_to_deg(angle)
+	return degree
+	
+	
+	
+	
