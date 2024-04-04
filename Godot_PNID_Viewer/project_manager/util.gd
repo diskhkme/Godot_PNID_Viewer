@@ -25,10 +25,19 @@ static func get_xml_paths(paths) -> PackedStringArray:
 static func get_all_file_filter() -> String:
 	var str = ""
 	for img_format in Config.ALLOW_IMG_FORMAT:
-		str += img_format + ", "
+		str += "*" + img_format + ", "
 	for data_format in Config.ALLOW_DATA_FORMAT:
-		str += data_format + ", "
-	str += ";"
+		str += "*" + data_format + ", "
+	
+	str = str.left(str.length()-2)
+	return str
+	
+	
+static func get_data_file_filter() -> String:
+	var str = ""
+	for data_format in Config.ALLOW_DATA_FORMAT:
+		str += "*" + data_format + ", "
+	str = str.left(str.length()-2)
 	return str
 
 

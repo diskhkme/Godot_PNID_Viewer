@@ -33,6 +33,7 @@ func _ready():
 	# Init?
 	Util.is_debug = true
 	_new_project_dialog.filters = [Util.get_all_file_filter()]
+	_add_xml_dialog.filters = [Util.get_data_file_filter()]
 	
 	# Signal
 	DataLoader.project_files_opened.connect(_on_project_files_opened)
