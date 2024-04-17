@@ -178,5 +178,20 @@ func get_degree_from_dota_fourpoint(p1,p2,p3,p4):
 	return degree
 	
 	
+func get_rotated_fourpoint():
+	var p1 = Vector2(bndbox.x, bndbox.y)
+	var p2 = Vector2(bndbox.z, bndbox.y) # z = max_x
+	var p3 = Vector2(bndbox.z, bndbox.w) # w = max_y
+	var p4 = Vector2(bndbox.x, bndbox.w) # w = max_y
+	
+	var center = get_center()
+	var rotated_p1 = (p1 - center).rotated(deg_to_rad(get_godot_degree())) + center
+	var rotated_p2 = (p2 - center).rotated(deg_to_rad(get_godot_degree())) + center
+	var rotated_p3 = (p3 - center).rotated(deg_to_rad(get_godot_degree())) + center
+	var rotated_p4 = (p4 - center).rotated(deg_to_rad(get_godot_degree())) + center
+	
+	return [rotated_p1, rotated_p2, rotated_p3, rotated_p4]
+	
+	
 	
 	

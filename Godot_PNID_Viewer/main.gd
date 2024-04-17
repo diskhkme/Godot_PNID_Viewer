@@ -271,14 +271,24 @@ func _on_xml_selected(xml_data: XMLData):
 	_status_bar.update_xml_status(xml_data)
 	
 	
-func _on_save_as_xml():
-	if OS.get_name() == "Windows":
-		if not _save_as_dialog.file_selected.is_connected(_project_viewer.save_xml):
-			_save_as_dialog.file_selected.connect(_project_viewer.save_xml)
-		_save_as_dialog.popup_centered()
-	elif OS.get_name() == "Web":
-		var xml_dump = PnidXmlIo.dump_pnid_xml(_project_viewer.selected_xml.symbol_objects)
-		JavaScriptBridge.download_buffer(xml_dump.to_utf8_buffer(), "export.xml")
+func _on_save_as_xml(is_twopoint: bool):
+	if is_twopoint:
+		if OS.get_name() == "Windows":
+			if not _save_as_dialog.file_selected.is_connected(_project_viewer.save_twopoint_xml):
+				_save_as_dialog.file_selected.connect(_project_viewer.save_twopoint_xml)
+			_save_as_dialog.popup_centered()
+		elif OS.get_name() == "Web":
+				var xml_dump = PnidXmlIo.dump_twopoint_pnid_xml(_project_viewer.selected_xml.symbol_objects)
+				JavaScriptBridge.download_buffer(xml_dump.to_utf8_buffer(), "export.xml")
+	else:
+		if OS.get_name() == "Windows":
+			if not _save_as_dialog.file_selected.is_connected(_project_viewer.save_fourpoint_xml):
+				_save_as_dialog.file_selected.connect(_project_viewer.save_fourpoint_xml)
+			_save_as_dialog.popup_centered()
+		elif OS.get_name() == "Web":
+				var xml_dump = PnidXmlIo.dump_fourpoint_pnid_xml(_project_viewer.selected_xml.symbol_objects)
+				JavaScriptBridge.download_buffer(xml_dump.to_utf8_buffer(), "export.xml")
+				
 
 
 func _on_xml_visibility_changed(xml_data: XMLData, is_text: bool, enabled: bool):

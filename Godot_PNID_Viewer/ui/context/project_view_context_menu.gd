@@ -1,13 +1,11 @@
 extends Control
 
-signal xml_save_as_pressed
+signal xml_save_as_pressed(is_twopoint: bool)
 signal diff_pressed
 signal close_pressed
 signal eval_pressed
 
 @export var _project_viewer: ProjectViewer
-
-@onready var save_as_button = $PanelContainer/VBoxContainer/SaveAsButton
 
 var is_in_context_menu: bool
 
@@ -22,11 +20,6 @@ func process_input(event):
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
 		if !is_in_context_menu:
 			visible = false
-
-
-func _on_save_as_button_pressed():
-	xml_save_as_pressed.emit()
-	visible = false
 
 
 func _on_diff_button_pressed():
@@ -49,4 +42,14 @@ func _on_mouse_exited():
 
 func _on_eval_button_pressed():
 	eval_pressed.emit()
+	visible = false
+
+
+func _on_twopoint_save_as_button_pressed():
+	xml_save_as_pressed.emit(true)
+	visible = false
+
+
+func _on_fourpoint_save_as_button_pressed():
+	xml_save_as_pressed.emit(false)
 	visible = false

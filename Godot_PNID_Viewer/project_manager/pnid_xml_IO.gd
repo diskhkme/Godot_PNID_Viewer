@@ -191,11 +191,14 @@ static func check_xml_type(contents: String) -> DATAFORMAT:
 	
 
 
-static func dump_pnid_xml(symbol_objects: Array[SymbolObject]) -> String:
+static func dump_twopoint_pnid_xml(symbol_objects: Array[SymbolObject]) -> String:
 	var xml_str = String()
 	
 	xml_str += "<annotation>\r\n"
 	for symbol_object in symbol_objects:
+		if symbol_object.removed:
+			continue
+		
 		xml_str += "  <symbol_object>\r\n"
 		xml_str += "    <type>%s</type>\r\n" % symbol_object.type
 		xml_str += "    <class>%s</class>\r\n" % symbol_object.cls
@@ -214,3 +217,34 @@ static func dump_pnid_xml(symbol_objects: Array[SymbolObject]) -> String:
 		
 	return xml_str
 	
+static func dump_fourpoint_pnid_xml(symbol_objects: Array[SymbolObject]) -> String:
+	var xml_str = String()
+	
+	xml_str += "<annotation>\r\n"
+	for symbol_object in symbol_objects:
+		if symbol_object.removed:
+			continue
+			
+		var points = symbol_object.get_rotated_fourpoint()
+		
+		xml_str += "  <symbol_object>\r\n"
+		xml_str += "    <type>%s</type>\r\n" % symbol_object.type
+		xml_str += "    <class>%s</class>\r\n" % symbol_object.cls
+		xml_str += "    <bndbox>\r\n"
+		xml_str += "      <x1>%d</x1>\r\n" % points[0].x
+		xml_str += "      <y1>%d</y1>\r\n" % points[0].y
+		xml_str += "      <x2>%d</x2>\r\n" % points[1].x
+		xml_str += "      <y2>%d</y2>\r\n" % points[1].y
+		xml_str += "      <x3>%d</x3>\r\n" % points[2].x
+		xml_str += "      <y3>%d</y3>\r\n" % points[2].y
+		xml_str += "      <x4>%d</x4>\r\n" % points[3].x
+		xml_str += "      <y4>%d</y4>\r\n" % points[3].y
+		xml_str += "    </bndbox>\r\n"
+		xml_str += "    <isLarge>%s</isLarge>\r\n" % bool_to_yn(symbol_object.is_large)
+		xml_str += "    <degree>%d</degree>\r\n" % symbol_object.degree
+		xml_str += "    <flip>%s</flip>\r\n" % bool_to_yn(symbol_object.flip)
+		xml_str += "  </symbol_object>\r\n"
+	
+	xml_str += "</annotation>\r\n"
+		
+	return xml_str

@@ -132,15 +132,26 @@ func _on_tree_nothing_selected():
 	selected_xml = null
 	_tree.deselect_all()
 	
-	
-func save_xml(path: String):
+func save_xml(path: String, is_twopoint: bool):
 	if !path.contains(".xml"):
 		path += ".xml"
-		
-	var xml_dump = PnidXmlIo.dump_pnid_xml(selected_xml.symbol_objects)
+	
+	var xml_dump
+	if is_twopoint:
+		xml_dump = PnidXmlIo.dump_twopoint_pnid_xml(selected_xml.symbol_objects)
+	else:
+		xml_dump = PnidXmlIo.dump_fourpoint_pnid_xml(selected_xml.symbol_objects)
+
 	if OS.get_name() == "Windows":
 		var file = FileAccess.open(path, FileAccess.WRITE)
 		file.store_string(xml_dump)
+		
+	
+func save_twopoint_xml(path: String):
+	save_xml(path, true)
+		
+func save_fourpoint_xml(path: String):
+	save_xml(path, false)
 
 
 func close_xml(xml_data: XMLData):

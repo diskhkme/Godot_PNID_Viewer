@@ -59,6 +59,7 @@ split_offset = 165
 
 [node name="ProjectViewer" parent="CanvasLayer/MainWindow/Middle/RightSide" instance=ExtResource("4_48ush")]
 layout_mode = 2
+ColorIcon = null
 
 [node name="XMLTreeViewer" parent="CanvasLayer/MainWindow/Middle/RightSide" instance=ExtResource("5_4qjjb")]
 layout_mode = 2

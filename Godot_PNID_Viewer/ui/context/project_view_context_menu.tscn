@@ -31,10 +31,15 @@ layout_mode = 2
 mouse_filter = 1
 text = "Eval"
 
-[node name="SaveAsButton" type="Button" parent="PanelContainer/VBoxContainer"]
+[node name="TwopointSaveAsButton" type="Button" parent="PanelContainer/VBoxContainer"]
 layout_mode = 2
 mouse_filter = 1
-text = "Save As"
+text = "Save As (Twopoint)"
+
+[node name="FourpointSaveAsButton" type="Button" parent="PanelContainer/VBoxContainer"]
+layout_mode = 2
+mouse_filter = 1
+text = "Save As (Fourpoint)"
 
 [node name="CloseButton" type="Button" parent="PanelContainer/VBoxContainer"]
 layout_mode = 2
@@ -45,5 +50,6 @@ text = "Close"
 [connection signal="mouse_exited" from="." to="." method="_on_mouse_exited"]
 [connection signal="pressed" from="PanelContainer/VBoxContainer/DiffButton" to="." method="_on_diff_button_pressed"]
 [connection signal="pressed" from="PanelContainer/VBoxContainer/EvalButton" to="." method="_on_eval_button_pressed"]
-[connection signal="pressed" from="PanelContainer/VBoxContainer/SaveAsButton" to="." method="_on_save_as_button_pressed"]
+[connection signal="pressed" from="PanelContainer/VBoxContainer/TwopointSaveAsButton" to="." method="_on_twopoint_save_as_button_pressed"]
+[connection signal="pressed" from="PanelContainer/VBoxContainer/FourpointSaveAsButton" to="." method="_on_fourpoint_save_as_button_pressed"]
 [connection signal="pressed" from="PanelContainer/VBoxContainer/CloseButton" to="." method="_on_close_button_pressed"]
