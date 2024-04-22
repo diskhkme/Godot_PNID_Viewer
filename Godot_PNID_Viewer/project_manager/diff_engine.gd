@@ -43,9 +43,9 @@ func calculate_diff(first: Array[SymbolObject], second: Array[SymbolObject], opt
 
 
 func filter_by_type(symbol_array: Array[SymbolObject], include_symbol: bool, include_text: bool):
-	if !include_symbol:
+	if include_symbol:
 		symbol_array = symbol_array.filter(func(a): return !a.is_text)
-	if !include_text:
+	if include_text:
 		symbol_array = symbol_array.filter(func(a): return a.is_text)
 	return symbol_array
 	
