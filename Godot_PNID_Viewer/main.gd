@@ -151,7 +151,10 @@ func _on_project_close(project: Project):
 	_image_viewer.close_project(project)
 	_project_viewer.close_project(project)
 	_xml_tree_viewer.close_project(project)
-	ProjectManager.close_project(project)
+	var next_project = ProjectManager.close_project(project)
+	if not next_project == null:
+		_make_project_active(next_project)
+		
 	_status_bar.reset()
 		
 		

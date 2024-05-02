@@ -22,9 +22,17 @@ func add_project(args: Variant) -> Project:
 	return project
 	
 	
-func close_project(project: Project):
+func close_project(project: Project) -> Project: # return new project to open
+	var next_project_index = open_projects.find(project)
 	open_projects.erase(project)
-	project.free()
+	if project == active_project:
+		if next_project_index <= open_projects.size() - 1:
+			return open_projects[next_project_index]
+		else:
+			active_project = null
+			return null
+	else:
+		return active_project
 	
 
 func make_project_active(project: Project):

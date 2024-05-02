@@ -78,7 +78,10 @@ func cancel_selected(): # force hiding when symbol is removed
 	
 	
 func is_editing():
-	return _active_editor_control.visible
+	if not _active_editor_control == null:
+		return _active_editor_control.visible
+	else:
+		return false
 	
 	
 func select_symbol(symbol_object: SymbolObject):
