@@ -22,6 +22,7 @@ extends Node
 @onready var _type_change_dialog = $CanvasLayer/Dialogs/TypeChangeWindow
 @onready var _diff_window = $CanvasLayer/Dialogs/DiffWindow
 @onready var _eval_window = $CanvasLayer/Dialogs/EvaluationWindow
+@onready var _color_picker_window = $CanvasLayer/Dialogs/ColorPickerWindow
 
 # context menu
 @onready var _image_viewer_context_menu = $CanvasLayer/ContextMenus/ImageViewContextMenu
@@ -63,6 +64,7 @@ func _ready():
 	_project_viewer.xml_visibility_changed.connect(_on_xml_visibility_changed)
 	_project_viewer.xml_selectability_changed.connect(_on_xml_selectability_changed)
 	_project_viewer.xml_label_visibility_changed.connect(_on_xml_label_visibility_changed)
+	_project_viewer.xml_color_change_request.connect(_on_xml_color_change_request)
 	_project_viewer_context_menu.xml_save_as_pressed.connect(_on_save_as_xml)
 	_project_viewer_context_menu.diff_pressed.connect(_on_diff_xml)
 	_project_viewer_context_menu.eval_pressed.connect(_on_eval_xml)
@@ -74,6 +76,9 @@ func _ready():
 	_diff_window.diff_calc_completed.connect(_on_diff_calc_completed)
 	
 	_type_change_dialog.symbol_type_changed.connect(_on_symbol_type_change)
+	
+	_color_picker_window.color_changed.connect(_on_xml_color_changed)
+	_color_picker_window.color_picker_closed.connect(_on_color_picker_closed)
 
 	
 func _input(event):
@@ -312,6 +317,20 @@ func _on_xml_selectability_changed(xml_data: XMLData, enabled: bool):
 func _on_xml_label_visibility_changed(xml_data: XMLData, enabled: bool):
 	xml_data.is_show_label = enabled
 	_image_viewer.update_label_visibility(xml_data)
+	
+	
+func _on_xml_color_change_request(init_color):
+	_color_picker_window.popup_centered()
+	_color_picker_window.initialize_color(init_color)
+
+
+func _on_xml_color_changed(color: Color):
+	_project_viewer.selected_xml.color = color
+	get_tree().call_group("draw", "redraw")
+	
+	
+func _on_color_picker_closed():
+	update_guis()
 
 
 func _on_diff_xml():

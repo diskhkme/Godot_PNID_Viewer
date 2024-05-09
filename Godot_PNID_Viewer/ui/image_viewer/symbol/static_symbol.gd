@@ -20,16 +20,13 @@ func _ready():
 	
 func update_symbol():
 	var symbol_center = symbol_object.get_center()
-	var symbol_size = symbol_object.get_size()
+	
 	
 	# draw set (rect draw)
-	var size = symbol_size
-	var color = symbol_object.origin_xml.color
-	var width = Config.DEFAULT_LINE_WIDTH
 	static_symbol_draw.global_position = symbol_center
 	static_symbol_draw.rotation = deg_to_rad(symbol_object.get_godot_degree())
+	static_symbol_draw.symbol_object = symbol_object
 	
-	static_symbol_draw.update_draw(size,color,width)
 	if symbol_object.removed:
 		static_symbol_draw.visible = false
 	else:
