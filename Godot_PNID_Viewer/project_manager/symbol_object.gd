@@ -167,7 +167,14 @@ func get_bndbox_from_fourpoint_degree(p1,p2,p3,p4,degree) -> Vector4:
 	
 	p1_vec += center
 	p3_vec += center
-	var bndbox = Vector4(p1_vec.x, p1_vec.y, p3_vec.x, p3_vec.y)
+	
+	# TODO: currently, does not consider the flip property
+	var minx = p1_vec.x if p1_vec.x < p3_vec.x else p3_vec.x
+	var miny = p1_vec.y if p1_vec.y < p3_vec.y else p3_vec.y
+	var maxx = p1_vec.x if p1_vec.x > p3_vec.x else p3_vec.x
+	var maxy = p1_vec.y if p1_vec.y > p3_vec.y else p3_vec.y
+		
+	var bndbox = Vector4(minx, miny, maxx, maxy)
 	return bndbox
 	
 
