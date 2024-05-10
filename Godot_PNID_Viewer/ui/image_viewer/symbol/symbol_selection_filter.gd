@@ -13,7 +13,7 @@ func set_target_xml_scene(xml_scenes): # key: xml_data, value: symbol scene
 		
 
 func process_input(event):
-	if event is InputEventMouseButton and (event.button_index == MOUSE_BUTTON_LEFT or event.button_index == MOUSE_BUTTON_RIGHT):
+	if event is InputEventMouseButton and (event.button_index == MOUSE_BUTTON_LEFT):
 		if !event.is_pressed():
 			var candidates: Array[StaticSymbol] = []
 			for scene in target_xml_scenes:
