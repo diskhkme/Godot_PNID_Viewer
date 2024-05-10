@@ -6,7 +6,6 @@
 
 [node name="ImageViewer" type="PanelContainer"]
 size_flags_horizontal = 3
-focus_mode = 1
 mouse_filter = 1
 script = ExtResource("1_de2r1")
 
@@ -18,6 +17,7 @@ viewport = NodePath("../SubViewportContainer/SubViewport")
 
 [node name="SubViewportContainer" type="SubViewportContainer" parent="."]
 layout_mode = 2
+focus_mode = 0
 stretch = true
 
 [node name="SubViewport" type="SubViewport" parent="SubViewportContainer"]

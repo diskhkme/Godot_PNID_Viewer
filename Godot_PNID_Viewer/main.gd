@@ -122,6 +122,10 @@ func _input(event):
 		if event.keycode == KEY_DELETE and _image_viewer.is_editing():
 			_on_remove_symbol()
 			
+		if event.keycode == KEY_RIGHT or event.keycode == KEY_LEFT or \
+		 	event.keycode == KEY_DOWN or event.keycode == KEY_UP:
+			_image_viewer.process_input(event)
+			
 
 func _on_new_project(): # web & windows
 	if OS.get_name() == "Windows":

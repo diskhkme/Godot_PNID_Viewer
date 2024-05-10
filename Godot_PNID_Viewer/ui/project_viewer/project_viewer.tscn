@@ -9,6 +9,7 @@ script = ExtResource("1_h42f5")
 
 [node name="Tree" type="Tree" parent="."]
 layout_mode = 2
+focus_mode = 0
 allow_rmb_select = true
 
 [connection signal="item_selected" from="Tree" to="." method="_on_tree_item_selected"]
