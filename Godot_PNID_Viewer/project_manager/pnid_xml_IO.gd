@@ -72,6 +72,7 @@ static func parse_dota_txt(contents: String) -> Array[SymbolObject]:
 	
 
 static func parse_fourpoint_xml(contents: String) -> Array[SymbolObject]:
+	print(contents)
 	var symbol_objects: Array[SymbolObject] = []
 	var parser = XMLParser.new()
 	parser.open_buffer(contents.to_utf8_buffer())
@@ -93,6 +94,7 @@ static func parse_fourpoint_xml(contents: String) -> Array[SymbolObject]:
 				"type":
 					symbol_object.type = get_current_node_data(parser)
 				"class":
+					var class_str = get_current_node_data(parser)
 					symbol_object.cls = get_current_node_data(parser)
 				"bndbox":
 					p1 = Vector2.ZERO
@@ -117,13 +119,16 @@ static func parse_fourpoint_xml(contents: String) -> Array[SymbolObject]:
 					p4.y = get_current_node_data(parser).to_float()
 				"degree":
 					symbol_object.degree = get_current_node_data(parser).to_float()
-					var bndbox = symbol_object.get_bndbox_from_fourpoint_degree(p1,p2,p3,p4,symbol_object.degree)
-					symbol_object.bndbox = bndbox
-					
 				"flip":
 					symbol_object.flip = yes_no_to_bool(get_current_node_data(parser))
-					symbol_objects.push_back(symbol_object)
-					id += 1
+		if parser.get_node_type() == XMLParser.NODE_ELEMENT_END:
+			var node_name = parser.get_node_name()
+			if node_name == Config.OBJECT_TAG_NAME:
+				# pend bbox calculation to points parsing finished
+				var bndbox = symbol_object.get_bndbox_from_fourpoint_degree(p1,p2,p3,p4,symbol_object.degree)
+				symbol_object.bndbox = bndbox
+				symbol_objects.push_back(symbol_object)
+				id += 1
 					
 	return symbol_objects
 
@@ -163,8 +168,11 @@ static func parse_twopoint_xml(contents: String) -> Array[SymbolObject]:
 					symbol_object.degree = get_current_node_data(parser).to_float()
 				"flip":
 					symbol_object.flip = yes_no_to_bool(get_current_node_data(parser))
-					symbol_objects.push_back(symbol_object)
 					id += 1
+		if parser.get_node_type() == XMLParser.NODE_ELEMENT_END:
+			var node_name = parser.get_node_name()
+			if node_name == Config.OBJECT_TAG_NAME:
+				symbol_objects.push_back(symbol_object)
 					
 	return symbol_objects
 
