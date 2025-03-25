@@ -1,0 +1,17 @@
+[gd_scene load_steps=2 format=3 uid="uid://hgivnhml2u60"]
+
+[ext_resource type="Script" path="res://ui/dialogs/color_picker_window.gd" id="1_y7cae"]
+
+[node name="ColorPickerWindow" type="Window"]
+initial_position = 1
+size = Vector2i(298, 506)
+wrap_controls = true
+script = ExtResource("1_y7cae")
+
+[node name="ColorPicker" type="ColorPicker" parent="."]
+offset_right = 298.0
+offset_bottom = 576.0
+presets_visible = false
+
+[connection signal="close_requested" from="." to="." method="_on_close_requested"]
+[connection signal="color_changed" from="ColorPicker" to="." method="_on_color_picker_color_changed"]

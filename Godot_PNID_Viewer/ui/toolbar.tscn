@@ -12,19 +12,23 @@ size_flags_horizontal = 2
 
 [node name="AddXMLButton" type="Button" parent="HBoxContainer"]
 layout_mode = 2
+focus_mode = 0
 text = "Add XML"
 
 [node name="UndoButton" type="Button" parent="HBoxContainer"]
 layout_mode = 2
+focus_mode = 0
 text = "Undo"
 
 [node name="RedoButton" type="Button" parent="HBoxContainer"]
 layout_mode = 2
+focus_mode = 0
 text = "Redo
 "
 
 [node name="ExportImageButton" type="Button" parent="HBoxContainer"]
 layout_mode = 2
+focus_mode = 0
 text = "Export Image"
 
 [node name="HBoxContainer3" type="HBoxContainer" parent="."]
@@ -37,6 +41,7 @@ layout_mode = 2
 
 [node name="FullScreenButton" type="TextureButton" parent="HBoxContainer3"]
 layout_mode = 2
+focus_mode = 0
 texture_normal = ExtResource("2_a71xb")
 stretch_mode = 3
 

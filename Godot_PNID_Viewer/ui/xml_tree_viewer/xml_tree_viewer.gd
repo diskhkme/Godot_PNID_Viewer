@@ -16,7 +16,7 @@ var _symbol_items_dict = {} # symbol_object: _tree_item
 var _root
 var selected_symbol
 
-const COLUMN_COUNT = 8
+const COLUMN_COUNT = 9
 
 func _ready():
 	reset_tree()
@@ -62,6 +62,7 @@ func reset_tree():
 	_tree.set_column_title(5, "XMax")
 	_tree.set_column_title(6, "YMax")
 	_tree.set_column_title(7, "Deg")
+	_tree.set_column_title(8, "Flip")
 	
 	_tree.column_titles_visible = true
 	
@@ -100,6 +101,7 @@ func fill_treeitem(symbol_child: TreeItem, symbol_object: SymbolObject):
 	symbol_child.set_text(5, str(floor(symbol_object.bndbox.z)))
 	symbol_child.set_text(6, str(floor(symbol_object.bndbox.w)))
 	symbol_child.set_text(7, str(symbol_object.degree))
+	symbol_child.set_text(8, str(symbol_object.flip))
 
 	
 func add_symbol_on_tree(parent: TreeItem, symbol_object: SymbolObject) -> TreeItem:
@@ -173,6 +175,7 @@ func sort_function(column):
 		5: return func(a,b): return a.bndbox.z < b.bndbox.z
 		6: return func(a,b): return a.bndbox.w < b.bndbox.w
 		7: return func(a,b): return a.degree < b.degree
+		8: return func(a,b): return a.flip < b.flip
 			
 			
 #-------------------------------------------------------------

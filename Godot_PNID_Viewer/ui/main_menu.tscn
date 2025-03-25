@@ -11,11 +11,13 @@ size_flags_horizontal = 3
 
 [node name="OpenFilesButton" type="Button" parent="Left"]
 layout_mode = 2
+focus_mode = 0
 text = "New Project"
 
 [node name="TabBar" type="TabBar" parent="Left"]
 layout_mode = 2
 size_flags_horizontal = 3
+focus_mode = 0
 tab_close_display_policy = 2
 
 [node name="Right" type="HBoxContainer" parent="."]
@@ -26,6 +28,7 @@ alignment = 2
 [node name="Button" type="Button" parent="Right"]
 visible = false
 layout_mode = 2
+focus_mode = 0
 text = "dumb"
 
 [connection signal="pressed" from="Left/OpenFilesButton" to="." method="_on_open_files_button_pressed"]

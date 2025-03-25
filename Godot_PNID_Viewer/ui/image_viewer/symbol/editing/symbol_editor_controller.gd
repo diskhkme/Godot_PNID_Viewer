@@ -44,6 +44,13 @@ func initialize(symbol_object: SymbolObject):
 func redraw():
 	queue_redraw()
 	update_handle_positions()
+	
+	
+func translate_control(vec: Vector2i):
+	center_node.translate(vec)
+	update_handle_positions()
+	update_symbol_box()
+	is_actually_edited = true
 
 
 func _draw():

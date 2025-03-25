@@ -78,7 +78,10 @@ func cancel_selected(): # force hiding when symbol is removed
 	
 	
 func is_editing():
-	return _active_editor_control.visible
+	if not _active_editor_control == null:
+		return _active_editor_control.visible
+	else:
+		return false
 	
 	
 func select_symbol(symbol_object: SymbolObject):
@@ -107,6 +110,17 @@ func process_input(event):
 				if selected != null:
 					symbol_selected.emit(selected, false)
 					_process_symbol_selected(selected)
+					
+	if event is InputEventKey:
+		if _active_editor_control.visible:
+			if event.keycode == KEY_RIGHT:
+				_active_editor_control.translate_control(Vector2i(Config.SYMBOL_TRANSLATE_TICK,0))
+			if event.keycode == KEY_LEFT:
+				_active_editor_control.translate_control(Vector2i(-Config.SYMBOL_TRANSLATE_TICK,0))
+			if event.keycode == KEY_UP:
+				_active_editor_control.translate_control(Vector2i(0, -Config.SYMBOL_TRANSLATE_TICK))
+			if event.keycode == KEY_DOWN:
+				_active_editor_control.translate_control(Vector2i(0, Config.SYMBOL_TRANSLATE_TICK))
 
 			
 func _on_tick_update():

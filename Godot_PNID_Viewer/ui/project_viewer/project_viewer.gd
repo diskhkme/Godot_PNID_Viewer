@@ -6,6 +6,7 @@ signal xml_deselected
 signal xml_visibility_changed(xml_data: XMLData, is_text: bool, enabled: bool)
 signal xml_selectability_changed(xml_data: XMLData, enabled: bool)
 signal xml_label_visibility_changed(xml_data: XMLData, enabled: bool)
+signal xml_color_change_request(xml_data: XMLData)
 
 @onready var _tree = $Tree
 
@@ -118,6 +119,10 @@ func _process(delta):
 			
 		if xml_item.is_checked(4) != xml_data.is_show_label:
 			xml_label_visibility_changed.emit(xml_data, xml_item.is_checked(4))
+			
+		if xml_item.is_selected(5):
+			# TODO: check if selected_xml == xml_data
+			xml_color_change_request.emit(xml_data.color)
 		
 
 func _on_tree_item_selected():
