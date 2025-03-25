@@ -95,7 +95,7 @@ static func parse_fourpoint_xml(contents: String) -> Array[SymbolObject]:
 					symbol_object.type = get_current_node_data(parser)
 				"class":
 					var class_str = get_current_node_data(parser)
-					symbol_object.cls = get_current_node_data(parser)
+					symbol_object.cls = class_str
 				"bndbox":
 					p1 = Vector2.ZERO
 					p2 = Vector2.ZERO
