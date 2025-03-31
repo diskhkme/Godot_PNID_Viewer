@@ -24,6 +24,20 @@ func initialize(id:int, xml_filename:String, xml_str: String):
 	symbol_objects.map(func(s): s.origin_xml = self)
 	var is_sane = check_sanity(symbol_objects) # TODO: what to do if check sanity failes?
 	
+
+func initialize_with_yolo(id:int, xml_filename:String, xml_str: String, img_width: int, img_height: int):
+	self.id = id
+	self.filename = xml_filename
+	symbol_objects = PnidXmlIo.parse_pnid_yolo_from_string(xml_str, img_width, img_height)
+	if id < Config.SYMBOL_COLOR_PRESET.size():
+		color = Config.SYMBOL_COLOR_PRESET[id]
+	else:
+		var rand_col = Color(randf(), randf(), randf(), 1)
+		color = rand_col
+	symbol_objects.map(func(s): s.source_xml = self)
+	symbol_objects.map(func(s): s.origin_xml = self)
+	var is_sane = check_sanity(symbol_objects) # TODO: what to do if check sanity failes?
+
 	
 # TODO: add more constraints
 func check_sanity(symbol_objects):

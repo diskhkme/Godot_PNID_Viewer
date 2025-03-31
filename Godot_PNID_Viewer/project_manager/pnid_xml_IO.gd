@@ -34,12 +34,50 @@ static func parse_pnid_xml_from_string(contents: String) -> Array[SymbolObject]:
 		return parse_twopoint_xml(contents)
 	elif xml_type == DATAFORMAT.FOURPOINT:
 		return parse_fourpoint_xml(contents)
-	elif xml_type == DATAFORMAT.DOTA:
+	elif xml_type == DATAFORMAT.DOTA: # TODO: Separate DOTA parsing like YOLO case
 		return parse_dota_txt(contents)
 		
 	return []
 	
 	
+static func parse_pnid_yolo_from_string(contents: String, img_width: int, img_height: int) -> Array[SymbolObject]:
+	var symbol_objects: Array[SymbolObject] = []
+	var lines = contents.split("\n")
+	
+	var id = 0
+	for line in lines:
+		if line.is_empty():
+			break
+			
+		var symbol_object = SymbolObject.new()
+		symbol_object.id = id
+		symbol_object.type = ""
+		
+		var elems = line.split(" ")
+		var normalized_x = elems[1].to_float()
+		var normalized_y = elems[2].to_float()
+		var normalized_w = elems[3].to_float()
+		var normalized_h = elems[4].to_float()
+		
+		var symbol_width = int(normalized_w * img_width)
+		var symbol_height = int(normalized_h * img_height)
+		var minx = int((normalized_x * img_width) - (symbol_width * 0.5))
+		var miny = int((normalized_y * img_height) - (symbol_height * 0.5))
+		var maxx = minx + symbol_width
+		var maxy = miny + symbol_height
+		
+		symbol_object.cls = elems[0]
+		var degree = 0 # no degree for dota
+		symbol_object.degree = degree
+		var bndbox = Vector4(minx, miny, maxx, maxy)
+		symbol_object.bndbox = bndbox
+		symbol_object.flip = false
+		symbol_objects.push_back(symbol_object)
+		id += 1
+		
+	return symbol_objects	
+	
+
 static func parse_dota_txt(contents: String) -> Array[SymbolObject]:
 	var symbol_objects: Array[SymbolObject] = []
 	var lines = contents.split("\n")
@@ -176,7 +214,7 @@ static func parse_twopoint_xml(contents: String) -> Array[SymbolObject]:
 					
 	return symbol_objects
 
-# TODO: more fine-grained type detection
+# TODO: separate DOTA/YOLO parse with explicit function calling
 static func check_xml_type(contents: String) -> DATAFORMAT:
 	# since DOTA is included, there's possiblity that content is not xml formatted...
 	if not "<" in contents:

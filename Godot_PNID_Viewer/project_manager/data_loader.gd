@@ -2,6 +2,7 @@ extends Node
 
 signal project_files_opened(args: Variant)
 signal xml_files_opened(args: Variant)
+signal yolo_files_opened(args: Variant)
 
 # In web build, callback of getFile(implemented in "header include" of build setting) is
 # designated to webFileLoadCallback, which is actually a FileParser() implemented as GDScript
@@ -21,7 +22,7 @@ func _ready():
 
 func project_files_load_from_paths(paths):
 	print("Data load from path")
-	var xml_filepaths = Util.get_xml_paths(paths)
+	var xml_filepaths = Util.get_valid_data_paths(paths)
 	var img_filepath = Util.get_img_path(paths)
 	
 	var img_filename = img_filepath.get_file()
@@ -77,7 +78,7 @@ func xml_files_load_from_web(args):
 	
 	
 func xml_files_load_from_paths(paths):
-	var xml_filepaths = Util.get_xml_paths(paths)
+	var xml_filepaths = Util.get_valid_data_paths(paths)
 	
 	var xml_filenames = []
 	var xml_buffers = []
@@ -88,6 +89,20 @@ func xml_files_load_from_paths(paths):
 		xml_buffers.push_back(xml_buffer)
 		
 	xml_files_opened.emit([xml_filenames.size(), xml_filenames, xml_buffers])
+	
+
+func yolo_files_load_from_paths(paths):
+	var yolo_filepaths = Util.get_valid_data_paths(paths)
+	
+	var yolo_filenames = []
+	var yolo_buffers = []
+	
+	for yolo_filepath in yolo_filepaths:
+		yolo_filenames.push_back(yolo_filepath.get_file())
+		var yolo_buffer = FileAccess.get_file_as_string(yolo_filepath)
+		yolo_buffers.push_back(yolo_buffer)
+		
+	yolo_files_opened.emit([yolo_filenames.size(), yolo_filenames, yolo_buffers])
 	
 
 func parse_symbol_type_to_dict(symbol_type_str: String):

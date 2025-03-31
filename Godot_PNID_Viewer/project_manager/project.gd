@@ -40,6 +40,14 @@ func add_xmls(num_xml, xml_filenames, xml_strs):
 		xml_datas.push_back(xml_data)
 		
 
+func add_yolos(num_xml, xml_filenames, xml_strs):
+	for i in range(num_xml):
+		var xml_data = XMLData.new()
+		# yolo requires image size for conversion
+		xml_data.initialize_with_yolo(xml_datas.size(), xml_filenames[i], xml_strs[i], img.get_width(), img.get_height()) 
+		xml_datas.push_back(xml_data)
+		
+
 func add_diff_xml(symbol_objects, diff_name, source_xml, target_xml):
 	var xml_id = xml_datas.size()
 	var new_name = diff_name

@@ -12,7 +12,7 @@ static func get_img_path(paths) -> String:
 	return String()
 			
 
-static func get_xml_paths(paths) -> PackedStringArray:
+static func get_valid_data_paths(paths) -> PackedStringArray:
 	var xml_paths = PackedStringArray()
 	for path in paths:
 		for data_format in Config.ALLOW_DATA_FORMAT:

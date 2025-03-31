@@ -1,11 +1,13 @@
 extends HBoxContainer
 
 signal add_xml
+signal add_yolo
 signal export_image
 signal undo_action
 signal redo_action
 
 @onready var add_xml_button = $HBoxContainer/AddXMLButton
+@onready var add_yolo_button = $HBoxContainer/AddYOLOButton
 @onready var undo_button = $HBoxContainer/UndoButton
 @onready var redo_button = $HBoxContainer/RedoButton
 @onready var export_img_button = $HBoxContainer/ExportImageButton
@@ -13,6 +15,7 @@ signal redo_action
 
 func _ready():
 	add_xml_button.disabled = true
+	add_yolo_button.disabled = true
 	undo_button.disabled = true
 	redo_button.disabled = true
 	export_img_button.disabled = true
@@ -26,6 +29,11 @@ func _process(delta):
 
 func _on_add_xml_button_pressed():
 	add_xml.emit()
+	
+
+func _on_add_yolo_button_pressed():
+	add_yolo.emit()
+
 
 func _on_export_image_button_pressed():
 	export_image.emit()
@@ -49,9 +57,11 @@ func _on_full_screen_button_pressed():
 func _update_button_enabled():
 	if ProjectManager.active_project == null:
 		add_xml_button.disabled = true
+		add_yolo_button.disabled = true
 		export_img_button.disabled = true
 	else:
 		add_xml_button.disabled = false
+		add_yolo_button.disabled = false
 		export_img_button.disabled = false
 		
 		if ProjectManager.active_project.has_undo():
@@ -63,6 +73,9 @@ func _update_button_enabled():
 			redo_button.disabled = false
 		else:
 			redo_button.disabled = true
+
+
+
 
 
 
