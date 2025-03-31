@@ -14,10 +14,12 @@ static func get_img_path(paths) -> String:
 
 static func get_valid_data_paths(paths) -> PackedStringArray:
 	var xml_paths = PackedStringArray()
+	var valid_extionsion = Config.ALLOW_DATA_FORMAT.values()
 	for path in paths:
-		for data_format in Config.ALLOW_DATA_FORMAT.values():
+		for data_format in valid_extionsion:
 			if path.contains(data_format): 
 				xml_paths.append(path)
+				break
 			
 	return xml_paths
 	
