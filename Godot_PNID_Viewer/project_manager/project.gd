@@ -19,7 +19,7 @@ func initialize(id, img_filename, img, num_xml, xml_filenames, xml_strs):
 	xml_datas.clear()
 	for i in range(num_xml):
 		var xml_data = XMLData.new()
-		xml_data.initialize(xml_datas.size(), xml_filenames[i], xml_strs[i])
+		xml_data.initialize(xml_datas.size(), xml_filenames[i], xml_strs[i], "XML")
 		xml_datas.push_back(xml_data)
 			
 	return true
@@ -32,19 +32,11 @@ func get_xml_id_from_filename(filename: String) -> int:
 			
 	return -1
 
-	
-func add_xmls(num_xml, xml_filenames, xml_strs):
+func add_datas(num_xml, xml_filenames, xml_strs, format):
 	for i in range(num_xml):
 		var xml_data = XMLData.new()
-		xml_data.initialize(xml_datas.size(), xml_filenames[i], xml_strs[i])
-		xml_datas.push_back(xml_data)
-		
-
-func add_yolos(num_xml, xml_filenames, xml_strs):
-	for i in range(num_xml):
-		var xml_data = XMLData.new()
-		# yolo requires image size for conversion
-		xml_data.initialize_with_yolo(xml_datas.size(), xml_filenames[i], xml_strs[i], img.get_width(), img.get_height()) 
+		print(xml_strs[i])
+		xml_data.initialize(xml_datas.size(), xml_filenames[i], xml_strs[i], format)
 		xml_datas.push_back(xml_data)
 		
 

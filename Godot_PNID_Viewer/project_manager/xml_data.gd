@@ -11,10 +11,13 @@ var is_text_visible: bool = true
 var is_selectable: bool = true
 var is_show_label: bool = false
 
-func initialize(id:int, xml_filename:String, xml_str: String):
+func initialize(id:int, data_filename:String, data_str: String, data_format: String):
 	self.id = id
-	self.filename = xml_filename
-	symbol_objects = PnidXmlIo.parse_pnid_xml_from_string(xml_str)
+	self.filename = data_filename
+	symbol_objects = PnidXmlIo.parse_pnid_data_from_string(data_str, data_format, 
+															ProjectManager.active_project.img_filename, 
+															ProjectManager.active_project.img.get_width(),
+															ProjectManager.active_project.img.get_height())
 	if id < Config.SYMBOL_COLOR_PRESET.size():
 		color = Config.SYMBOL_COLOR_PRESET[id]
 	else:
@@ -24,20 +27,6 @@ func initialize(id:int, xml_filename:String, xml_str: String):
 	symbol_objects.map(func(s): s.origin_xml = self)
 	var is_sane = check_sanity(symbol_objects) # TODO: what to do if check sanity failes?
 	
-
-func initialize_with_yolo(id:int, xml_filename:String, xml_str: String, img_width: int, img_height: int):
-	self.id = id
-	self.filename = xml_filename
-	symbol_objects = PnidXmlIo.parse_pnid_yolo_from_string(xml_str, img_width, img_height)
-	if id < Config.SYMBOL_COLOR_PRESET.size():
-		color = Config.SYMBOL_COLOR_PRESET[id]
-	else:
-		var rand_col = Color(randf(), randf(), randf(), 1)
-		color = rand_col
-	symbol_objects.map(func(s): s.source_xml = self)
-	symbol_objects.map(func(s): s.origin_xml = self)
-	var is_sane = check_sanity(symbol_objects) # TODO: what to do if check sanity failes?
-
 	
 # TODO: add more constraints
 func check_sanity(symbol_objects):

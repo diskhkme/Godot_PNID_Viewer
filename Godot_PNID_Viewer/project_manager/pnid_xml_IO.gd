@@ -1,6 +1,6 @@
 class_name PnidXmlIo
 
-enum DATAFORMAT {TWOPOINT, FOURPOINT, DOTA, UNKNOWN}
+enum XMLFORMAT {TWOPOINT, FOURPOINT, UNKNOWN}
 
 
 static func yes_no_to_bool(str: String) -> bool:
@@ -26,21 +26,28 @@ static func get_current_node_data(parser: XMLParser) -> String:
 	return ""
 		
 		
-static func parse_pnid_xml_from_string(contents: String) -> Array[SymbolObject]:
-	var xml_type = check_xml_type(contents)
-	assert(xml_type != DATAFORMAT.UNKNOWN, "Error: Unknown data format")
+static func parse_pnid_data_from_string(contents: String, format: String, img_filename: String, img_width: int, img_height: int) -> Array[SymbolObject]:
+	if format == "XML":
+		var xml_type = check_xml_type(contents)
+		assert(xml_type != XMLFORMAT.UNKNOWN, "Error: Unknown data format")
+		if xml_type == XMLFORMAT.TWOPOINT:
+			return parse_twopoint_xml(contents)
+		elif xml_type == XMLFORMAT.FOURPOINT:
+			return parse_fourpoint_xml(contents)
 	
-	if xml_type == DATAFORMAT.TWOPOINT:
-		return parse_twopoint_xml(contents)
-	elif xml_type == DATAFORMAT.FOURPOINT:
-		return parse_fourpoint_xml(contents)
-	elif xml_type == DATAFORMAT.DOTA: # TODO: Separate DOTA parsing like YOLO case
+	if format == "DOTA":
 		return parse_dota_txt(contents)
+		
+	if format == "COCO":
+		return parse_coco_json(contents, img_filename)
+		
+	if format == "YOLO":
+		return parse_yolo_txt(contents, img_width, img_height)
 		
 	return []
 	
 	
-static func parse_pnid_yolo_from_string(contents: String, img_width: int, img_height: int) -> Array[SymbolObject]:
+static func parse_yolo_txt(contents: String, img_width: int, img_height: int) -> Array[SymbolObject]:
 	var symbol_objects: Array[SymbolObject] = []
 	var lines = contents.split("\n")
 	
@@ -75,6 +82,52 @@ static func parse_pnid_yolo_from_string(contents: String, img_width: int, img_he
 		symbol_objects.push_back(symbol_object)
 		id += 1
 		
+	return symbol_objects	
+	
+	
+static func parse_coco_json(contents: String, target_image_filename: String) -> Array[SymbolObject]:
+	var symbol_objects: Array[SymbolObject] = []
+	var symbol_id = 0
+	
+	var json = JSON.new()
+	var error = json.parse(contents)
+		
+	var target_image_id
+	if error == OK:
+		var data_received = json.data
+				
+		var categories = data_received["categories"]
+		
+		for image_info in data_received["images"]:
+			if image_info["file_name"] == target_image_filename:
+				target_image_id = image_info["id"]
+				break
+		
+		for annotation in data_received["annotations"]:
+			if annotation["image_id"] == target_image_id:
+				var symbol_object = SymbolObject.new()
+				symbol_object.id = symbol_id
+				symbol_object.type = ""
+				var category_id = int(annotation["category_id"])
+				
+				var matched_category = categories.filter(func(c): return int(c["id"]) == category_id)
+				symbol_object.cls = matched_category[0]["name"]
+				var degree = 0 # no degree for dota
+				symbol_object.degree = degree
+				
+				var bbox = annotation["bbox"]
+				# x,y,w,h -> minx, miny, maxx, maxy
+				var bndbox = Vector4(int(bbox[0]), int(bbox[1]), int(bbox[0]) + int(bbox[2]), int(bbox[1]) + int(bbox[3]))
+				symbol_object.bndbox = bndbox
+				symbol_object.flip = false
+				symbol_objects.push_back(symbol_object)
+				symbol_id += 1
+		
+		
+	else:
+		print("JSON Parse Error: ", json.get_error_message(), " at line ", json.get_error_line())
+		return symbol_objects
+	
 	return symbol_objects	
 	
 
@@ -215,11 +268,7 @@ static func parse_twopoint_xml(contents: String) -> Array[SymbolObject]:
 	return symbol_objects
 
 # TODO: separate DOTA/YOLO parse with explicit function calling
-static func check_xml_type(contents: String) -> DATAFORMAT:
-	# since DOTA is included, there's possiblity that content is not xml formatted...
-	if not "<" in contents:
-		return DATAFORMAT.DOTA
-	
+static func check_xml_type(contents: String) -> XMLFORMAT:
 	var parser = XMLParser.new()
 	parser.open_buffer(contents.to_utf8_buffer())
 	
@@ -229,11 +278,11 @@ static func check_xml_type(contents: String) -> DATAFORMAT:
 			
 			match node_name:
 				"xmin":
-					return DATAFORMAT.TWOPOINT
+					return XMLFORMAT.TWOPOINT
 				"x1":
-					return DATAFORMAT.FOURPOINT
+					return XMLFORMAT.FOURPOINT
 	
-	return DATAFORMAT.UNKNOWN
+	return XMLFORMAT.UNKNOWN
 	
 
 

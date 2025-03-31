@@ -1,8 +1,7 @@
 extends Node
 
 signal project_files_opened(args: Variant)
-signal xml_files_opened(args: Variant)
-signal yolo_files_opened(args: Variant)
+signal data_files_opened(args: Variant)
 
 # In web build, callback of getFile(implemented in "header include" of build setting) is
 # designated to webFileLoadCallback, which is actually a FileParser() implemented as GDScript
@@ -74,35 +73,29 @@ func xml_files_load_from_web(args):
 	var xml_filenames = args[1]
 	var xml_strs = args[2]
 
-	xml_files_opened.emit([num_xml, xml_filenames, xml_strs])
+	data_files_opened.emit([num_xml, xml_filenames, xml_strs, "XML"])
 	
+func data_files_load_from_path(paths, format):
+	var data_filepaths = Util.get_valid_data_paths(paths)
+	
+	var data_filenames = []
+	var data_buffers = []
+	
+	for data_filepath in data_filepaths:
+		data_filenames.push_back(data_filepath.get_file())
+		var data_buffer = FileAccess.get_file_as_string(data_filepath)
+		data_buffers.push_back(data_buffer)
+		
+	data_files_opened.emit([data_filenames.size(), data_filenames, data_buffers, format])
 	
 func xml_files_load_from_paths(paths):
-	var xml_filepaths = Util.get_valid_data_paths(paths)
+	data_files_load_from_path(paths, "XML")
 	
-	var xml_filenames = []
-	var xml_buffers = []
-	
-	for xml_filepath in xml_filepaths:
-		xml_filenames.push_back(xml_filepath.get_file())
-		var xml_buffer = FileAccess.get_file_as_string(xml_filepath)
-		xml_buffers.push_back(xml_buffer)
-		
-	xml_files_opened.emit([xml_filenames.size(), xml_filenames, xml_buffers])
-	
-
 func yolo_files_load_from_paths(paths):
-	var yolo_filepaths = Util.get_valid_data_paths(paths)
+	data_files_load_from_path(paths, "YOLO")
 	
-	var yolo_filenames = []
-	var yolo_buffers = []
-	
-	for yolo_filepath in yolo_filepaths:
-		yolo_filenames.push_back(yolo_filepath.get_file())
-		var yolo_buffer = FileAccess.get_file_as_string(yolo_filepath)
-		yolo_buffers.push_back(yolo_buffer)
-		
-	yolo_files_opened.emit([yolo_filenames.size(), yolo_filenames, yolo_buffers])
+func coco_files_load_from_paths(paths):
+	data_files_load_from_path(paths, "COCO")
 	
 
 func parse_symbol_type_to_dict(symbol_type_str: String):

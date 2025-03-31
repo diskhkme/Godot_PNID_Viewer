@@ -18,6 +18,7 @@ extends Node
 @onready var _new_project_dialog = $CanvasLayer/Dialogs/NewProjectDialog
 @onready var _add_xml_dialog = $CanvasLayer/Dialogs/AddXMLDialog
 @onready var _add_yolo_dialog = $CanvasLayer/Dialogs/AddYOLODialog
+@onready var _add_coco_dialog = $CanvasLayer/Dialogs/AddCOCODialog
 @onready var _save_as_dialog = $CanvasLayer/Dialogs/SaveAsFilesDialog
 @onready var _save_img_dialog = $CanvasLayer/Dialogs/SaveImageDialog
 @onready var _type_change_dialog = $CanvasLayer/Dialogs/TypeChangeWindow
@@ -39,8 +40,7 @@ func _ready():
 	
 	# Signal
 	DataLoader.project_files_opened.connect(_on_project_files_opened)
-	DataLoader.xml_files_opened.connect(_on_xml_files_opened)
-	DataLoader.yolo_files_opened.connect(_on_yolo_files_opened)
+	DataLoader.data_files_opened.connect(_on_data_files_opened)
 	
 	_main_menu.open_files.connect(_on_new_project)
 	_main_menu.active_project_change.connect(_on_active_project_change)
@@ -48,6 +48,7 @@ func _ready():
 	
 	_toolbar.add_xml.connect(_on_add_xml)
 	_toolbar.add_yolo.connect(_on_add_yolo)
+	_toolbar.add_coco.connect(_on_add_coco)
 	_toolbar.export_image.connect(_on_export_img)
 	_toolbar.undo_action.connect(_on_undo_action)
 	_toolbar.redo_action.connect(_on_redo_action)
@@ -184,19 +185,19 @@ func _on_add_yolo():
 		if not _add_yolo_dialog.files_selected.is_connected(DataLoader.yolo_files_load_from_paths):
 			_add_yolo_dialog.files_selected.connect(DataLoader.yolo_files_load_from_paths)
 		_add_yolo_dialog.popup_centered()
+		
+func _on_add_coco():
+	if OS.get_name() == "Windows":
+		if not _add_coco_dialog.files_selected.is_connected(DataLoader.coco_files_load_from_paths):
+			_add_coco_dialog.files_selected.connect(DataLoader.coco_files_load_from_paths)
+		_add_coco_dialog.popup_centered()
 
-func _on_xml_files_opened(args):
-	var num_xml = args[0]
-	var xml_filenames = args[1]
-	var xml_str = args[2]
-	ProjectManager.active_project.add_xmls(num_xml, xml_filenames, xml_str)
-	update_guis()
-	
-func _on_yolo_files_opened(args):
-	var num_yolo = args[0]
-	var yolo_filenames = args[1]
-	var yolo_str = args[2]
-	ProjectManager.active_project.add_yolos(num_yolo, yolo_filenames, yolo_str)
+func _on_data_files_opened(args):
+	var num_data = args[0]
+	var data_filenames = args[1]
+	var data_str = args[2]
+	var data_format = args[3]
+	ProjectManager.active_project.add_datas(num_data, data_filenames, data_str, data_format)
 	update_guis()
 	
 func _on_close_xml():
