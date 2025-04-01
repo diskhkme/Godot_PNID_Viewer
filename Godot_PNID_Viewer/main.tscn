@@ -88,6 +88,15 @@ access = 2
 filters = PackedStringArray("*.xml;XML Files")
 use_native_dialog = true
 
+[node name="AddDOTADialog" type="FileDialog" parent="CanvasLayer/Dialogs"]
+title = "Open File(s)"
+size = Vector2i(334, 159)
+ok_button_text = "열기"
+file_mode = 1
+access = 2
+filters = PackedStringArray("*.txt;TXT Files")
+use_native_dialog = true
+
 [node name="AddYOLODialog" type="FileDialog" parent="CanvasLayer/Dialogs"]
 title = "Open File(s)"
 size = Vector2i(334, 159)

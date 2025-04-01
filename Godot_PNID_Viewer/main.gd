@@ -17,6 +17,7 @@ extends Node
 # dialogs
 @onready var _new_project_dialog = $CanvasLayer/Dialogs/NewProjectDialog
 @onready var _add_xml_dialog = $CanvasLayer/Dialogs/AddXMLDialog
+@onready var _add_dota_dialog = $CanvasLayer/Dialogs/AddDOTADialog
 @onready var _add_yolo_dialog = $CanvasLayer/Dialogs/AddYOLODialog
 @onready var _add_coco_dialog = $CanvasLayer/Dialogs/AddCOCODialog
 @onready var _save_as_dialog = $CanvasLayer/Dialogs/SaveAsFilesDialog
@@ -47,6 +48,7 @@ func _ready():
 	_main_menu.project_tab_close.connect(_on_project_close)
 	
 	_toolbar.add_xml.connect(_on_add_xml)
+	_toolbar.add_dota.connect(_on_add_dota)
 	_toolbar.add_yolo.connect(_on_add_yolo)
 	_toolbar.add_coco.connect(_on_add_coco)
 	_toolbar.export_image.connect(_on_export_img)
@@ -179,6 +181,12 @@ func _on_add_xml():
 	elif OS.get_name() == "Web":
 		var _window = JavaScriptBridge.get_interface("window")
 		_window.input_xml.click()
+		
+func _on_add_dota():
+	if OS.get_name() == "Windows":
+		if not _add_dota_dialog.files_selected.is_connected(DataLoader.dota_files_load_from_paths):
+			_add_dota_dialog.files_selected.connect(DataLoader.dota_files_load_from_paths)
+		_add_dota_dialog.popup_centered()
 
 func _on_add_yolo():
 	if OS.get_name() == "Windows":

@@ -15,6 +15,11 @@ layout_mode = 2
 focus_mode = 0
 text = "Add XML"
 
+[node name="AddDOTAButton" type="Button" parent="HBoxContainer"]
+layout_mode = 2
+focus_mode = 0
+text = "Add DOTA"
+
 [node name="AddYOLOButton" type="Button" parent="HBoxContainer"]
 layout_mode = 2
 focus_mode = 0
@@ -59,6 +64,7 @@ stretch_mode = 3
 layout_mode = 2
 
 [connection signal="pressed" from="HBoxContainer/AddXMLButton" to="." method="_on_add_xml_button_pressed"]
+[connection signal="pressed" from="HBoxContainer/AddDOTAButton" to="." method="_on_add_dota_button_pressed"]
 [connection signal="pressed" from="HBoxContainer/AddYOLOButton" to="." method="_on_add_yolo_button_pressed"]
 [connection signal="pressed" from="HBoxContainer/AddCOCOButton" to="." method="_on_add_coco_button_pressed"]
 [connection signal="pressed" from="HBoxContainer/UndoButton" to="." method="_on_undo_button_pressed"]

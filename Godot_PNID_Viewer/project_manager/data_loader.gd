@@ -91,6 +91,9 @@ func data_files_load_from_path(paths, format):
 func xml_files_load_from_paths(paths):
 	data_files_load_from_path(paths, "XML")
 	
+func dota_files_load_from_paths(paths):
+	data_files_load_from_path(paths, "DOTA")
+	
 func yolo_files_load_from_paths(paths):
 	data_files_load_from_path(paths, "YOLO")
 	

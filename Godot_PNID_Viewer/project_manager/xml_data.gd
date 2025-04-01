@@ -14,10 +14,7 @@ var is_show_label: bool = false
 func initialize(id:int, data_filename:String, data_str: String, data_format: String):
 	self.id = id
 	self.filename = data_filename
-	symbol_objects = PnidXmlIo.parse_pnid_data_from_string(data_str, data_format, 
-															ProjectManager.active_project.img_filename, 
-															ProjectManager.active_project.img.get_width(),
-															ProjectManager.active_project.img.get_height())
+	symbol_objects = PnidXmlIo.parse_pnid_data_from_string(data_str, data_format, ProjectManager.active_project.img_filename, ProjectManager.active_project.img.get_width(),ProjectManager.active_project.img.get_height())
 	if id < Config.SYMBOL_COLOR_PRESET.size():
 		color = Config.SYMBOL_COLOR_PRESET[id]
 	else:

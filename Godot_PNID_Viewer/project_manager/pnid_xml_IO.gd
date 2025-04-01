@@ -46,7 +46,6 @@ static func parse_pnid_data_from_string(contents: String, format: String, img_fi
 		
 	return []
 	
-	
 static func parse_yolo_txt(contents: String, img_width: int, img_height: int) -> Array[SymbolObject]:
 	var symbol_objects: Array[SymbolObject] = []
 	var lines = contents.split("\n")

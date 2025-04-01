@@ -3,11 +3,13 @@ extends HBoxContainer
 signal add_xml
 signal add_yolo
 signal add_coco
+signal add_dota
 signal export_image
 signal undo_action
 signal redo_action
 
 @onready var add_xml_button = $HBoxContainer/AddXMLButton
+@onready var add_dota_button = $HBoxContainer/AddDOTAButton
 @onready var add_yolo_button = $HBoxContainer/AddYOLOButton
 @onready var add_coco_button = $HBoxContainer/AddCOCOButton
 @onready var undo_button = $HBoxContainer/UndoButton
@@ -32,6 +34,8 @@ func _process(delta):
 func _on_add_xml_button_pressed():
 	add_xml.emit()
 	
+func _on_add_dota_button_pressed():
+	add_dota.emit()
 
 func _on_add_yolo_button_pressed():
 	add_yolo.emit()
@@ -61,11 +65,13 @@ func _on_full_screen_button_pressed():
 func _update_button_enabled():
 	if ProjectManager.active_project == null:
 		add_xml_button.disabled = true
+		add_dota_button.disabled = true
 		add_yolo_button.disabled = true
 		add_coco_button.disabled = true
 		export_img_button.disabled = true
 	else:
 		add_xml_button.disabled = false
+		add_dota_button.disabled = false
 		add_yolo_button.disabled = false
 		export_img_button.disabled = false
 		add_coco_button.disabled = false
@@ -79,6 +85,8 @@ func _update_button_enabled():
 			redo_button.disabled = false
 		else:
 			redo_button.disabled = true
+
+
 
 
 
