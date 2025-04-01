@@ -36,7 +36,7 @@ var _is_context_on = false
 func _ready():
 	# Init?
 	Util.is_debug = true
-	_new_project_dialog.filters = [Util.get_all_file_filter()]
+	_new_project_dialog.filters = [Util.get_img_file_filter()]
 	_add_xml_dialog.filters = [Util.get_data_file_filter()]
 	
 	# Signal
@@ -135,8 +135,8 @@ func _input(event):
 
 func _on_new_project(): # web & windows
 	if OS.get_name() == "Windows":
-		if not _new_project_dialog.files_selected.is_connected(DataLoader.project_files_load_from_paths):
-			_new_project_dialog.files_selected.connect(DataLoader.project_files_load_from_paths)
+		if not _new_project_dialog.file_selected.is_connected(DataLoader.img_file_load_from_path):
+			_new_project_dialog.file_selected.connect(DataLoader.img_file_load_from_path)
 		_new_project_dialog.popup_centered()
 	elif OS.get_name() == "Web":
 		var _window = JavaScriptBridge.get_interface("window")

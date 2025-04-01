@@ -19,28 +19,20 @@ func _ready():
 		window.onload()
 		
 
-func project_files_load_from_paths(paths):
-	print("Data load from path")
-	var xml_filepaths = Util.get_valid_data_paths(paths)
-	var img_filepath = Util.get_img_path(paths)
+func img_file_load_from_path(path):
+	print("Image load from path")
+	var img_filepath = path
 	
 	var img_filename = img_filepath.get_file()
-	var xml_filenames = []
-	var xml_strs = []
 	var img
 	
-	for xml_filepath in xml_filepaths:
-		xml_filenames.push_back(xml_filepath.get_file())
-		var xml_str = FileAccess.get_file_as_string(xml_filepath)
-		xml_strs.push_back(xml_str)
-		
 	img = Image.new()
 	var err = img.load(img_filepath)
 	
 	if err != OK:
 		print("image loading error!")
 		
-	project_files_opened.emit([img_filename, img, xml_filenames.size(), xml_filenames, xml_strs])
+	project_files_opened.emit([img_filename, img])
 		
 
 func project_files_load_from_web(args):

@@ -24,12 +24,10 @@ static func get_valid_data_paths(paths) -> PackedStringArray:
 	return xml_paths
 	
 	
-static func get_all_file_filter() -> String:
+static func get_img_file_filter() -> String:
 	var str = ""
 	for img_format in Config.ALLOW_IMG_FORMAT:
 		str += "*" + img_format + ", "
-	for data_format in Config.ALLOW_DATA_FORMAT:
-		str += "*" + data_format + ", "
 	
 	str = str.left(str.length()-2)
 	return str
@@ -37,7 +35,9 @@ static func get_all_file_filter() -> String:
 	
 static func get_data_file_filter() -> String:
 	var str = ""
-	for data_format in Config.ALLOW_DATA_FORMAT:
+	var extentions: Array[String]
+	extentions.assign(unique_array(Config.ALLOW_DATA_FORMAT.values()))
+	for data_format in extentions:
 		str += "*" + data_format + ", "
 	str = str.left(str.length()-2)
 	return str
@@ -56,3 +56,9 @@ static func log_end(log_name: String):
 static func debug_msg(msg):
 	if is_debug:
 		print(msg)
+
+static func unique_array(arr: Array) -> Array:
+	var dict := {}
+	for a in arr:
+		dict[a] = 1
+	return dict.keys()

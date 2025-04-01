@@ -10,17 +10,13 @@ var xml_datas: Array[XMLData]
 
 var undoredo_mgr: UndoRedoManager
 
-func initialize(id, img_filename, img, num_xml, xml_filenames, xml_strs):
+func initialize(id, img_filename, img):
 	self.id = id
 	self.img_filename = img_filename
 	self.img = img
 	
 	undoredo_mgr = UndoRedoManager.new()
 	xml_datas.clear()
-	for i in range(num_xml):
-		var xml_data = XMLData.new()
-		xml_data.initialize(xml_datas.size(), xml_filenames[i], xml_strs[i], "XML")
-		xml_datas.push_back(xml_data)
 			
 	return true
 	

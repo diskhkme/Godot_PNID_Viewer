@@ -71,12 +71,12 @@ size_flags_vertical = 8
 [node name="Dialogs" type="Node" parent="CanvasLayer"]
 
 [node name="NewProjectDialog" type="FileDialog" parent="CanvasLayer/Dialogs"]
-title = "Open File(s)"
+title = "Open a File"
 size = Vector2i(334, 159)
 ok_button_text = "열기"
-file_mode = 1
+file_mode = 0
 access = 2
-filters = PackedStringArray("*.xml, *.png, *.jpg, *.jpeg")
+filters = PackedStringArray("*.png, *.jpg, *.jpeg")
 use_native_dialog = true
 
 [node name="AddXMLDialog" type="FileDialog" parent="CanvasLayer/Dialogs"]

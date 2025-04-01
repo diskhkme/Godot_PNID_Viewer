@@ -12,7 +12,7 @@ func _ready():
 func add_project(args: Variant) -> Project:
 	var project = Project.new() as Project
 		
-	if project.initialize(open_projects.size(), args[0], args[1], args[2], args[3], args[4]) == true:
+	if project.initialize(open_projects.size(), args[0], args[1]) == true:
 		open_projects.append(project)
 	else:
 		print("project init failed")
