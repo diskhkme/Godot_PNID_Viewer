@@ -64,7 +64,7 @@ static func parse_yolo_txt(contents: String, img_width: int, img_height: int) ->
 		var normalized_y = elems[2].to_float()
 		var normalized_w = elems[3].to_float()
 		var normalized_h = elems[4].to_float()
-		
+				
 		var symbol_width = int(normalized_w * img_width)
 		var symbol_height = int(normalized_h * img_height)
 		var minx = int((normalized_x * img_width) - (symbol_width * 0.5))
@@ -73,7 +73,7 @@ static func parse_yolo_txt(contents: String, img_width: int, img_height: int) ->
 		var maxy = miny + symbol_height
 		
 		symbol_object.cls = elems[0]
-		var degree = 0 # no degree for dota
+		var degree = elems[6].to_float() if len(elems) >= 6 else 0 # no degree for dota
 		symbol_object.degree = degree
 		var bndbox = Vector4(minx, miny, maxx, maxy)
 		symbol_object.bndbox = bndbox
@@ -106,12 +106,12 @@ static func parse_coco_json(contents: String, target_image_filename: String) -> 
 			if annotation["image_id"] == target_image_id:
 				var symbol_object = SymbolObject.new()
 				symbol_object.id = symbol_id
-				symbol_object.type = ""
+				symbol_object.type = annotation['attributes']['type']
 				var category_id = int(annotation["category_id"])
 				
 				var matched_category = categories.filter(func(c): return int(c["id"]) == category_id)
-				symbol_object.cls = matched_category[0]["name"]
-				var degree = 0 # no degree for dota
+				symbol_object.cls = matched_category[0]["name"] if not symbol_object.is_text else annotation['attributes']['text_string']
+				var degree = annotation['attributes']['degree']
 				symbol_object.degree = degree
 				
 				var bbox = annotation["bbox"]
