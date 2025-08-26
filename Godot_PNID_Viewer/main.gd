@@ -134,7 +134,7 @@ func _input(event):
 			
 
 func _on_new_project(): # web & windows
-	if OS.get_name() == "Windows":
+	if OS.get_name() == "Windows" or OS.get_name() == "Linux":
 		if not _new_project_dialog.file_selected.is_connected(DataLoader.img_file_load_from_path):
 			_new_project_dialog.file_selected.connect(DataLoader.img_file_load_from_path)
 		_new_project_dialog.popup_centered()
@@ -174,7 +174,7 @@ func _on_project_close(project: Project):
 		
 		
 func _on_add_xml():
-	if OS.get_name() == "Windows":
+	if OS.get_name() == "Windows" or OS.get_name() == "Linux":
 		if not _add_xml_dialog.files_selected.is_connected(DataLoader.xml_files_load_from_paths):
 			_add_xml_dialog.files_selected.connect(DataLoader.xml_files_load_from_paths)
 		_add_xml_dialog.popup_centered()
@@ -183,19 +183,19 @@ func _on_add_xml():
 		_window.input_xml.click()
 		
 func _on_add_dota():
-	if OS.get_name() == "Windows":
+	if OS.get_name() == "Windows" or OS.get_name() == "Linux":
 		if not _add_dota_dialog.files_selected.is_connected(DataLoader.dota_files_load_from_paths):
 			_add_dota_dialog.files_selected.connect(DataLoader.dota_files_load_from_paths)
 		_add_dota_dialog.popup_centered()
 
 func _on_add_yolo():
-	if OS.get_name() == "Windows":
+	if OS.get_name() == "Windows" or OS.get_name() == "Linux":
 		if not _add_yolo_dialog.files_selected.is_connected(DataLoader.yolo_files_load_from_paths):
 			_add_yolo_dialog.files_selected.connect(DataLoader.yolo_files_load_from_paths)
 		_add_yolo_dialog.popup_centered()
 		
 func _on_add_coco():
-	if OS.get_name() == "Windows":
+	if OS.get_name() == "Windows" or OS.get_name() == "Linux":
 		if not _add_coco_dialog.files_selected.is_connected(DataLoader.coco_files_load_from_paths):
 			_add_coco_dialog.files_selected.connect(DataLoader.coco_files_load_from_paths)
 		_add_coco_dialog.popup_centered()
@@ -217,7 +217,7 @@ func _on_close_xml():
 	
 	
 func _on_export_img():
-	if OS.get_name() == "Windows":
+	if OS.get_name() == "Windows" or OS.get_name() == "Linux":
 		if not _save_img_dialog.file_selected.is_connected(_image_viewer.generate_screenshot):
 			_save_img_dialog.file_selected.connect(_image_viewer.generate_screenshot)
 		_save_img_dialog.popup_centered()
@@ -230,7 +230,7 @@ func _on_screenshot_start():
 	
 
 func _on_screenshot_taken(img: Image, path: String):
-	if OS.get_name() == "Windows":
+	if OS.get_name() == "Windows" or OS.get_name() == "Linux":
 		if !path.contains(".png"):
 			path += ".png"
 		img.save_png(path)
@@ -308,7 +308,7 @@ func _on_xml_selected(xml_data: XMLData):
 	
 func _on_save_as_xml(is_twopoint: bool):
 	if is_twopoint:
-		if OS.get_name() == "Windows":
+		if OS.get_name() == "Windows" or OS.get_name() == "Linux":
 			if not _save_as_dialog.file_selected.is_connected(_project_viewer.save_twopoint_xml):
 				_save_as_dialog.file_selected.connect(_project_viewer.save_twopoint_xml)
 			_save_as_dialog.popup_centered()
@@ -316,7 +316,7 @@ func _on_save_as_xml(is_twopoint: bool):
 				var xml_dump = PnidXmlIo.dump_twopoint_pnid_xml(_project_viewer.selected_xml.symbol_objects)
 				JavaScriptBridge.download_buffer(xml_dump.to_utf8_buffer(), "export.xml")
 	else:
-		if OS.get_name() == "Windows":
+		if OS.get_name() == "Windows" or OS.get_name() == "Linux":
 			if not _save_as_dialog.file_selected.is_connected(_project_viewer.save_fourpoint_xml):
 				_save_as_dialog.file_selected.connect(_project_viewer.save_fourpoint_xml)
 			_save_as_dialog.popup_centered()

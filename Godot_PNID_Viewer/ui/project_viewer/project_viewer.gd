@@ -147,7 +147,7 @@ func save_xml(path: String, is_twopoint: bool):
 	else:
 		xml_dump = PnidXmlIo.dump_fourpoint_pnid_xml(selected_xml.symbol_objects)
 
-	if OS.get_name() == "Windows":
+	if OS.get_name() == "Windows" or OS.get_name() == "Linux":
 		var file = FileAccess.open(path, FileAccess.WRITE)
 		file.store_string(xml_dump)
 		
