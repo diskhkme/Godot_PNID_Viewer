@@ -38,15 +38,15 @@ func reset_class_with_type(type: String):
 		_cls_option_button.add_item(cls)
 
 
-func _on_type_option_button_item_selected(index):
-	if ProjectManager.is_symbol_type_text(index):
-		_cls_option_button.visible = false
-		_cls_text_edit.visible = true
-	else:
-		var current_type = ProjectManager.symbol_type_set.keys()[index]
-		reset_class_with_type(current_type)
-		_cls_option_button.visible = true
-		_cls_text_edit.visible = false
+#func _on_type_option_button_item_selected(index):
+	#if ProjectManager.is_symbol_type_text(index):
+		#_cls_option_button.visible = false
+		#_cls_text_edit.visible = true
+	#else:
+		#var current_type = ProjectManager.symbol_type_set.keys()[index]
+		#reset_class_with_type(current_type)
+		#_cls_option_button.visible = true
+		#_cls_text_edit.visible = false
 	
 	
 func check_symbol_updated() -> bool:

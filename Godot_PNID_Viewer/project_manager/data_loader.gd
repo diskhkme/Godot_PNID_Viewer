@@ -93,23 +93,3 @@ func coco_files_load_from_paths(paths):
 	data_files_load_from_path(paths, "COCO")
 	
 
-func parse_symbol_type_to_dict(symbol_type_str: String):
-	var symbol_type_set = {}
-	var lines = symbol_type_str.split("\n")
-	for line in lines:
-		var strs = line.split("|")
-		if strs[0].is_empty():
-			continue
-		
-		if !symbol_type_set.has(strs[0]):
-			symbol_type_set[strs[0]] = [strs[1]]
-		else:
-			symbol_type_set[strs[0]].append(strs[1])
-			
-	if !symbol_type_set.has(Config.TEXT_TYPE_NAME):
-		symbol_type_set[Config.TEXT_TYPE_NAME] = []
-		
-	if !symbol_type_set.has("None"):
-		symbol_type_set["None"] = ["None"]
-		
-	return symbol_type_set

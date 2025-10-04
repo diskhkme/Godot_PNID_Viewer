@@ -22,23 +22,8 @@ func initialize(id:int, data_filename:String, data_str: String, data_format: Str
 		color = rand_col
 	symbol_objects.map(func(s): s.source_xml = self)
 	symbol_objects.map(func(s): s.origin_xml = self)
-	var is_sane = check_sanity(symbol_objects) # TODO: what to do if check sanity failes?
 	
 	
-# TODO: add more constraints
-func check_sanity(symbol_objects):
-	for symbol_object in symbol_objects:
-		if !ProjectManager.symbol_type_set.has(symbol_object.type):
-			print("XML has undefined symbol type!")
-			return false
-		if !symbol_object.is_text:
-			if !ProjectManager.symbol_type_set[symbol_object.type].has(symbol_object.cls):
-				print("XML has undefined symbol type!")
-				return false
-
-	return true
-
-
 func add_symbol(position: Vector2):
 	var new_symbol = SymbolObject.new()
 	new_symbol.id = symbol_objects.size()

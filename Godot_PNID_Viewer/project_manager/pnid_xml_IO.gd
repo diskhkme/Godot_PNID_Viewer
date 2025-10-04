@@ -32,8 +32,6 @@ static func parse_pnid_data_from_string(contents: String, format: String, img_fi
 		assert(xml_type != XMLFORMAT.UNKNOWN, "Error: Unknown data format")
 		if xml_type == XMLFORMAT.TWOPOINT:
 			return parse_twopoint_xml(contents)
-		elif xml_type == XMLFORMAT.FOURPOINT:
-			return parse_fourpoint_xml(contents)
 	
 	if format == "DOTA":
 		return parse_dota_txt(contents)
@@ -161,68 +159,6 @@ static func parse_dota_txt(contents: String) -> Array[SymbolObject]:
 	return symbol_objects
 	
 
-static func parse_fourpoint_xml(contents: String) -> Array[SymbolObject]:
-	print(contents)
-	var symbol_objects: Array[SymbolObject] = []
-	var parser = XMLParser.new()
-	parser.open_buffer(contents.to_utf8_buffer())
-	
-	var id = 0
-	var symbol_object
-	var p1
-	var p2
-	var p3
-	var p4
-	while parser.read() != ERR_FILE_EOF:
-		if parser.get_node_type() == XMLParser.NODE_ELEMENT:
-			var node_name = parser.get_node_name()
-			
-			match node_name:
-				Config.OBJECT_TAG_NAME:
-					symbol_object = SymbolObject.new()
-					symbol_object.id = id
-				"type":
-					symbol_object.type = get_current_node_data(parser)
-				"class":
-					var class_str = get_current_node_data(parser)
-					symbol_object.cls = class_str
-				"bndbox":
-					p1 = Vector2.ZERO
-					p2 = Vector2.ZERO
-					p3 = Vector2.ZERO
-					p4 = Vector2.ZERO
-				"x1":
-					p1.x = get_current_node_data(parser).to_float()
-				"y1":
-					p1.y = get_current_node_data(parser).to_float()
-				"x2":
-					p2.x = get_current_node_data(parser).to_float()
-				"y2":
-					p2.y = get_current_node_data(parser).to_float()
-				"x3":
-					p3.x = get_current_node_data(parser).to_float()
-				"y3":
-					p3.y = get_current_node_data(parser).to_float()
-				"x4":
-					p4.x = get_current_node_data(parser).to_float()
-				"y4":
-					p4.y = get_current_node_data(parser).to_float()
-				"degree":
-					symbol_object.degree = get_current_node_data(parser).to_float()
-				"flip":
-					symbol_object.flip = yes_no_to_bool(get_current_node_data(parser))
-		if parser.get_node_type() == XMLParser.NODE_ELEMENT_END:
-			var node_name = parser.get_node_name()
-			if node_name == Config.OBJECT_TAG_NAME:
-				# pend bbox calculation to points parsing finished
-				var bndbox = symbol_object.get_bndbox_from_fourpoint_degree(p1,p2,p3,p4,symbol_object.degree)
-				symbol_object.bndbox = bndbox
-				symbol_objects.push_back(symbol_object)
-				id += 1
-					
-	return symbol_objects
-
-
 static func parse_twopoint_xml(contents: String) -> Array[SymbolObject]:
 	var symbol_objects: Array[SymbolObject] = []
 	var parser = XMLParser.new()
@@ -278,9 +214,8 @@ static func check_xml_type(contents: String) -> XMLFORMAT:
 			match node_name:
 				"xmin":
 					return XMLFORMAT.TWOPOINT
-				"x1":
-					return XMLFORMAT.FOURPOINT
 	
+	# no longer supports other than 2point XML format
 	return XMLFORMAT.UNKNOWN
 	
 

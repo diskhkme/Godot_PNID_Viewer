@@ -11,5 +11,4 @@ func initialize_diff(id: int, filename:String, symbol_objects: Array[SymbolObjec
 	self.symbol_objects.map(func(s): s.source_xml = self) 
 	self.source_xml = source_xml
 	self.target_xml = target_xml
-	var is_sane = check_sanity(symbol_objects) # TODO: what to do if check sanity failes?
 	

@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://bdsyjmvhhrl76"]
 
-[ext_resource type="Script" path="res://ui/dialogs/type_change_window.gd" id="1_02ps1"]
+[ext_resource type="Script" path="res://ui/dialogs/_deprecated/type_change_window.gd" id="1_02ps1"]
 
 [node name="TypeChangeWindow" type="Window"]
 title = "Select Type & Class"

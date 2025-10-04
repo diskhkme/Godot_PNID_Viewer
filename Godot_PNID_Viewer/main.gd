@@ -22,7 +22,7 @@ extends Node
 @onready var _add_coco_dialog = $CanvasLayer/Dialogs/AddCOCODialog
 @onready var _save_as_dialog = $CanvasLayer/Dialogs/SaveAsFilesDialog
 @onready var _save_img_dialog = $CanvasLayer/Dialogs/SaveImageDialog
-@onready var _type_change_dialog = $CanvasLayer/Dialogs/TypeChangeWindow
+
 @onready var _diff_window = $CanvasLayer/Dialogs/DiffWindow
 @onready var _eval_window = $CanvasLayer/Dialogs/EvaluationWindow
 @onready var _color_picker_window = $CanvasLayer/Dialogs/ColorPickerWindow
@@ -64,7 +64,6 @@ func _ready():
 	_image_viewer.camera_moved.connect(_on_camera_moved)
 	_image_viewer_context_menu.add_symbol_pressed.connect(_on_add_symbol)
 	_image_viewer_context_menu.remove_symbol_pressed.connect(_on_remove_symbol)
-	_image_viewer_context_menu.edit_symbol_pressed.connect(_on_edit_symbol)
 	
 	_project_viewer.xml_selected.connect(_on_xml_selected)
 	_project_viewer.xml_visibility_changed.connect(_on_xml_visibility_changed)
@@ -80,8 +79,6 @@ func _ready():
 	_xml_tree_viewer.symbol_deselected.connect(_on_symbol_deselected)
 	
 	_diff_window.diff_calc_completed.connect(_on_diff_calc_completed)
-	
-	_type_change_dialog.symbol_type_changed.connect(_on_symbol_type_change)
 	
 	_color_picker_window.color_changed.connect(_on_xml_color_changed)
 	_color_picker_window.color_picker_closed.connect(_on_color_picker_closed)
@@ -375,10 +372,6 @@ func _on_eval_xml():
 	_eval_window.initialize_with_selected(_project_viewer.selected_xml)
 
 
-func _show_type_change_window(symbol_object:SymbolObject):
-	_type_change_dialog.show_type_change_window(symbol_object)
-
-
 func _on_zoom_changed(zoom: float):
 	_status_bar.update_camera_zoom(zoom)
 	get_tree().call_group("draw", "redraw")
@@ -386,11 +379,6 @@ func _on_zoom_changed(zoom: float):
 	
 func _on_camera_moved(pos: Vector2):
 	_status_bar.update_camera_position(pos)
-	
-	
-func _on_edit_symbol():
-	_type_change_dialog.initialize_types(_xml_tree_viewer.selected_symbol)
-	_type_change_dialog.popup_centered()
 	
 	
 func _on_symbol_type_change(symbol_object: SymbolObject):

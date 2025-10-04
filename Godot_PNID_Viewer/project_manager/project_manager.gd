@@ -1,13 +1,7 @@
 extends Node
 
-var symbol_type_set = {} 
-
 var open_projects: Array[Project]
 var active_project: Project
-
-func _ready():
-	symbol_type_set = DataLoader.parse_symbol_type_to_dict(SymbolTypeClassDef.TXT)
-	
 
 func add_project(args: Variant) -> Project:
 	var project = Project.new() as Project
@@ -37,12 +31,4 @@ func close_project(project: Project) -> Project: # return new project to open
 
 func make_project_active(project: Project):
 	active_project = project
-	
-
-func is_symbol_type_text(index: int):
-	if symbol_type_set.keys()[index] == Config.TEXT_TYPE_NAME:
-		return true
-		
-	return false
-	
 	

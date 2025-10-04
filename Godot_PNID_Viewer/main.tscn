@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://en0mt7v4ddrg"]
+[gd_scene load_steps=14 format=3 uid="uid://en0mt7v4ddrg"]
 
 [ext_resource type="Script" path="res://main.gd" id="1_h1xnr"]
 [ext_resource type="Theme" uid="uid://dseywhd5dettr" path="res://resources/project_default.tres" id="2_6rl77"]
@@ -7,7 +7,6 @@
 [ext_resource type="PackedScene" uid="uid://kadsves1l116" path="res://ui/toolbar.tscn" id="4_ioe6v"]
 [ext_resource type="PackedScene" uid="uid://mmirfa2yhj50" path="res://ui/xml_tree_viewer/xml_tree_viewer.tscn" id="5_4qjjb"]
 [ext_resource type="PackedScene" uid="uid://dkh7n1euog8gl" path="res://ui/image_viewer/image_viewer.tscn" id="5_ikjut"]
-[ext_resource type="PackedScene" uid="uid://bdsyjmvhhrl76" path="res://ui/dialogs/type_change_window.tscn" id="6_xn5xa"]
 [ext_resource type="PackedScene" uid="uid://bub4qah0tbwdj" path="res://ui/status_bar.tscn" id="8_87pkj"]
 [ext_resource type="PackedScene" uid="uid://fxwcfnsk0rgt" path="res://ui/dialogs/diff_window.tscn" id="11_3hrp5"]
 [ext_resource type="PackedScene" uid="uid://myj67o0jfstd" path="res://ui/dialogs/evaluation_window.tscn" id="11_8k5ry"]
@@ -128,9 +127,6 @@ ok_button_text = "저장"
 access = 2
 filters = PackedStringArray("*.png ; PNG File")
 use_native_dialog = true
-
-[node name="TypeChangeWindow" parent="CanvasLayer/Dialogs" instance=ExtResource("6_xn5xa")]
-visible = false
 
 [node name="DiffWindow" parent="CanvasLayer/Dialogs" instance=ExtResource("11_3hrp5")]
 visible = false
