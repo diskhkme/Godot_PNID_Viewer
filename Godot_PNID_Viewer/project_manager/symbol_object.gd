@@ -4,14 +4,7 @@ class_name SymbolObject
 # --- Properties -----------------------------------------------------
 # --------------------------------------------------------------------
 var id: int 
-var type: String :  # TODO: save type and class using id
-	get: return type
-	set(value):
-		type = value
-		if type.to_lower().contains(Config.TEXT_TYPE_NAME):
-			is_text = true
-		else:
-			is_text = false
+var type: String
 var cls: String
 var bndbox: Vector4
 var is_large: bool 

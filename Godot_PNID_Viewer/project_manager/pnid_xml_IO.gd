@@ -167,38 +167,54 @@ static func parse_twopoint_xml(contents: String) -> Array[SymbolObject]:
 	var id = 0
 	var symbol_object
 	while parser.read() != ERR_FILE_EOF:
-		if parser.get_node_type() == XMLParser.NODE_ELEMENT:
+		var node_type = parser.get_node_type()
+		var openinig_node_name
+		
+		if node_type == XMLParser.NODE_ELEMENT:
 			var node_name = parser.get_node_name()
-			
-			match node_name:
-				Config.OBJECT_TAG_NAME:
-					symbol_object = SymbolObject.new()
-					symbol_object.id = id
-				"type":
-					symbol_object.type = get_current_node_data(parser)
-				"class":
-					symbol_object.cls = get_current_node_data(parser)
-				"bndbox":
-					symbol_object.bndbox = Vector4()
-				"xmin":
-					symbol_object.bndbox.x = get_current_node_data(parser).to_float()
-				"ymin":
-					symbol_object.bndbox.y = get_current_node_data(parser).to_float()
-				"xmax":
-					symbol_object.bndbox.z = get_current_node_data(parser).to_float()
-				"ymax":
-					symbol_object.bndbox.w = get_current_node_data(parser).to_float()
-				"isLarge":
-					symbol_object.is_large = yes_no_to_bool(get_current_node_data(parser))
-				"degree":
-					symbol_object.degree = get_current_node_data(parser).to_float()
-				"flip":
-					symbol_object.flip = yes_no_to_bool(get_current_node_data(parser))
+			if node_name in Config.OBJECT_TAG_NAME:
+				symbol_object = SymbolObject.new()
+				symbol_object.id = id
+				match node_name:
+					"text_object":
+						symbol_object.type = "text"
+						symbol_object.is_text = true
+					"title_box_object":
+						symbol_object.type = "title_box"
+					"table_object":
+						symbol_object.type = "table"
+					"note_object":
+						symbol_object.type = "note"
+
+			if symbol_object != null:
+				match node_name:
+					"type":
+						symbol_object.type = get_current_node_data(parser)
+					"class":
+						symbol_object.cls = get_current_node_data(parser)
+					"bndbox":
+						symbol_object.bndbox = Vector4()
+					"xmin":
+						symbol_object.bndbox.x = get_current_node_data(parser).to_float()
+					"ymin":
+						symbol_object.bndbox.y = get_current_node_data(parser).to_float()
+					"xmax":
+						symbol_object.bndbox.z = get_current_node_data(parser).to_float()
+					"ymax":
+						symbol_object.bndbox.w = get_current_node_data(parser).to_float()
+					"isLarge":
+						symbol_object.is_large = yes_no_to_bool(get_current_node_data(parser))
+					"degree":
+						symbol_object.degree = get_current_node_data(parser).to_float()
+					"flip":
+						symbol_object.flip = yes_no_to_bool(get_current_node_data(parser))
+
+		if node_type == XMLParser.NODE_ELEMENT_END:
+			var node_name = parser.get_node_name()
+			if node_name in Config.OBJECT_TAG_NAME:
+				if symbol_object != null:
+					symbol_objects.push_back(symbol_object)
 					id += 1
-		if parser.get_node_type() == XMLParser.NODE_ELEMENT_END:
-			var node_name = parser.get_node_name()
-			if node_name == Config.OBJECT_TAG_NAME:
-				symbol_objects.push_back(symbol_object)
 					
 	return symbol_objects
 

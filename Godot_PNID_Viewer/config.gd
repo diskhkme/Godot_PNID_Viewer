@@ -25,7 +25,8 @@ const EDITOR_MINIMUM_SYMBOL_SIZE: int = 5
 const EDITOR_HANDLE_PADDING: float = 10
 
 # XML
-const OBJECT_TAG_NAME = "symbol_object"
+# TODO: Support package object
+const OBJECT_TAG_NAME = ["symbol_object", "text_object", "title_box_object", "table_object", "note_object"]
 const FORCE_QUANTIZED_DEGREE = true
 const QUANTIZED_DEGREE_VALUE = 5
 const FORCE_INT_COORD = true # only applied when exporting xml (use float internally)
