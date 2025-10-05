@@ -109,8 +109,6 @@ static func parse_coco_json(contents: String, target_image_filename: String) -> 
 				
 				var matched_category = categories.filter(func(c): return int(c["id"]) == category_id)
 				symbol_object.cls = matched_category[0]["name"] if not symbol_object.is_text else annotation['attributes']['text_string']
-				var degree = annotation['attributes']['degree']
-				symbol_object.degree = degree
 				
 				var bbox = annotation["bbox"]
 				# x,y,w,h -> minx, miny, maxx, maxy
